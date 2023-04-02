@@ -8,6 +8,7 @@ import Verify from "./screens/Verification";
 import HomeScreen from "./screens/HomeScreen";
 import Events from "./screens/Events";
 import TestingScreen from "./screens/TestingScreen";
+import Profile from "./screens/Profile";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ const Main = () => {
         <Stack.Screen name="verify" component={Verify} />
         <Stack.Screen name="homescreen" component={HomeScreen} />
         <Stack.Screen name="events" component={Events} />
+        <Stack.Screen name="profile" component={Profile} />
       </Stack.Navigator>
     </NavigationContainer>
   );

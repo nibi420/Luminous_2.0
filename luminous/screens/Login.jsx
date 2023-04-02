@@ -23,8 +23,6 @@ export default function App({ navigation }) {
         password,
       });
 
-      // navigation.navigate("home");
-
       if (!response.data.success) {
         // I think here we need to use response.data.success
         console.log("Error", response.data.message);
