@@ -79,7 +79,22 @@ export default function App({ navigation, route }) {
     }
   };
 
-  const timer = 10;
+  const handleResend = async () => {
+    try {
+      const response = await axios.get(`${IP}/resend`);
+
+      if (!response.data.success) {
+        console.log("Error", response.data.message);
+        Alert.alert("Error!", "Incorrect Email or it has expired.");
+        return;
+      }
+    } catch (error) {
+      Alert.alert("User has expired");
+      console.log("Error", error);
+    }
+  };
+
+  const timer = 90;
   const [isEnabled, setIsEnabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(timer);
 
@@ -159,6 +174,7 @@ export default function App({ navigation, route }) {
           style={isEnabled ? styles.enabledbtn : styles.resendbtn}
           disabled={!isEnabled}
           onPress={() => {
+            handleResend();
             setTimeLeft(timer);
             setIsEnabled(false);
           }}

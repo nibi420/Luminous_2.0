@@ -18,6 +18,7 @@ export default function App({ navigation }) {
 
   const handleLogin = async () => {
     try {
+      setemail(email.trim());
       const response = await axios.post(`${IP}/login`, {
         email,
         password,
@@ -39,7 +40,6 @@ export default function App({ navigation }) {
 
   const handleSignUp = () => {
     // Handle sign up logic here
-    console.log("Sign up");
     navigation.navigate("signup");
   };
 
@@ -55,7 +55,7 @@ export default function App({ navigation }) {
           style={styles.inputText}
           placeholder="Email"
           placeholderTextColor="#003f5c"
-          onChangeText={(text) => setemail(text.trim())}
+          onChangeText={(text) => setemail(text)}
           value={email}
         />
       </View>
