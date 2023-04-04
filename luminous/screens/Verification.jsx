@@ -74,7 +74,7 @@ export default function App({ navigation, route }) {
     //     console.log(err);
     //   });
 
-    navigation.navigate("home");
+    navigation.navigate("homescreen");
   };
 
   const timer = 10;

@@ -24,7 +24,7 @@ const categories = [
 ];
 
 const banners = [
-  { id: 1, imageUrl: "", title: "Event 1" },
+  { id: 1, imageUrl: "https://assets.xboxservices.com/assets/ef/9e/ef9e8f9f-4141-409c-9bab-659102bcc6b2.jpg?n=XSX_Page-Hero-0_768x1434.jpg", title: "Event 1" },
   {
     id: 2,
     imageUrl:

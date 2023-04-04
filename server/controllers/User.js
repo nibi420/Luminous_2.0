@@ -54,6 +54,8 @@ export const register = async (req, res) => {
 
 export const verify = async (req, res) => {
   try {
+    console.log("Here");
+    console.log(req.body.user);
     const otp = Number(req.body.otp);
 
     const user = await User.findById(req.user._id);
