@@ -21,12 +21,11 @@ const Navbar = ({ navigation, currentScreen }) => {
   return (
     <View style={styles.navBar}>
       <TouchableOpacity
-        stylestyle={
+        style={
           currentScreen === "map"
             ? [styles.navButton, styles.selectedNavButton]
             : styles.navButton
         }
-        v
       >
         <Ionicons
           name="map-outline"
