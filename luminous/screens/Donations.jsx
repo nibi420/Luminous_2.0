@@ -12,6 +12,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
+import DonationProgressBar from "./DonationProgressBar";
 
 const { width } = Dimensions.get("window");
 
@@ -68,6 +69,9 @@ export default function Event({ navigation }) {
               />
               <View style={styles.bannerInfo}>
                 <Text style={styles.bannerTitle}>{banner.title}</Text>
+              <DonationProgressBar collected={90} pledged = {120} total={150}/>
+
+  
                 
               </View>
             </View>
