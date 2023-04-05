@@ -37,6 +37,12 @@ const TestingScreen = ({ navigation }) => {
       >
         <Text style={styles.text}>Verify</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("donations")}
+      >
+        <Text style={styles.text}>Donation</Text>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -7,6 +7,7 @@ import Signup from "./screens/Signup";
 import Verify from "./screens/Verification";
 import HomeScreen from "./screens/HomeScreen";
 import Events from "./screens/Events";
+import Donation from "./screens/Donations";
 import TestingScreen from "./screens/TestingScreen";
 
 const Stack = createNativeStackNavigator();
@@ -24,6 +25,7 @@ const Main = () => {
         <Stack.Screen name="verify" component={Verify} />
         <Stack.Screen name="homescreen" component={HomeScreen} />
         <Stack.Screen name="events" component={Events} />
+        <Stack.Screen name="donations" component={Donation} />
       </Stack.Navigator>
     </NavigationContainer>
   );
