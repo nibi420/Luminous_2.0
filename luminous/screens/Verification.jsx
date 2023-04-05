@@ -47,7 +47,7 @@ export default function App({ navigation, route }) {
     setInput4(value);
   };
 
-  const handleSubmit = (navigate) => {
+  const handleSubmit = async (navigate) => {
     const code = input1 + input2 + input3 + input4;
     if (code.length < 4) {
       Alert.alert(
@@ -74,7 +74,9 @@ export default function App({ navigation, route }) {
     //     console.log(err);
     //   });
 
-    navigation.navigate("home");
+
+
+    navigation.navigate("homescreen");
   };
 
   const timer = 10;
