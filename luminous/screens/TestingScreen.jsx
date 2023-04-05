@@ -2,8 +2,17 @@ import { IP } from "../constant.js";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+
+
+
+
+  
+
+ 
 
 const TestingScreen = ({ navigation }) => {
+  
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Testing Screen</Text>
@@ -39,6 +48,7 @@ const TestingScreen = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
+        
         onPress={() => navigation.navigate("donations")}
       >
         <Text style={styles.text}>Donation</Text>

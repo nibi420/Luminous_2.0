@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import {
   StyleSheet,
   View,
@@ -13,6 +13,9 @@ import { Ionicons } from "@expo/vector-icons";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import DonationProgressBar from "./DonationProgressBar";
+import axios from "axios";
+import React, { useState, useEffect } from 'react';
+
 
 const { width } = Dimensions.get("window");
 
@@ -24,86 +27,110 @@ const categories = [
   { id: 5, name: "Category 5" },
 ];
 
-const banners = [
-  { id: 1, imageUrl: "https://thumbs.dreamstime.com/z/donate-money-vector-illustration-charity-donation-concept-hand-putting-banknote-box-eps-143816912.jpg", title: "Donation 1" },
-  {
-    id: 2,
-    imageUrl:
-      "https://ofhsoupkitchen.org/wp-content/uploads/2022/07/donation-vs.-contribution.jpg",
-    title: "Donation 2",
-  },
-];
+// const banners = [
+//   { id: 1, imageUrl: "https://thumbs.dreamstime.com/z/donate-money-vector-illustration-charity-donation-concept-hand-putting-banknote-box-eps-143816912.jpg", title: "Donation 1" },
+//   {
+//     id: 2,
+//     imageUrl:
+//       "https://ofhsoupkitchen.org/wp-content/uploads/2022/07/donation-vs.-contribution.jpg",
+//     title: "Donation 2",
+//   },
+// ];
 
-export default function Event({ navigation }) {
+
+
+
+
+
+import { IP } from '../constant';
+
+const Event = () => {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${IP}/getDonationsData`);
+        setData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (!data) {
+    return <Text>Loading...</Text>;
+  }
+
   return (
-    <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
-      <View style={styles.topContainer}>
-        <Text style={styles.eventsTitle}>Donations</Text>
-        <View style={styles.divider} />
-      </View>
-      <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder="Search" />
-      </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.categoriesContainer}
-      >
-        {categories.map((category) => (
-          <View key={category.id} style={styles.category}>
-            <Text style={styles.categoryName}>{category.name}</Text>
+        <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
+          <View style={styles.topContainer}>
+            <Text style={styles.eventsTitle}>Donations</Text>
+            <View style={styles.divider} />
           </View>
-        ))}
-      </ScrollView>
-      <ScrollView style={styles.bannersContainer}>
-        {banners.map((banner) => (
-          <TouchableOpacity
-            style={styles.button}
-            key={banner.id}
-            onPress={() => navigation.navigate(banner.title)}
+          <View style={styles.searchContainer}>
+            <TextInput style={styles.searchInput} placeholder="Search" />
+          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.categoriesContainer}
           >
-            <View style={styles.banner}>
-              <Image
-                source={{ uri: banner.imageUrl }}
-                style={styles.bannerImage}
-              />
-              <View style={styles.bannerInfo}>
-                <Text style={styles.bannerTitle}>{banner.title}</Text>
-              <DonationProgressBar collected={90} pledged = {120} total={150}/>
-
-  
-                
+            {categories.map((category) => (
+              <View key={category.id} style={styles.category}>
+                <Text style={styles.categoryName}>{category.name}</Text>
               </View>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      <View style={styles.navBar}>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="map-outline" size={24} color="#aaa" />
-          <Text style={[styles.navText]}>Map</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.navButton]}>
-          <Ionicons name="calendar-outline" size={24} color="#aaa" />
-          <Text style={[styles.navText]}>Events</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.navButton]}>
-          <Ionicons name="home-outline" size={24} color="#aaa" />
-          <Text style={[styles.navText]}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.navButton,styles.selectedNavButton]}>
-          <Ionicons name="heart-outline" size={24} color="blue" />
-          <Text style={[styles.navText,styles.selectedNavText]}>Donate</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="person-outline" size={24} color="#aaa" />
-          <Text style={[styles.navText]}>Account</Text>
-        </TouchableOpacity>
-      </View>
-    </LinearGradient>
-  );
-}
+            ))}
+          </ScrollView>
+          <ScrollView style={styles.bannersContainer}>
+            {data.map((banner) => (
+              <TouchableOpacity
+                style={styles.button}
+                key={banner.donation_id}
+                onPress={() => navigation.navigate(banner.post_title)}
+              >
+                <View style={styles.banner}>
+                  <Image
+                    source={{ uri: banner.image }}
+                    style={styles.bannerImage}
+                  />
+                  <View style={styles.bannerInfo}>
+                    <Text style={styles.bannerTitle}>{banner.post_title}</Text>
+                    <DonationProgressBar collected = {50} pledged={100} total={150}/>
+                    
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+    
+          <View style={styles.navBar}>
+            <TouchableOpacity style={styles.navButton}>
+              <Ionicons name="map-outline" size={24} color="#aaa" />
+              <Text style={[styles.navText]}>Map</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.navButton]}>
+              <Ionicons name="calendar-outline" size={24} color="#aaa" />
+              <Text style={[styles.navText]}>Events</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.navButton]}>
+              <Ionicons name="home-outline" size={24} color="#aaa" />
+              <Text style={[styles.navText]}>Home</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.navButton,styles.selectedNavButton]}>
+              <Ionicons name="heart-outline" size={24} color="blue" />
+              <Text style={[styles.navText,styles.selectedNavText]}>Donate</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navButton}>
+              <Ionicons name="person-outline" size={24} color="#aaa" />
+              <Text style={[styles.navText]}>Account</Text>
+            </TouchableOpacity>
+          </View>
+        </LinearGradient>
+      );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -237,3 +264,5 @@ const styles = StyleSheet.create({
     color: "blue",
   },
 });
+
+export default Event;
