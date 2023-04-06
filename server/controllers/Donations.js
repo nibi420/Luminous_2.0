@@ -16,7 +16,8 @@ export const getDonationsData = async (req,res) => {
 export const pushDonationsData = async (req,res) => {
     console.log(req.body)
    
-    let don_case = await Donation.create(req.body);
+    // let don_case = await Donation.create(req.body);
+   let a  = await Donation.deleteMany( { post_title: "third case" } )
 
     return res.send("done")
     console.log(user)

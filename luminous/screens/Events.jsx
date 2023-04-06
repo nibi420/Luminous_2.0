@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -46,6 +46,13 @@ const banners = [
 ];
 
 export default function Event({ navigation }) {
+
+  const [searchQuery, setSearchQuery] = useState("");
+  // const [filteredBanners, setFilteredBanners] = useState(banners);
+
+  const filteredBanners = banners.filter((banner) =>
+    banner.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   return (
     <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
       <View style={styles.topContainer}>
@@ -53,7 +60,9 @@ export default function Event({ navigation }) {
         <View style={styles.divider} />
       </View>
       <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder="Search" />
+        <TextInput style={styles.searchInput} placeholder="Search" 
+          onChangeText={(query) => setSearchQuery(query)}
+          value={searchQuery}/>
       </View>
       <ScrollView
         horizontal
@@ -67,7 +76,7 @@ export default function Event({ navigation }) {
         ))}
       </ScrollView>
       <ScrollView style={styles.bannersContainer}>
-        {banners.map((banner) => (
+        {filteredBanners.map((banner) => (
           <TouchableOpacity
             style={styles.button}
             key={banner.id}

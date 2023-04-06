@@ -17,6 +17,7 @@ import axios from "axios";
 import React, { useState, useEffect } from 'react';
 
 
+
 const { width } = Dimensions.get("window");
 
 const categories = [
@@ -46,6 +47,8 @@ import { IP } from '../constant';
 
 const Event = () => {
   const [data, setData] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,6 +66,9 @@ const Event = () => {
   if (!data) {
     return <Text>Loading...</Text>;
   }
+  const filteredData = data.filter((banner) =>
+    banner.post_title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
         <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
@@ -71,7 +77,9 @@ const Event = () => {
             <View style={styles.divider} />
           </View>
           <View style={styles.searchContainer}>
-            <TextInput style={styles.searchInput} placeholder="Search" />
+            <TextInput style={styles.searchInput} placeholder="Search" 
+              onChangeText={(query) => setSearchQuery(query)}
+              value={searchQuery}/>
           </View>
           <ScrollView
             horizontal
@@ -85,7 +93,7 @@ const Event = () => {
             ))}
           </ScrollView>
           <ScrollView style={styles.bannersContainer}>
-            {data.map((banner) => (
+            {filteredData.map((banner) => (
               <TouchableOpacity
                 style={styles.button}
                 key={banner.donation_id}
