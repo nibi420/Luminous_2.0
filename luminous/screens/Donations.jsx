@@ -45,11 +45,11 @@ const categories = [
 
 import { IP } from '../constant';
 
-const Event = ({navigation}) => {
+const Event = ({ navigation }) => {
   const [data, setData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  
-  
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -71,73 +71,75 @@ const Event = ({navigation}) => {
   );
 
   return (
-        <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
-          <View style={styles.topContainer}>
-            <Text style={styles.eventsTitle}>Donations</Text>
-            <View style={styles.divider} />
+    <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
+      <View style={styles.topContainer}>
+        <Text style={styles.eventsTitle}>Donations</Text>
+        <View style={styles.divider} />
+      </View>
+      <View style={styles.searchContainer}>
+        <TextInput style={styles.searchInput} placeholder="Search"
+          onChangeText={(query) => setSearchQuery(query)}
+          value={searchQuery} />
+      </View>
+      <View style={styles.catContainer}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.categoriesContainer}
+      >
+        {categories.map((category) => (
+          <View key={category.id} style={styles.category}>
+            <Text style={styles.categoryName}>{category.name}</Text>
           </View>
-          <View style={styles.searchContainer}>
-            <TextInput style={styles.searchInput} placeholder="Search" 
-              onChangeText={(query) => setSearchQuery(query)}
-              value={searchQuery}/>
-          </View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.categoriesContainer}
+        ))}
+      </ScrollView>
+      </View>
+      <ScrollView style={styles.bannersContainer}>
+        {filteredData.map((banner) => (
+          <TouchableOpacity
+            style={styles.button}
+            key={banner.donation_id}
+            onPress={() => navigation.navigate('donationDetails', banner)}
           >
-            {categories.map((category) => (
-              <View key={category.id} style={styles.category}>
-                <Text style={styles.categoryName}>{category.name}</Text>
+            <View style={styles.banner}>
+              <Image
+                source={{ uri: banner.image }}
+                style={styles.bannerImage}
+              />
+              <View style={styles.bannerInfo}>
+                <Text style={styles.bannerTitle}>{banner.post_title}</Text>
+                <DonationProgressBar collected={50} pledged={100} total={150} />
+
               </View>
-            ))}
-          </ScrollView>
-          <ScrollView style={styles.bannersContainer}>
-            {filteredData.map((banner) => (
-              <TouchableOpacity
-                style={styles.button}
-                key={banner.donation_id}
-                onPress={() => navigation.navigate('donationDetails',banner)}
-              >
-                <View style={styles.banner}>
-                  <Image
-                    source={{ uri: banner.image }}
-                    style={styles.bannerImage}
-                  />
-                  <View style={styles.bannerInfo}>
-                    <Text style={styles.bannerTitle}>{banner.post_title}</Text>
-                    <DonationProgressBar collected = {50} pledged={100} total={150}/>
-                    
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-    
-          <View style={styles.navBar}>
-            <TouchableOpacity style={styles.navButton}>
-              <Ionicons name="map-outline" size={24} color="#aaa" />
-              <Text style={[styles.navText]}>Map</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.navButton]}>
-              <Ionicons name="calendar-outline" size={24} color="#aaa" />
-              <Text style={[styles.navText]}>Events</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.navButton]}>
-              <Ionicons name="home-outline" size={24} color="#aaa" />
-              <Text style={[styles.navText]}>Home</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.navButton,styles.selectedNavButton]}>
-              <Ionicons name="heart-outline" size={24} color="blue" />
-              <Text style={[styles.navText,styles.selectedNavText]}>Donate</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.navButton}>
-              <Ionicons name="person-outline" size={24} color="#aaa" />
-              <Text style={[styles.navText]}>Account</Text>
-            </TouchableOpacity>
-          </View>
-        </LinearGradient>
-      );
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      <View style={styles.navBar}>
+        <TouchableOpacity style={styles.navButton}>
+          <Ionicons name="map-outline" size={24} color="#aaa" />
+          <Text style={[styles.navText]}>Map</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.navButton]}>
+          <Ionicons name="calendar-outline" size={24} color="#aaa" />
+          <Text style={[styles.navText]}>Events</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.navButton]}>
+          <Ionicons name="home-outline" size={24} color="#aaa" />
+          <Text style={[styles.navText]}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.navButton, styles.selectedNavButton]}>
+          <Ionicons name="heart-outline" size={24} color="blue" />
+          <Text style={[styles.navText, styles.selectedNavText]}>Donate</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton}>
+          <Ionicons name="person-outline" size={24} color="#aaa" />
+          <Text style={[styles.navText]}>Account</Text>
+        </TouchableOpacity>
+      </View>
+    </LinearGradient>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -171,6 +173,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  catContainer: {
+    // marginTop: 30,
+    marginHorizontal: 20,
+    backgroundColor: "transparent",
+    borderRadius: 20,
+    
+    // paddingHorizontal: 20,
+    // paddingVertical: 10,
+    flexDirection: "row",
+    // alignItems: "center",
+  },
   searchInput: {
     fontSize: 18,
     marginLeft: 10,
@@ -178,9 +191,11 @@ const styles = StyleSheet.create({
     color: "white",
   },
   categoriesContainer: {
+    // position: "absolute",
+    // flex: 1,
     marginTop: 20,
-    marginLeft: 20,
-    height: 50,
+    // marginLeft: 20,
+    height: "80%",
   },
   category: {
     backgroundColor: "rgba(255, 255, 255, 0.0)", // 80% opaque white

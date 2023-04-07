@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { Dimensions, Animated, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Progress from 'react-native-progress';
+import moment from 'moment'
 
 const { width, height } = Dimensions.get('window');
 
@@ -9,6 +10,22 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 
 const GradientScreen = ({ route, navigation }) => {
+
+    const [daysLeft, setDaysLeft] = useState(0);
+    const date = new Date(route.params.deadline)
+    const date_format = moment(route.params.deadline);
+    const formattedDate = date_format.format('DD/MM/YYYY');
+
+
+
+    useEffect(() => {
+
+        const today = new Date();
+        const differenceInTime = date.getTime() - today.getTime();
+        const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+        setDaysLeft(differenceInDays);
+    }, [date]);
+
 
     const translateY = useRef(new Animated.Value(height)).current;
 
@@ -20,7 +37,6 @@ const GradientScreen = ({ route, navigation }) => {
         }).start();
     }, [translateY]);
 
-
     return (
         <View style={styles.container}>
             <View style={styles.imageContainer}>
@@ -31,89 +47,92 @@ const GradientScreen = ({ route, navigation }) => {
 
             <Animated.View style={[styles.textContainer, { transform: [{ translateY }] }, { position: "absolute", width: width, right: 0, left: 0 }]}>
                 <View style={styles.textContainer}>
+                  
 
-                    <ScrollView>
-                        <Text style={styles.text}>Posted by: {route.params.post_title}</Text>
-                        <Text style={styles.title}>{route.params.post_title}</Text>
-                        <Text style={styles.subtitle}>This is a demo screen</Text>
+                        <ScrollView>
+                            <Text style={styles.text}>Posted by: {route.params.post_title}</Text>
+                            <Text style={styles.title}>{route.params.post_title}</Text>
+                            <Text style={styles.subtitle}>This is a demo screen</Text>
 
-                        <View style={[styles.containerBox, { backgroundColor: "transparent" }]}>
-                            <Progress.Bar progress={12 / 15} color="skyblue" height={10} width={null} />
-                        </View>
+                            <View style={[styles.containerBox, { backgroundColor: "transparent" }]}>
+                                <Progress.Bar progress={12 / 15} color="skyblue" height={10} width={null} />
+                            </View>
 
-                        <View style={styles.transparentContainer}>
-                            <View style={[styles.containerBox]}>
-                                <Text style={styles.text}>Name:</Text>
-                                <Text style={styles.bluetext}>Abdullah</Text>
-                            </View>
-                            <View style={styles.containerBox}>
-                                <Text style={styles.text}>Phone:</Text>
-                                <Text style={styles.bluetext}>Abdullah</Text>
-                            </View>
-                            <View style={[styles.containerBox, { flex: 1 }]}>
-                                <Text style={styles.text}>Account Name:</Text>
-                                <Text style={styles.bluetext}>Abdullah</Text>
-                            </View>
-                            <View style={[styles.containerBox, { backgroundColor: "black" }]}>
-                                <Text style={[styles.text, { color: "grey" }]}>Expires:</Text>
-                                <Text style={styles.bluetext}>Abdullah</Text>
-                            </View>
-                        </View>
-
-                        <View style={styles.outercontainer}>
-                            <Text style={[styles.subtitle, { textAlign: 'center' }]}>Bank Details:</Text>
                             <View style={styles.transparentContainer}>
-                                <View style={styles.topLeft}>
-                                    <Text style={styles.text}>Account Name:</Text>
+                                <View style={[styles.containerBox]}>
+                                    <Text style={styles.text}>Name:</Text>
                                     <Text style={styles.bluetext}>Abdullah</Text>
                                 </View>
-                                <View style={styles.topRight}>
-                                    <Text style={styles.text}>Account Number</Text>
-                                    <Text style={styles.bluetext}>Abafadhdgfhgggg</Text>
+                                <View style={[styles.containerBox, { flex: 1 }]}>
+                                    <Text style={styles.text}>Phone:</Text>
+                                    <Text style={styles.bluetext}>03444020321</Text>
                                 </View>
-                                <View style={styles.bottomLeft}>
-                                    <Text style={styles.text}>Bank Name:</Text>
-                                    <Text style={styles.bluetext}>Abdullah</Text>
+                                <View style={[styles.containerBox, { flex: 1, backgroundColor: '#2482C7' }]}>
+
+                                    <Text style={[styles.bluetext, { textAlign: "center", color: "black" }]}> {daysLeft} days left</Text>
                                 </View>
-                                <View style={styles.bottomRight}>
-                                    <Text style={styles.text}>IBAN:</Text>
-                                    <Text style={styles.bluetext}>Abdullah</Text>
+                                <View style={[styles.containerBox, { backgroundColor: "black" }]}>
+                                    <Text style={[styles.text, { color: "grey" }]}>Expires:</Text>
+                                    <Text style={styles.bluetext}> {formattedDate}</Text>
                                 </View>
                             </View>
-                        </View>
 
-                        <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                        <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                        <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                        <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                        <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                        <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
+                            <View style={styles.outercontainer}>
+                                <Text style={[styles.subtitle, { textAlign: 'center' }]}>Bank Details:</Text>
+                                <View style={styles.transparentContainer}>
+                                    <View style={styles.topLeft}>
+                                        <Text style={styles.text}>Account Name:</Text>
+                                        <Text style={styles.bluetext}>Abdullah</Text>
+                                    </View>
+                                    <View style={styles.topRight}>
+                                        <Text style={styles.text}>Account Number</Text>
+                                        <Text style={styles.bluetext}>Abafadhdgfhgggg</Text>
+                                    </View>
+                                    <View style={styles.bottomLeft}>
+                                        <Text style={styles.text}>Bank Name:</Text>
+                                        <Text style={styles.bluetext}>Abdullah</Text>
+                                    </View>
+                                    <View style={styles.bottomRight}>
+                                        <Text style={styles.text}>IBAN:</Text>
+                                        <Text style={styles.bluetext}>Abdullah</Text>
+                                    </View>
+                                </View>
+                            </View>
+
+                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
+                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
+                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
+                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
+                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
+                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
 
 
-                        <Text style={styles.text}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-                            aliquam, augue sit amet aliquet congue, erat est ullamcorper
-                            lectus, vel iaculis tellus felis vitae nibh. Sed eu enim leo.
-                            Aenean convallis odio et tellus aliquam, vitae bibendum orci
-                            accumsan. Ut luctus malesuada libero, vel tempor nulla. Sed
-                            euismod auctor quam vel porttitor. Maecenas nec dui eu lorem
-                            elementum imperdiet. Etiam finibus est a nisl malesuada, at
-                            fringilla dolor tristique. Donec eget orci et massa commodo
-                            viverra non non sapien. Nunc id ligula sit amet risus fringilla
-                            euismod. Sed imperdiet venenatis sapien non luctus. Pellentesque
-                            at vestibulum metus, eu tincidunt quam. Integer semper maximus
-                            tortor, id hendrerit nunc dapibus a. Nullam et nibh ex.
-                        </Text>
-                        <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                            <TouchableOpacity
-                                style={[styles.loginBtn, { backgroundColor: "#2482C7" }]}
+                            <Text style={styles.text}>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+                                aliquam, augue sit amet aliquet congue, erat est ullamcorper
+                                lectus, vel iaculis tellus felis vitae nibh. Sed eu enim leo.
+                                Aenean convallis odio et tellus aliquam, vitae bibendum orci
+                                accumsan. Ut luctus malesuada libero, vel tempor nulla. Sed
+                                euismod auctor quam vel porttitor. Maecenas nec dui eu lorem
+                                elementum imperdiet. Etiam finibus est a nisl malesuada, at
+                                fringilla dolor tristique. Donec eget orci et massa commodo
+                                viverra non non sapien. Nunc id ligula sit amet risus fringilla
+                                euismod. Sed imperdiet venenatis sapien non luctus. Pellentesque
+                                at vestibulum metus, eu tincidunt quam. Integer semper maximus
+                                tortor, id hendrerit nunc dapibus a. Nullam et nibh ex.
+                            </Text>
+                            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                                <TouchableOpacity
+                                    style={[styles.loginBtn, { backgroundColor: "#2482C7" }]}
                                 // onPress={handleLogin}
-                            >
-                                <Text style={styles.text}>Pledge Now</Text>
-                            </TouchableOpacity>
-                           
-                        </View>
-                    </ScrollView>
+                                >
+                                    <Text style={styles.text}>Pledge Now</Text>
+                                </TouchableOpacity>
+
+                            </View>
+                        </ScrollView>
+                       
+                  
 
                 </View>
             </Animated.View>
@@ -131,7 +150,7 @@ const styles = StyleSheet.create({
         marginTop: 40,
         marginBottom: 10,
         width: "40%",
-      },
+    },
 
     gradient: {
         zIndex: 2,
