@@ -22,4 +22,4 @@ mapSchema.pre("save", async function (next) {
   });
 
 
-export const Map_Schema = mongoose.model("Map", mapSchema);
+export const Venue = mongoose.model("Venue", mapSchema);

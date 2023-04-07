@@ -21,6 +21,7 @@ export default function App({ navigation, route }) {
   const [input2, setInput2] = useState("");
   const [input3, setInput3] = useState("");
   const [input4, setInput4] = useState("");
+  const [otp, setOtp] = useState("");
 
   const handleInput1Change = (value) => {
     setInput1(value);
@@ -47,39 +48,53 @@ export default function App({ navigation, route }) {
     setInput4(value);
   };
 
-  const handleSubmit = async (navigate) => {
-    const code = input1 + input2 + input3 + input4;
-    if (code.length < 4) {
-      Alert.alert(
-        "Not Enough Digits",
-        "Whoopsies.\nLooks like you are missing some digits there bud."
-      );
-      return;
-    } else if (code.includes(".")) {
-      Alert.alert("Incorrect Character", "Please enter numbers only");
-      return;
+  const handleSubmit = async () => {
+    try {
+      const code = input1 + input2 + input3 + input4;
+      if (code.length < 4) {
+        Alert.alert(
+          "Not Enough Digits",
+          "Whoopsies.\nLooks like you are missing some digits there bud."
+        );
+        return;
+      } else if (code.includes(".")) {
+        Alert.alert("Incorrect Character", "Please enter numbers only");
+        return;
+      }
+
+      setOtp(Number(code));
+      console.log("OTP", otp);
+
+      const response = await axios.post(`${IP}/verify`, { otp });
+
+      if (!response.data.success) {
+        console.log("Error", response.data.message);
+        Alert.alert("Error!", "Incorrect OTP or it has expired.");
+        return;
+      }
+
+      navigation.navigate("login");
+    } catch (error) {
+      console.log("Error", error);
     }
-
-    // let email = route.params.email;
-    // let fullName = route.params.fullName;
-    // const response = axios
-    //   .post("http://119.160.98.52:8000/otp", { email, code })
-    //   .then((res) => {
-    //     if (res.data.status === "success") {
-    //       navigation.navigate("Home", { fullName: fullName, email: email });
-    //     }
-    //     console.log(res);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-
-
-
-    navigation.navigate("homescreen");
   };
 
-  const timer = 10;
+  const handleResend = async () => {
+    try {
+      const response = await axios.get(`${IP}/resend`);
+
+      if (!response.data.success) {
+        console.log("Error", response.data.message);
+        Alert.alert("Error!", "Incorrect Email or it has expired.");
+        return;
+      }
+    } catch (error) {
+      Alert.alert("User has expired");
+      console.log("Error", error);
+    }
+  };
+
+  const timer = 90;
   const [isEnabled, setIsEnabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(timer);
 
@@ -159,6 +174,7 @@ export default function App({ navigation, route }) {
           style={isEnabled ? styles.enabledbtn : styles.resendbtn}
           disabled={!isEnabled}
           onPress={() => {
+            handleResend();
             setTimeLeft(timer);
             setIsEnabled(false);
           }}

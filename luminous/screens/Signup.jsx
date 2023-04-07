@@ -62,12 +62,11 @@ export default function Signup({ navigation }) {
         username,
       });
       console.log(response.data);
+      navigation.navigate("verify");
     } catch (error) {
       console.log(error);
+      Alert.alert("User already exists!");
     }
-
-    navigation.navigate("verify");
-    console.log(fullname, email, password, confirmPassword, username);
   };
 
   return (

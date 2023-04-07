@@ -255,12 +255,12 @@ const Map = ({navigation}) => {
 
     setMarkers([
         {coordinate:{ latitude: 31.4710037, longitude: 74.4115004} ,
-        title:"LUMS MINIBAR",
-        description:"sab kuch milega"} ,
+        title:"Seminar on Artifical Intelligence",
+        description:"2nd Floor Room 2003"} ,
     
-        {coordinate:{ latitude: 31.4710037, longitude: 74.4116004} ,
-        title:"whatever",
-        description:"sab kuch nahi milega"}
+        {coordinate:{ latitude: 31.4710037, longitude: 74.4115004} ,
+        title:"Seminar on Federated Machine Learning",
+        description:"3rd Floor my room"}
     ]);
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -269,28 +269,12 @@ const Map = ({navigation}) => {
         return;
       }
 
-      let location = await Location.watchPositionAsync(
-        {
-          accuracy: Location.Accuracy.High,
-          timeInterval: 1000,
-        },
-        (newLocation) => {
-          const { latitude, longitude } = newLocation.coords;
-          
-          setRegion({
-            latitude,
-            longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          });
-        }
-      );
 
       setRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitude:31.4707 ,
+        longitude:74.4098,
+        latitudeDelta: 0.0012,
+        longitudeDelta: 0.0099,
       });
     })();
   }, []);

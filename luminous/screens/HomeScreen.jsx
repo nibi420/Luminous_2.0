@@ -50,9 +50,10 @@ export default function HomeScreen({ navigation }) {
         </View>
       </LinearGradient>
       <View style={styles.navBar}>
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate("map")}>
           <Ionicons name="map-outline" size={24} color="#aaa" />
           <Text style={[styles.navText]}>Map</Text>
+          
         </TouchableOpacity>
         <TouchableOpacity style={styles.navButton} onPress={handleEvent}>
           <Ionicons name="calendar-outline" size={24} color="#aaa" />
