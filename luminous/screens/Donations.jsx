@@ -45,11 +45,11 @@ const categories = [
 
 import { IP } from '../constant';
 
-const Event = () => {
+const Event = ({navigation}) => {
   const [data, setData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -61,7 +61,7 @@ const Event = () => {
     };
 
     fetchData();
-  }, []);
+  }, [1]);
 
   if (!data) {
     return <Text>Loading...</Text>;
@@ -97,7 +97,7 @@ const Event = () => {
               <TouchableOpacity
                 style={styles.button}
                 key={banner.donation_id}
-                onPress={() => navigation.navigate(banner.post_title)}
+                onPress={() => navigation.navigate('donationDetails',banner)}
               >
                 <View style={styles.banner}>
                   <Image

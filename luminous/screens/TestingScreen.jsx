@@ -53,6 +53,12 @@ const TestingScreen = ({ navigation }) => {
       >
         <Text style={styles.text}>Donation</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("donationDetails")}
+      >
+        <Text style={styles.text}>GradientScreen</Text>
+      </TouchableOpacity>
     </View>
   );
 };
