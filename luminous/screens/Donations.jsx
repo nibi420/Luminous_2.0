@@ -82,17 +82,17 @@ const Event = ({ navigation }) => {
           value={searchQuery} />
       </View>
       <View style={styles.catContainer}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.categoriesContainer}
-      >
-        {categories.map((category) => (
-          <View key={category.id} style={styles.category}>
-            <Text style={styles.categoryName}>{category.name}</Text>
-          </View>
-        ))}
-      </ScrollView>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.categoriesContainer}
+        >
+          {categories.map((category) => (
+            <View key={category.id} style={styles.category}>
+              <Text style={styles.categoryName}>{category.name}</Text>
+            </View>
+          ))}
+        </ScrollView>
       </View>
       <ScrollView style={styles.bannersContainer}>
         {filteredData.map((banner) => (
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     backgroundColor: "transparent",
     borderRadius: 20,
-    
+
     // paddingHorizontal: 20,
     // paddingVertical: 10,
     flexDirection: "row",
