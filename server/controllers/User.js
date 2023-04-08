@@ -61,7 +61,7 @@ export const verify = async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (user.otp !== otp || user.otpExpire < Date.now()) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "Invalid OTP or OTP expired",
       });
@@ -82,10 +82,43 @@ export const verify = async (req, res) => {
   }
 };
 
+export const sendAgain = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (user.otpExpire < Date.now()) {
+      return res.status(200).json({
+        success: false,
+        message: "OTP expired",
+      });
+    }
+
+    const otp = Math.floor(Math.random() * 10000);
+
+    await sendMail(user.email, otp);
+
+    user.otp = otp;
+    user.otpExpire = Date.now() + 60 * 1000 * 5;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "OTP sent to your email",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 export const login = async (req, res) => {
   try {
     // console.log(req.body);
     const { email, password } = req.body;
+    email = email.trim();
 
     if (!email || !password) {
       return res.status(400).json({
@@ -94,21 +127,23 @@ export const login = async (req, res) => {
       });
     }
 
-    // console.log("yahan aa gaya");
     const user = await User.findOne({ email }).select("+password");
-    // console.log(user);
-
-    // console.log("yahan aa gaya");
 
     if (!user) {
       console.log("yahan error aa gaya");
-      return res.status(200).json({
+      return res.status(400).json({
         success: false,
         message: "Invalid email or password",
       });
     }
 
-    // console.log("yahan aa gaya");
+    if (!user.verified) {
+      return res.status(200).json({
+        success: false,
+        message: "Please verify your account",
+      });
+    }
+
     const isMatch = await user.comparePassword(password);
 
     if (!isMatch) {

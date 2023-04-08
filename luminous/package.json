@@ -16,7 +16,9 @@
     "expo-linear-gradient": "~12.1.2",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
-    "react-native": "0.71.4"
+    "react-native": "0.71.6",
+    "react-native-paper": "^5.5.2",
+    "@expo/vector-icons": "^13.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
