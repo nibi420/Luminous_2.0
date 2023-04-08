@@ -10,6 +10,7 @@ import Events from "./screens/Events";
 import Donation from "./screens/Donations";
 import TestingScreen from "./screens/TestingScreen";
 import GradientScreen from "./screens/DonationsDetails";
+import CreateDonation from "./screens/CreateDonation";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,7 +28,7 @@ const Main = () => {
         <Stack.Screen name="homescreen" component={HomeScreen} />
         <Stack.Screen name="events" component={Events} />
         <Stack.Screen name="donations" component={Donation} />
-        <Stack.Screen name="donationDetails" component={GradientScreen} />
+        <Stack.Screen name="donationDetails" component={CreateDonation} />
         
       </Stack.Navigator>
     </NavigationContainer>
