@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import axios from "axios";
+import Loadings from "../components/Loading.jsx";
 
 export default function App({ navigation, route }) {
   const input2Ref = useRef(null);
@@ -22,7 +23,7 @@ export default function App({ navigation, route }) {
   const [input3, setInput3] = useState("");
   const [input4, setInput4] = useState("");
   const [otp, setOtp] = useState("");
-  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleInput1Change = (value) => {
     setInput1(value);
@@ -66,7 +67,10 @@ export default function App({ navigation, route }) {
       setOtp(Number(code));
       console.log("OTP", otp);
 
-      const response = await axios.post(`${IP}/verify`, { otp });
+      setLoading(true);
+      const response = await axios.post(`${IP}/resetPassword`, { otp });
+      console.log("Response", response.data);
+      setLoading(false);
 
       if (!response.data.success) {
         console.log("Error", response.data.message);
@@ -74,41 +78,27 @@ export default function App({ navigation, route }) {
         return;
       }
 
-      navigation.navigate("login");
+      navigation.navigate("settingpassword");
     } catch (error) {
+      setLoading(false);
       console.log("Error", error);
     }
   };
 
-  const handleResend = async () => {
-    try {
-      const response = await axios.get(`${IP}/resend`);
+  //   const timer = 90;
+  //   const [isEnabled, setIsEnabled] = useState(false);
+  //   const [timeLeft, setTimeLeft] = useState(timer);
 
-      if (!response.data.success) {
-        console.log("Error", response.data.message);
-        Alert.alert("Error!", "Incorrect Email or it has expired.");
-        return;
-      }
-    } catch (error) {
-      Alert.alert("User has expired");
-      console.log("Error", error);
-    }
-  };
-
-  const timer = 90;
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(timer);
-
-  useEffect(() => {
-    if (timeLeft > 0) {
-      const timerId = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-      }, 1000);
-      return () => clearInterval(timerId);
-    } else {
-      setIsEnabled(true);
-    }
-  }, [timeLeft]);
+  //   useEffect(() => {
+  //     if (timeLeft > 0) {
+  //       const timerId = setInterval(() => {
+  //         setTimeLeft((prevTime) => prevTime - 1);
+  //       }, 1000);
+  //       return () => clearInterval(timerId);
+  //     } else {
+  //       setIsEnabled(true);
+  //     }
+  //   }, [timeLeft]);
 
   return (
     <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
@@ -160,31 +150,16 @@ export default function App({ navigation, route }) {
             selectTextOnFocus={true}
             keyboardType="number-pad"
             maxLength={1}
-            // caretHidden={true}
             style={styles.input}
             onChangeText={handleInput4Change}
             value={input4}
           ></TextInput>
         </View>
-
         <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
-          <Text style={styles.btntext}>Submit</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={isEnabled ? styles.enabledbtn : styles.resendbtn}
-          disabled={!isEnabled}
-          onPress={() => {
-            handleResend();
-            setTimeLeft(timer);
-            setIsEnabled(false);
-          }}
-        >
-          <Text style={isEnabled ? styles.enabledtxt : styles.resendtxt}>
-            Resend {!isEnabled ? timeLeft + `s` : ""}
-          </Text>
+          <Text style={styles.btntext}>Next</Text>
         </TouchableOpacity>
       </View>
+      {loading && <Loadings />}
     </LinearGradient>
   );
 }
@@ -213,7 +188,7 @@ const styles = StyleSheet.create({
     marginTop: -10,
     marginLeft: 20,
     marginRight: 20,
-    marginBottom: 50,
+    marginBottom: 20,
   },
 
   inputContainer: {

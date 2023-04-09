@@ -8,7 +8,6 @@ export const register = async (req, res) => {
   try {
     console.log("Register");
     const { fullname, email, username, password, role } = req.body;
-    // const profile_picture = req.files.avatar.tempFilePath;
 
     let user = await User.findOne({ email });
 
@@ -123,51 +122,93 @@ export const sendAgain = async (req, res) => {
 };
 
 export const forgotPassword = async (req, res) => {
-  const { email } = req.body;
+  try {
+    const { email } = req.body;
 
-  const user = await User.findOne({ email });
+    const user = await User.findOne({ email });
 
-  if (!user) {
-    return res.status(400).json({
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const otp = Math.floor(Math.random() * 10000);
+
+    await sendMail(email, otp);
+
+    user.resetPasswordOtp = otp;
+    user.resetPasswordOtpExpire = Date.now() + 60 * 1000 * 5;
+
+    await user.save();
+
+    sendToken(res, user, 200, "OTP sent to your email");
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      message: "User not found",
+      message: error.message,
     });
   }
-
-  const otp = Math.floor(Math.random() * 10000);
-
-  await sendMail(email, otp);
-
-  user.resetPasswordOtp = otp;
-  user.resetPasswordOtpExpire = Date.now() + 60 * 1000 * 5;
-
-  await user.save();
-
-  sendToken(res, user, 200, "OTP sent to your email");
 };
 
 export const resetPassword = async (req, res) => {
-  const { otp, password } = req.body;
+  try {
+    const { otp } = req.body;
 
-  const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id);
 
-  if (
-    user.resetPasswordOtp !== otp ||
-    user.resetPasswordOtpExpire < Date.now()
-  ) {
-    return res.status(400).json({
+    if (
+      user.resetPasswordOtp !== otp ||
+      user.resetPasswordOtpExpire < Date.now()
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP or OTP expired",
+      });
+    }
+
+    user.resetPasswordOtp = null;
+    user.resetPasswordOtpExpire = null;
+
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "OTP verified",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
       success: false,
-      message: "Invalid OTP or OTP expired",
+      message: error.message,
     });
   }
+};
 
-  user.password = password;
-  user.resetPasswordOtp = null;
-  user.resetPasswordOtpExpire = null;
+export const settingPassword = async (req, res) => {
+  try {
+    const { newPassword } = req.body;
 
-  await user.save();
+    if (!newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter password",
+      });
+    }
 
-  logout(req, res);
+    const user = await User.findById(req.user._id);
+
+    user.password = newPassword;
+
+    await user.save();
+
+    logout(req, res);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
 export const login = async (req, res) => {

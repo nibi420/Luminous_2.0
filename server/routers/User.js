@@ -9,6 +9,8 @@ import {
   getProfile,
   uploadPicture,
   forgotPassword,
+  resetPassword,
+  settingPassword,
 } from "../controllers/User.js";
 import { isAuthenticated } from "../middleware/auth.js";
 
@@ -22,7 +24,8 @@ router.route("/changePassword").post(isAuthenticated, changePassword);
 router.route("/getProfile").get(isAuthenticated, getProfile);
 router.route("/upload").put(isAuthenticated, uploadPicture);
 router.route("/forgotPassword").post(forgotPassword);
-router.route("/resetPassword").post(isAuthenticated, changePassword);
+router.route("/resetPassword").post(isAuthenticated, resetPassword);
+router.route("/settingPassword").put(isAuthenticated, settingPassword);
 
 router.route("/logout").get(logout);
 

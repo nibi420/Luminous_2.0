@@ -68,9 +68,9 @@ export default function Profile({ navigation }) {
 
       const formData = new FormData();
       formData.append("avatar", {
-        uri: avatar,
-        type: mime.getType(avatar),
-        name: avatar.split("/").pop(),
+        uri: result.uri,
+        type: mime.getType(result.uri),
+        name: result.uri.split("/").pop(),
       });
 
       console.log("Avatar", avatar);
@@ -150,9 +150,10 @@ export default function Profile({ navigation }) {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <MaterialIcons name="edit" size={24} color="white" />
+          <MaterialIcons name="edit" size={20} color="white" />
           <Text style={{ color: "white", fontSize: 15, marginVertical: 10 }}>
             Change Picture
           </Text>
@@ -185,16 +186,6 @@ export default function Profile({ navigation }) {
             width: "85%",
           }}
         >
-          <TouchableOpacity style={styles.option}>
-            <MaterialIcons
-              name="person"
-              size={24}
-              color="white"
-              style={{ paddingRight: 10 }}
-            />
-            <Text style={styles.optionsText}>Change Username</Text>
-          </TouchableOpacity>
-          <View style={styles.border}></View>
           <TouchableOpacity
             style={styles.option}
             onPress={handleChangePassword}

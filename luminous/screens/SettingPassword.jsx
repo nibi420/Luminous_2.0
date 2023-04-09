@@ -2,51 +2,60 @@ import {
   View,
   Text,
   StyleSheet,
+  BackHandler,
+  TextInput,
   Image,
   TouchableOpacity,
-  TextInput,
+  Alert,
   ToastAndroid,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import { IP } from "../constant.js";
-import Loading from "../components/Loading.jsx";
 
-const ForgotPassword = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+const SettingPassword = ({ navigation }) => {
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleNext = async () => {
+  const handleSubmit = async () => {
+    console.log("Submit");
     try {
-      if (email == "") {
-        ToastAndroid.show("Please Enter Email Address", ToastAndroid.LONG);
+      if (newPassword == "" || confirmPassword == "") {
+        ToastAndroid.show("Please Fill in All Fields", ToastAndroid.LONG);
         return;
       }
 
-      setLoading(true);
-      const response = await axios.post(`${IP}/forgotPassword`, { email });
-      setLoading(false);
-
-      if (!response.data.success) {
-        ToastAndroid.show(response.data.message, ToastAndroid.LONG);
+      if (newPassword != confirmPassword) {
+        ToastAndroid.show(
+          "New Password and Confirm Password do not match ",
+          ToastAndroid.LONG
+        );
         return;
       }
 
-      navigation.navigate("resetpassword", { email });
+      const response = await axios.put(`${IP}/settingPassword`, {
+        newPassword,
+      });
+
+      navigation.navigate("login");
+
+      await axios.get(`${IP}/logout`);
+      ToastAndroid.show("Password Changed Successfully", ToastAndroid.LONG);
     } catch (error) {
-      setLoading(false);
-      ToastAndroid.show("User does not exist :(", ToastAndroid.LONG);
-      console.log(error);
+      ToastAndroid.show("Uh-oh! Something went wrong :(", ToastAndroid.LONG);
+      console.log("Error", error);
     }
   };
 
   return (
     <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
       <View style={styles.header}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
+            // borderColor: "white",
+            // borderWidth: 1,
             justifyContent: "center",
             alignItems: "center",
           }}
@@ -58,7 +67,7 @@ const ForgotPassword = ({ navigation }) => {
             color="white"
             // style={{ borderColor: "white", borderWidth: 1, padding: 15 }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Text
           style={{
             color: "white",
@@ -71,28 +80,41 @@ const ForgotPassword = ({ navigation }) => {
             justifyContent: "center",
           }}
         >
-          Forgot Password
+          Reset Password
         </Text>
       </View>
       <Image style={styles.logo} source={require("../assets/main_logo.png")} />
       <View style={styles.inputContainer}>
         <View>
-          <Text style={styles.inputText}>Enter Email Address</Text>
+          <Text style={styles.inputText}>Enter New Password</Text>
           <TextInput
-            placeholder="Email Address"
+            secureTextEntry={true}
+            placeholder="New Password"
             placeholderTextColor="rgba(255,255,255,0.4)"
             style={styles.input}
             onChangeText={(text) => {
-              setEmail(text);
+              setNewPassword(text);
             }}
-            value={email}
+            value={newPassword}
+          ></TextInput>
+        </View>
+        <View>
+          <Text style={styles.inputText}>Confirm New Password</Text>
+          <TextInput
+            secureTextEntry={true}
+            placeholder="Confirm Password"
+            placeholderTextColor="rgba(255,255,255,0.4)"
+            style={styles.input}
+            onChangeText={(text) => {
+              setConfirmPassword(text);
+            }}
+            value={confirmPassword}
           ></TextInput>
         </View>
       </View>
-      <TouchableOpacity style={styles.btn} onPress={handleNext}>
-        <Text style={styles.btntext}>Next</Text>
+      <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
+        <Text style={styles.btntext}>Submit</Text>
       </TouchableOpacity>
-      {loading && <Loading />}
     </LinearGradient>
   );
 };
@@ -126,10 +148,9 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: "90%",
     padding: 20,
-    // borderColor: "rgba(0,0,255,0.5)",
-    // borderWidth: 2,
-    // borderRadius: 10,
-    // backgroundColor: "rgba(0,0,255,0.1)",
+    borderColor: "rgba(0,0,255,0.5)",
+    borderWidth: 2,
+    borderRadius: 10,
     // justifyContent: "center",
   },
 
@@ -176,4 +197,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-export default ForgotPassword;
+
+export default SettingPassword;
