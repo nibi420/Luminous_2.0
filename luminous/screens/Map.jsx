@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Button, TouchableOpacity } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import { StyleSheet, View, Text, Button, TouchableOpacity,Image } from "react-native";
+import  { Marker } from "react-native-maps";
+import MapView from "react-native-map-clustering";
 import { PROVIDER_GOOGLE }  from "react-native-maps";
 import  OverlayComponent from "react-native-maps";
 import * as Location from "expo-location";
+import axios from "axios";
+import { IP } from "../constant.js";
 
 
 const MapNightStyle = [
@@ -244,43 +247,90 @@ const MapNightStyle = [
 
 
 const Map = ({navigation}) => {
-  const [region, setRegion] = useState(null);
+
+  const INITIAL_REGION = {
+    latitude:31.4707 ,
+    longitude:74.4098,
+    latitudeDelta: 0.0012,
+    longitudeDelta: 0.0099,
+  };
 
 
-  const [markers, setMarkers] = useState([]);
+
+// getEvents().then(x =>{ console.log(x.data[0].details);} )
+  function getRandomArbitrary(min, max) {
+    let ran = Math.random() * (max - min) + min;
+    if ((ran>0 && ran<0.00003) || (ran<0 && ran>-0.00003)  ){
+      return getRandomArbitrary(min, max);
+    }
+    else{
+      return ran;
+    }
+  }
+
+
+  let offset = getRandomArbitrary(-0.00007,0.00007);
+
+
+  // const [region, setRegion] = useState(null);
+  const [x, setx] = useState(false);
+
+
+  const [markers, setMarkers] = useState(null);
+  const [data,setData] = useState(null)
 
   
 
   useEffect(() => {
+    const getEvents = async ()=> {
+      try{
+        const response = await axios.get(`${IP}/nextThreedays` );
+        // const response = await axios.get(`${IP}/todaysEvents` );
+        // return response.data;
+        setData(response.data.data)
+       
 
-    setMarkers([
-        {coordinate:{ latitude: 31.4710037, longitude: 74.4115004} ,
-        title:"Seminar on Artifical Intelligence",
-        description:"2nd Floor Room 2003"} ,
-    
-        {coordinate:{ latitude: 31.4710037, longitude: 74.4115004} ,
-        title:"Seminar on Federated Machine Learning",
-        description:"3rd Floor my room"}
-    ]);
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        // Handle permission not granted error
-        return;
+        
+      console.log(markers);
+      }catch(error){
+        return error;
       }
+  }
 
+  // const displayMap = async () => {
+  //   const { status } = await Location.requestForegroundPermissionsAsync();
+  //   if (status !== "granted") {
+  //     // Handle permission not granted error
+  //     return;
+  //   }
+  //   setRegion({
+  //     latitude:31.4707 ,
+  //     longitude:74.4098,
+  //     latitudeDelta: 0.0012,
+  //     longitudeDelta: 0.0099,
+  //   });
+  // };
+  getEvents().then(()=>{
+    console.log("events done");
+    return ;
 
-      setRegion({
-        latitude:31.4707 ,
-        longitude:74.4098,
-        latitudeDelta: 0.0012,
-        longitudeDelta: 0.0099,
-      });
-    })();
-  }, []);
+  }).then(()=>{
+    console.log("map done")
+    setx(true)
+    return true
+  });
 
+     
+  }, [x]);
 
-
+  if (!data){
+    // console.log("Error Loading");
+  return <Text>Loading....</Text>
+  }
+  
+  const markerImage = require('../assets/markericon.png');
+  const markerImageSize = { width: 39, height: 44 };
+  
   return (
     <View style={styles.container}>
         
@@ -288,13 +338,20 @@ const Map = ({navigation}) => {
       provider={PROVIDER_GOOGLE}
       style={styles.map}
       customMapStyle= {MapNightStyle} 
-      region={region} 
+      region={INITIAL_REGION} 
       showsUserLocation= {true}
+      clusterColor={"#00BDFE"}
+      radius = {15}
       >
 
-{markers.map((item) => {
-                return (<Marker coordinate={item.coordinate} title={item.title} description={item.description}/>)
-        })}
+        {data.map((item,index) => {
+                return (<Marker coordinate={{latitude: item.venue.coordinates[0] + getRandomArbitrary(-0.00006,0.00006)  , longitude: item.venue.coordinates[1]+ getRandomArbitrary(-0.00006,0.00006) }} title={item.title} description={item.room}
+                        // image ={ require("../assets/markericon.png")  }
+                         >
+                         <Image source={markerImage} style={markerImageSize} />
+                         </Marker>
+                         )
+               })}
         
         {/* <Marker  
             coordinate={{ latitude: 31.4710037, longitude: 74.4115004 }}  
