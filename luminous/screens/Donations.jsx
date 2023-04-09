@@ -82,7 +82,7 @@ const Donation = ({ navigation }) => {
     
     return <Text>Loading...</Text>;
   }
- 
+ const isVisible = true;
   
   const filteredData = request.data.filter((banner) =>{
  
@@ -116,6 +116,26 @@ const Donation = ({ navigation }) => {
             setSearchQuery(query)}}
           value={searchQuery} />
       </View>
+
+
+      {isVisible && (<View style={{ flexDirection: "row", justifyContent: "center" }}>
+        <TouchableOpacity
+          style={[styles.addBtn, { backgroundColor: "#2482C7" }]}
+          // onPress={handleLogin}
+        >
+            <Ionicons name="add" size={24} color="white" style={{ marginRight: 8 }} />
+          <Text style={{color:"white"}}>Add donations</Text>
+        </TouchableOpacity>
+      </View>)}
+
+
+
+
+
+      {/* <TouchableOpacity  style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <Ionicons name="add" size={24} color="white" style={{ marginRight: 8 }} />
+      <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Add Donations</Text> */}
+    {/* </TouchableOpacity> */}
       <View style={styles.catContainer}>
         <ScrollView
           horizontal
@@ -188,6 +208,16 @@ const Donation = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  addBtn: {
+    flexDirection:"row",
+    borderRadius: 10,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+    marginBottom: 5,
+    width: "90%",
+  },
   container: {
     flex: 1,
   },
