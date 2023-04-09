@@ -30,7 +30,12 @@ const eventSchema = new mongoose.Schema({
     room: {
         type: String,
         default: ''
-    }
+    },
+    category: {
+        type: String,
+        required: true,
+    },
+
 });
 
 export const Event = mongoose.model('Event', eventSchema); 

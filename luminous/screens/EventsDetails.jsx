@@ -82,7 +82,7 @@ const EventDetailsFunc = ({ route, navigation }) => {
                     <ScrollView>
                         <View style={[styles.textContainer2]}>
                             <Text style={styles.text}>concert</Text>
-                            <Text style={styles.title}>{route.params.post_title}</Text>
+                            <Text style={styles.title}>{route.params.title}</Text>
 
                             <View style={[styles.outercontainer, { flexDirection: "row", width: "100%" }]}>
                                 <View
@@ -94,11 +94,11 @@ const EventDetailsFunc = ({ route, navigation }) => {
 
                                     <View style={[styles.containerBox, { width: "45%" }]}>
                                         <Text style={styles.text}>Hosted By:</Text>
-                                        <Text style={styles.bluetext}>{route.params.postedBy}</Text>
+                                        <Text style={styles.bluetext}>{route.params.postedBy.username}</Text>
                                     </View>
                                     <View style={[styles.containerBox, { width: "45%" }]}>
                                         <Text style={styles.text}>Venue</Text>
-                                        <Text style={styles.bluetext}>{route.params.venue}</Text>
+                                        <Text style={styles.bluetext}>{route.params.venue.name}</Text>
                                     </View>
                                     <View
                                         style={[
@@ -148,11 +148,6 @@ const EventDetailsFunc = ({ route, navigation }) => {
                             {/* <View paddingTop={30}> */}
 
                             <Text style={[styles.text, { paddingTop: 30 }]}>
-                                fringilla dolor tristique. Donec eget orci et massa commodo
-                                viverra non non sapien. Nunc id ligula sit amet risus fringilla
-                                euismod. Sed imperdiet venenatis sapien non luctus. Pellentesque
-                                at vestibulum metus, eu tincidunt quam. Integer semper maximus
-                                tortor, id hendrerit nunc dapibus a. Nullam et nibh ex.
                                 {route.params.details}
                             </Text>
 

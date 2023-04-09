@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
-import { Image,ScrollView, Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, ScrollView, Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import { IP } from "../constant.js";
+import axios from 'axios';
+import Loading from '../components/Loading.jsx';
 
 
 
-const AddEventScreen = ({navigation}) => {
+const AddEventScreen = ({ navigation }) => {
     const [title, setTitle] = useState('');
     const [venueName, setVenue] = useState('');
+    const [categoryName, setCategory] = useState('');
     const [date, setDate] = useState(new Date());
     const [time, setTime] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -18,6 +21,8 @@ const AddEventScreen = ({navigation}) => {
     const [info, setInfo] = useState('');
     const [roomNumber, setRoomNumber] = useState('');
     const [showVenueModal, setShowVenueModal] = useState(false);
+    const [showCategoryModal, setShowCategoryModal] = useState(false);
+
 
     const [image, setImage] = useState(null);
 
@@ -38,7 +43,7 @@ const AddEventScreen = ({navigation}) => {
         setShowDatePicker(false);
         setDate(selectedDate);
     };
-    
+
 
     const handleTimeChange = (event, selectedTime) => {
         setShowTimePicker(false);
@@ -53,6 +58,7 @@ const AddEventScreen = ({navigation}) => {
                 time: new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes()),
                 details: info,
                 room: roomNumber || null,
+                categoryName,
             };
             const response = await axios.post(`${IP}/addEvent`, eventData);
             console.log(response.data);
@@ -63,28 +69,58 @@ const AddEventScreen = ({navigation}) => {
         }
     };
 
-    
-
-
-
     const toggleVenueModal = () => {
         setShowVenueModal(!showVenueModal);
     };
+    const toggleCategoryModal = () => {
+        setShowCategoryModal(!showCategoryModal);
+    };
+
+    const [request, setRequest] = useState({ categories: null, venues: null })
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+
+                const response = await axios.get(`${IP}/getVenues`);
+                // setData(response.data);
+                const catresponse = await axios.post(`${IP}/getDonationCategories`, { type: "events" });//Events Ki catergories arahi hain
+
+
+                setRequest({ categories: catresponse.data, venues: response.data });
+                console.log(request.venues);
+
+
+            } catch (error) {
+                console.log("Error Caught in useeffect AddEvents")
+                console.error(error);
+
+            }
+        };
+        fetchData()
+    }, [1]);
+
+    if (!request.venues) {
+
+
+        return <Loading />
+
+    }
+
 
 
     return (
-        
+
         <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
             <View style={styles.container}>
                 <View>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name="arrow-back-sharp" size={30} color="white" />
-                </TouchableOpacity>
-                               
-                <Text style={styles.title}>Add Event</Text>
-                <Text style={styles.subText}>Please enter details</Text>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Ionicons name="arrow-back-sharp" size={30} color="white" />
+                    </TouchableOpacity>
+                    <Text style={styles.title}>Add Event</Text>
+                    <Text style={styles.subText}>Please enter details</Text>
                 </View>
-                
+
                 <ScrollView>
 
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 15 }}>
@@ -99,119 +135,157 @@ const AddEventScreen = ({navigation}) => {
                             </TouchableOpacity>
                         )}
                     </View>
-                    
-                <Text style={styles.label}>Title</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setTitle}
-                    value={title}
-                    placeholder="Enter event title"
-                    placeholderTextColor= 'grey'
-                />
 
-                <Text style={styles.label}>Venue</Text>
+                    <Text style={styles.label}>Title</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setTitle}
+                        value={title}
+                        placeholder="Enter event title"
+                        placeholderTextColor='grey'
+                    />
 
-                <TouchableOpacity style={styles.venue} onPress={toggleVenueModal}>
-                    <Text style={styles.venueText}>{venueName || 'Select a venue'}</Text>
-                    <Ionicons name="chevron-down-outline" size={20} color="white" />
-                </TouchableOpacity>
+                    <Text style={styles.label}>Venue</Text>
 
-                {showVenueModal && (
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={showVenueModal}
-                    >
-                        <View style={styles.modalContainer}>
-                            <TouchableOpacity onPress={toggleVenueModal} style={styles.modalBackdrop} />
-                            <View style={styles.modalContent}>
-                                <FlatList
-                                    data={['Venue 1', 'Venue 2', 'Venue 3']} // replace with your list of venues
-                                    renderItem={({ item }) => (
-                                        <TouchableOpacity
-                                            style={styles.modalItem}
-                                            onPress={() => {
-                                                setVenue(item);
-                                                toggleVenueModal();
-                                            }}
-                                        >
-                                            <Text>{item}</Text>
-                                        </TouchableOpacity>
-                                    )}
-                                    keyExtractor={(item) => item}
-                                />
+                    <TouchableOpacity style={styles.venue} onPress={toggleVenueModal}>
+                        <Text style={styles.venueText}>{venueName || 'Select a venue'}</Text>
+                        <Ionicons name="chevron-down-outline" size={20} color="white" />
+                    </TouchableOpacity>
+
+                    {showVenueModal && (
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={showVenueModal}
+                        >
+                            <View style={styles.modalContainer}>
+                                <TouchableOpacity onPress={toggleVenueModal} style={styles.modalBackdrop} />
+                                <View style={styles.modalContent}>
+                                    <FlatList
+                                        data={request.venues.map((item) => { return item.name })} // replace with your list of venues
+                                        renderItem={({ item }) => (
+                                            <TouchableOpacity
+                                                style={styles.modalItem}
+                                                onPress={() => {
+                                                    setVenue(item);
+                                                    toggleVenueModal();
+                                                }}
+                                            >
+                                                <Text>{item}</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                        keyExtractor={(item) => item}
+                                    />
+                                </View>
                             </View>
+                        </Modal>
+                    )}
+
+
+                    <Text style={styles.label}>Category</Text>
+
+                    <TouchableOpacity style={styles.venue} onPress={toggleCategoryModal}>
+                        <Text style={styles.venueText}>{categoryName || 'Select a Category'}</Text>
+                        <Ionicons name="chevron-down-outline" size={20} color="white" />
+                    </TouchableOpacity>
+
+                    {showCategoryModal && (
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={showCategoryModal}
+                        >
+                            <View style={styles.modalContainer}>
+                                <TouchableOpacity onPress={toggleCategoryModal} style={styles.modalBackdrop} />
+                                <View style={styles.modalContent}>
+                                    <FlatList
+                                        data={request.categories.map((item) => { return item.name })} // replace with your list of venues
+                                        renderItem={({ item }) => (
+                                            <TouchableOpacity
+                                                style={styles.modalItem}
+                                                onPress={() => {
+                                                    setCategory(item);
+                                                    toggleCategoryModal();
+                                                }}
+                                            >
+                                                <Text>{item}</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                        keyExtractor={(item) => item}
+                                    />
+                                </View>
+                            </View>
+                        </Modal>
+                    )}
+
+                    <View style={styles.dateTimeContainer}>
+                        <View style={styles.dateTimePickerContainer}>
+                            <Ionicons name="calendar" size={20} color="#666666" style={styles.dateTimePickerIcon} />
+                            <TouchableOpacity style={styles.dateTimePicker} onPress={() => setShowDatePicker(true)}>
+                                <Text style={styles.dateTimePickerText}>{date.toDateString()}</Text>
+                            </TouchableOpacity>
                         </View>
-                    </Modal>
-                )}
 
-                <View style={styles.dateTimeContainer}>
-                    <View style={styles.dateTimePickerContainer}>
-                        <Ionicons name="calendar" size={20} color="#666666" style={styles.dateTimePickerIcon} />
-                        <TouchableOpacity style={styles.dateTimePicker} onPress={() => setShowDatePicker(true)}>
-                            <Text style={styles.dateTimePickerText}>{date.toDateString()}</Text>
-                        </TouchableOpacity>
+                        {showDatePicker && (
+                            <DateTimePicker
+                                value={date}
+                                mode="date"
+                                display="default"
+                                onChange={handleDateChange}
+                            />
+                        )}
+
+                        <View style={styles.dateTimePickerContainer}>
+                            <Ionicons name="time" size={20} color="#666666" style={styles.dateTimePickerIcon} />
+                            <TouchableOpacity style={styles.dateTimePicker} onPress={() => setShowTimePicker(true)}>
+                                <Text style={styles.dateTimePickerText}>{time.toLocaleTimeString()}</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {showTimePicker && (
+                            <DateTimePicker
+                                value={time}
+                                mode="time"
+                                display="default"
+                                onChange={handleTimeChange}
+                            />
+                        )}
+
                     </View>
 
-                    {showDatePicker && (
-                        <DateTimePicker
-                            value={date}
-                            mode="date"
-                            display="default"
-                            onChange={handleDateChange}
-                        />
-                    )}
+                    <Text style={styles.label}>Details:</Text>
+                    <TextInput
+                        style={styles.info}
+                        onChangeText={setInfo}
+                        value={info}
+                        multiline
+                        maxLength={500}
+                        placeholder="Enter event info"
+                        placeholderTextColor='rgba(255,255,255,0.4)'
+                    />
 
-                    <View style={styles.dateTimePickerContainer}>
-                        <Ionicons name="time" size={20} color="#666666" style={styles.dateTimePickerIcon} />
-                        <TouchableOpacity style={styles.dateTimePicker} onPress={() => setShowTimePicker(true)}>
-                            <Text style={styles.dateTimePickerText}>{time.toLocaleTimeString()}</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <Text style={styles.label}>Room Number</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setRoomNumber}
+                        value={roomNumber}
+                        placeholder="Enter room number"
+                        placeholderTextColor='rgba(255,255,255,0.4)'
+                        maxLength={40}
+                    />
 
-                    {showTimePicker && (
-                        <DateTimePicker
-                            value={time}
-                            mode="time"
-                            display="default"
-                            onChange={handleTimeChange}
-                        />
-                    )}
+                    <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                        <Text style={styles.buttonText}>Add Event</Text>
+                    </TouchableOpacity>
 
-                </View>
-
-                <Text style={styles.label}>Details:</Text>
-                <TextInput
-                    style={styles.info}
-                    onChangeText={setInfo}
-                    value={info}
-                    multiline
-                    maxLength={150}
-                    placeholder="Enter event info"
-                    placeholderTextColor='rgba(255,255,255,0.4)'
-                />
-
-                <Text style={styles.label}>Room Number</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setRoomNumber}
-                    value={roomNumber}
-                    placeholder="Enter room number"
-                    placeholderTextColor='rgba(255,255,255,0.4)'
-                />
-
-                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Add Event</Text>
-                </TouchableOpacity>
-                    
                 </ScrollView>
-               
+
             </View>
 
-         
-           
+
+
         </LinearGradient>
-        
+
     );
 };
 
@@ -226,7 +300,7 @@ const styles = {
         textAlign: 'center',
         marginTop: 20,
         color: 'white',
-        
+
     },
     subText: {
         fontSize: 16,

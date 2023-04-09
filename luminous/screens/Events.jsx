@@ -63,7 +63,7 @@ export default function Event({ navigation }) {
     const fetchData = async () => {
       try {
 
-        const response = await axios.get(`${IP}/getDonationsData`);
+        const response = await axios.get(`${IP}/getAllEvents`);
         // setData(response.data);
         const catresponse = await axios.post(`${IP}/getDonationCategories`,{type:"events"});
         catresponse.data.unshift({name:"All"})

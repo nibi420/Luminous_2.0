@@ -3,10 +3,12 @@ import {Venue} from '../models/venues.js';
 
 export const addEvent = async (req, res) => {
     try {
-        const { title, venueName, time, details, room } = req.body;
-
+        const { title, venueName, time, details, room, categoryName } = req.body;
+        console.log(req.body);
         // Find the venue with the given name in the venueSchema
         const venue = await Venue.findOne({ name: venueName });
+        const category = categoryName;
+        // console.log(req);
 
         const newEvent = new Event({
             title,
@@ -14,7 +16,8 @@ export const addEvent = async (req, res) => {
             venue: venue._id, // Set the venue ID instead of the name
             time,
             details,
-            room
+            room,
+            category,
         });
 
         if (req.file) {
