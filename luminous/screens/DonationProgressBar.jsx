@@ -8,24 +8,25 @@ function DonationProgressBar (props) {
     return (
         <View >
         <View style={styles.bannerInfo}>
-        <Text style={styles.bannerTitle}>Donated</Text>
-        <Progress.Bar progress={collected/total} color="gold" height={20}/>
-        
-        <Text>Donated</Text>
-        <Text style={styles.bannerTitle}>Donated and pledged</Text>
-        <Progress.Bar progress={(collected+pledged)/total} color="blue"  height={15}/>
-       
+        <Text style={styles.bannerTitle}>
+        <Text style={[styles.bannerTitle,{color:"skyblue"}]}>Rs {collected} </Text>
+          raised from {' '}
+          <Text style={[styles.bannerTitle,{color:"skyblue"}]}>
+         Rs {total}
+          </Text>
+          </Text>
+        <Progress.Bar progress={collected/total} color="skyblue" height={5}/>
         </View>
         </View>
     )
 }
 const styles = StyleSheet.create({bannersContainer: {
     marginTop: 20,
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
   },bannerInfo: {
     marginLeft: 0,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    padding: 10,
+    // padding: 10,
     borderTopLeftRadius: 0,
     borderBottomLeftRadius: 0,
     borderTopRightRadius: 10,

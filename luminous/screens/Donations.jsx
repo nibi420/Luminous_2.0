@@ -20,13 +20,13 @@ import React, { useState, useEffect } from 'react';
 
 const { width } = Dimensions.get("window");
 
-const categories = [
-  { id: 1, name: "Category 1" },
-  { id: 2, name: "Category 2" },
-  { id: 3, name: "Category 3" },
-  { id: 4, name: "Category 4" },
-  { id: 5, name: "Category 5" },
-];
+// const categories = [
+//   { id: 1, name: "Category 1" },
+//   { id: 2, name: "Category 2" },
+//   { id: 3, name: "Category 3" },
+//   { id: 4, name: "Category 4" },
+//   { id: 5, name: "Category 5" },
+// ];
 
 // const banners = [
 //   { id: 1, imageUrl: "https://thumbs.dreamstime.com/z/donate-money-vector-illustration-charity-donation-concept-hand-putting-banknote-box-eps-143816912.jpg", title: "Donation 1" },
@@ -45,30 +45,63 @@ const categories = [
 
 import { IP } from '../constant';
 
-const Event = ({ navigation }) => {
+const Donation = ({ navigation }) => {
   const [data, setData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [catQuery, setCatQuery] = useState("");
+  const [request,setRequest] = useState({categories:null,data:null})
+  const [myswitch, setSwitch] = useState(1);
+  // const [x, setx] = useState(false);
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+
         const response = await axios.get(`${IP}/getDonationsData`);
-        setData(response.data);
+        // setData(response.data);
+        const catresponse = await axios.post(`${IP}/getDonationCategories`,{type:"donations"});
+        catresponse.data.unshift({name:"All"})
+        // console.log(catresponse.data)
+        // Array.unshift(element);
+
+        setRequest({categories: catresponse.data,data: response.data});
+        
+
       } catch (error) {
+        console.log("dsjflsdhfajsdhfaskd")
         console.error(error);
+
       }
     };
 
-    fetchData();
+    fetchData()
   }, [1]);
 
-  if (!data) {
+  if (!request.data  ) {
+    
     return <Text>Loading...</Text>;
   }
-  const filteredData = data.filter((banner) =>
-    banner.post_title.toLowerCase().includes(searchQuery.toLowerCase())
+ 
+  
+  const filteredData = request.data.filter((banner) =>{
+ 
+    if(myswitch === 1){
+      return banner.post_title.toLowerCase().includes(searchQuery.toLowerCase());
+
+    }
+    if(myswitch === 2){
+      if(catQuery == "All"){
+        return banner.post_title.toLowerCase().includes("");
+
+      }
+      return banner.category.toLowerCase().includes(catQuery.toLowerCase())
+
+    }
+  }
+    
   );
+
 
   return (
     <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
@@ -78,7 +111,9 @@ const Event = ({ navigation }) => {
       </View>
       <View style={styles.searchContainer}>
         <TextInput style={styles.searchInput} placeholder="Search"
-          onChangeText={(query) => setSearchQuery(query)}
+          onChangeText={(query) => {
+            setSwitch(1);
+            setSearchQuery(query)}}
           value={searchQuery} />
       </View>
       <View style={styles.catContainer}>
@@ -87,10 +122,18 @@ const Event = ({ navigation }) => {
           showsHorizontalScrollIndicator={false}
           style={styles.categoriesContainer}
         >
-          {categories.map((category) => (
+          {request.categories.map((category) => (
+             <TouchableOpacity
+             
+             onPress={() => {
+              setSwitch(2);
+              setCatQuery(category.name)}}
+           >
             <View key={category.id} style={styles.category}>
               <Text style={styles.categoryName}>{category.name}</Text>
+             
             </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
       </View>
@@ -99,7 +142,7 @@ const Event = ({ navigation }) => {
           <TouchableOpacity
             style={styles.button}
             key={banner.donation_id}
-            onPress={() => navigation.navigate('donationDetails', banner)}
+            onPress={() => navigation.navigate('donationsDetails', banner)}
           >
             <View style={styles.banner}>
               <Image
@@ -108,6 +151,8 @@ const Event = ({ navigation }) => {
               />
               <View style={styles.bannerInfo}>
                 <Text style={styles.bannerTitle}>{banner.post_title}</Text>
+                <Text style={{color:"grey"}}>Posted by: Welfare Committee</Text>
+
                 <DonationProgressBar collected={50} pledged={100} total={150} />
 
               </View>
@@ -288,4 +333,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Event;
+export default Donation;

@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { Dimensions, Animated, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Progress from 'react-native-progress';
+import { MaterialIcons } from "@expo/vector-icons";
 import moment from 'moment'
 
 const { width, height } = Dimensions.get('window');
@@ -16,7 +17,7 @@ const GradientScreen = ({ route, navigation }) => {
     const date_format = moment(route.params.deadline);
     const formattedDate = date_format.format('DD/MM/YYYY');
 
-    const result = (route.params.collected/ route.params.required) * 100;
+    const result = (route.params.collected / route.params.required) * 100;
     const percentage = `${result.toFixed(2)}%`;
 
 
@@ -43,10 +44,19 @@ const GradientScreen = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.imageContainer}>
 
-                <Image source={{ uri: `https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?cs=srgb&dl=pexels-pixabay-267885.jpg&fm=jpg` }} style={styles.image} />
+            <TouchableOpacity style={[styles.closeButton,{zIndex:2}]} onPress={() => {
+              navigation.goBack()
+          }}>
+            <MaterialIcons name="close" size={24} color="white" />
+          </TouchableOpacity>
+            
+
+            <View style={styles.imageContainer}>
+            {/* { uri: `https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?cs=srgb&dl=pexels-pixabay-267885.jpg&fm=jpg` } */}
+                <Image source={route.params.image} style={styles.image} />
                 <LinearGradient colors={['rgba(0,0,0,0)', '#0E2C4F', 'rgba(0,0,0,255)']} style={styles.gradient} />
+
             </View>
 
             <Animated.View style={[styles.textContainer, { transform: [{ translateY }] }, { position: "absolute", width: width, left: 0, }]}>
@@ -54,18 +64,18 @@ const GradientScreen = ({ route, navigation }) => {
 
                     <ScrollView>
                         <View style={[styles.textContainer2]}>
-                            <Text style={styles.text}>Posted by: {route.params.post_title}</Text>
+                            <Text style={styles.text}>Posted by: Welfare Committee</Text>
                             <Text style={styles.title}>{route.params.post_title}</Text>
-                            
+
                             <View style={styles.container12}>
                                 <View style={styles.leftContainer}>
-                                  
+
                                     <View style={styles.bottomLeftContainer}>
-                                    <Text style={[styles.subtitle,{color:"grey",fontWeight: 'bold'}]}>This is a demo screen</Text>
+                                        <Text style={[styles.subtitle, { color: "grey", fontWeight: 'bold' }]}>This is a demo screen</Text>
                                     </View>
                                 </View>
                                 <View style={styles.rightContainer}>
-                                <Text style={[styles.subtitle,{bottom:0,right:0,position:"absolute",color:"skyblue",fontWeight: 'bold'}]}>{percentage}</Text>
+                                    <Text style={[styles.subtitle, { bottom: 0, right: 0, position: "absolute", color: "skyblue", fontWeight: 'bold' }]}>{percentage}</Text>
                                 </View>
                             </View>
 
@@ -114,22 +124,18 @@ const GradientScreen = ({ route, navigation }) => {
                                 </View>
                             </View>
 
-                            {/* <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
 
+                            <Text style={[styles.text,{paddingTop:30}]}>
 
-                            <Text style={styles.text}>
-                               
+                        
                                 fringilla dolor tristique. Donec eget orci et massa commodo
                                 viverra non non sapien. Nunc id ligula sit amet risus fringilla
                                 euismod. Sed imperdiet venenatis sapien non luctus. Pellentesque
                                 at vestibulum metus, eu tincidunt quam. Integer semper maximus
                                 tortor, id hendrerit nunc dapibus a. Nullam et nibh ex.
-                            </Text> */}
+
+                                {route.params.details}
+                            </Text>
 
                             <View style={{ flexDirection: "row", justifyContent: "center" }}>
                                 <TouchableOpacity
@@ -153,26 +159,35 @@ const GradientScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    closeButton: {
+        position: 'absolute',
+        top: 20,
+        left: 20,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        borderRadius: 20,
+        padding: 10,
+    
+      },
     container12: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'stretch',
-      },
-      leftContainer: {
+    },
+    leftContainer: {
         flex: 2,
         flexDirection: 'column',
-      },
-      rightContainer: {
+    },
+    rightContainer: {
         flex: 1,
-      },
-      topLeftContainer: {
-        flex: 1,
-        backgroundColor: 'transparent',
-      },
-      bottomLeftContainer: {
+    },
+    topLeftContainer: {
         flex: 1,
         backgroundColor: 'transparent',
-      },
+    },
+    bottomLeftContainer: {
+        flex: 1,
+        backgroundColor: 'transparent',
+    },
     loginBtn: {
         borderRadius: 25,
         height: 50,
@@ -261,9 +276,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         height: height,
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        justifyContent: 'flex-start',
+        flexDirection: "column",
+        alignItems: "stretch",
+        justifyContent: "flex-start",
         backgroundColor: "black",
     },
 

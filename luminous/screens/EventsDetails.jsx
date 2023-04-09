@@ -1,34 +1,39 @@
-import { useRef, useEffect } from 'react';
-import { Dimensions, Animated, TouchableOpacity } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import * as Progress from 'react-native-progress';
-import moment from 'moment'
+import { useRef, useEffect } from "react";
+import { Dimensions, Animated, TouchableOpacity } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import * as Progress from "react-native-progress";
+import moment from "moment";
+import { MaterialIcons } from "@expo/vector-icons";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
+const months = [
+    'January', 'February', 'March', 'April', 'May', 'June', 'July',
+    'August', 'September', 'October', 'November', 'December'
+];
 
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const EventDetailsFunc = ({ route, navigation }) => {
 
-    const [daysLeft, setDaysLeft] = useState(0);
-    const date = new Date(route.params.deadline)
-    const date_format = moment(route.params.deadline);
-    const formattedDate = date_format.format('DD/MM/YYYY');
 
-    const result = (route.params.collected/ route.params.required) * 100;
+    const [daysLeft, setDaysLeft] = useState(0);
+    const date = new Date(route.params.deadline);
+    const date_format = moment(route.params.deadline);
+    const formattedDate = date_format.format("DD/MM/YYYY");
+    const formattedTime = date_format.format('hh:mm A');
+
+
+    const result = (route.params.collected / route.params.required) * 100;
     const percentage = `${result.toFixed(2)}%`;
 
-
-
     useEffect(() => {
-
         const today = new Date();
         const differenceInTime = date.getTime() - today.getTime();
         const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
         setDaysLeft(differenceInDays);
     }, [date]);
-
 
     const translateY = useRef(new Animated.Value(height)).current;
 
@@ -42,138 +47,179 @@ const EventDetailsFunc = ({ route, navigation }) => {
     }, [translateY]);
 
     return (
+        
         <View style={styles.container}>
-            <View style={styles.imageContainer}>
 
-                <Image source={{ uri: `https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?cs=srgb&dl=pexels-pixabay-267885.jpg&fm=jpg` }} style={styles.image} />
-                <LinearGradient colors={['rgba(0,0,0,0)', '#0E2C4F', 'rgba(0,0,0,255)']} style={styles.gradient} />
-            </View>
+              <TouchableOpacity style={[styles.closeButton,{zIndex:2}]} onPress={() => {
+              navigation.goBack()
+          }}>
+            <MaterialIcons name="close" size={24} color="white" />
+          </TouchableOpacity>
 
-            <Animated.View style={[styles.textContainer, { transform: [{ translateY }] }, { position: "absolute", width: width, left: 0, }]}>
+
+        <View style={styles.imageContainer}>
+          <Image
+            source={{
+              uri: `https://i.ytimg.com/vi/WQ3oYtIG1Ho/maxresdefault.jpg`,
+            }}
+            style={styles.image}
+          />
+          <LinearGradient
+            colors={["rgba(0,0,0,0)", "#0E2C4F", "rgba(0,0,0,255)"]}
+            style={styles.gradient}
+          />
+        
+        </View>
+      {/* </View> */}
+            <Animated.View
+                style={[
+                    styles.textContainer,
+                    { transform: [{ translateY }] },
+                    { position: "absolute", width: width, left: 0 },
+                ]}
+            >
                 <View style={[styles.textContainer1]}>
-
                     <ScrollView>
                         <View style={[styles.textContainer2]}>
-                            <Text style={styles.text}>Posted by: {route.params.post_title}</Text>
+                            <Text style={styles.text}>concert</Text>
                             <Text style={styles.title}>{route.params.post_title}</Text>
-                            
-                            <View style={styles.container12}>
-                                <View style={styles.leftContainer}>
-                                  
-                                    <View style={styles.bottomLeftContainer}>
-                                    <Text style={[styles.subtitle,{color:"grey",fontWeight: 'bold'}]}>This is a demo screen</Text>
+
+                            <View style={[styles.outercontainer, { flexDirection: "row", width: "100%" }]}>
+                                <View
+                                    style={[
+                                        styles.transparentContainer,
+                                        { width: "60%" },
+                                    ]}
+                                >
+
+                                    <View style={[styles.containerBox, { width: "45%" }]}>
+                                        <Text style={styles.text}>Hosted By:</Text>
+                                        <Text style={styles.bluetext}>{route.params.postedBy}</Text>
+                                    </View>
+                                    <View style={[styles.containerBox, { width: "45%" }]}>
+                                        <Text style={styles.text}>Venue</Text>
+                                        <Text style={styles.bluetext}>{route.params.venue}</Text>
+                                    </View>
+                                    <View
+                                        style={[
+                                            styles.containerBox,
+                                            {
+                                                width: "100%", marginTop: 20, flexDirection: "row",
+                                                flexWrap: "wrap",
+                                                justifyContent: "space-between",
+                                                alignItems: "flex-start"
+                                            },
+                                        ]}
+                                    >
+                                        <View style={[styles.containerBox, { width: "45%" }]}>
+                                            <Text style={styles.centerText}>Starting:</Text>
+                                            <Text style={styles.centerText}>{formattedTime}</Text>
+                                        </View>
+                                        <View style={[styles.containerBox, { width: "45%" }]}>
+                                            <Text style={styles.centerText}>Ending:</Text>
+                                            <Text style={styles.centerText}>{formattedTime}</Text>
+                                        </View>
+
                                     </View>
                                 </View>
-                                <View style={styles.rightContainer}>
-                                <Text style={[styles.subtitle,{bottom:0,right:0,position:"absolute",color:"skyblue",fontWeight: 'bold'}]}>{percentage}</Text>
+
+                                <View
+                                    style={[
+                                        styles.transparentContainer,
+                                        { flex: 1, width: "20%", justifyContent: "center", flexDirection: "column" },
+                                    ]}
+                                >
+                                    <View
+                                        style={[
+                                            styles.containerBox,
+                                            { margin: 10, justifyContent: "center", width: "100%", backgroundColor: "#2482C7" },
+                                        ]}
+                                    >
+                                        <Text style={[styles.text, { textAlign: "center" }]}>
+                                            {months[date.getMonth()]}
+                                        </Text>
+                                        <Text style={[styles.text, { textAlign: "center" }]}>
+                                            {date.getDay()}
+                                        </Text>
+                                    </View>
                                 </View>
                             </View>
 
-                            <View style={[styles.containerBox, { backgroundColor: "transparent" }]}>
-                                <Progress.Bar progress={route.params.collected / route.params.required} color="skyblue" height={10} width={null} marginTop={-10} />
-                            </View>
+                            {/* <View paddingTop={30}> */}
 
-                            <View style={styles.transparentContainer}>
-                                <View style={[styles.containerBox]}>
-                                    <Text style={styles.text}>Name:</Text>
-                                    <Text style={styles.bluetext}>Abdullah</Text>
-                                </View>
-                                <View style={[styles.containerBox, { flex: 1 }]}>
-                                    <Text style={styles.text}>Phone:</Text>
-                                    <Text style={styles.bluetext}>03444020321</Text>
-                                </View>
-                                <View style={[styles.containerBox, { flex: 1, backgroundColor: '#2482C7' }]}>
-
-                                    <Text style={[styles.bluetext, { textAlign: "center", color: "black" }]}> {daysLeft} days left</Text>
-                                </View>
-                                <View style={[styles.containerBox, { backgroundColor: "black" }]}>
-                                    <Text style={[styles.text, { color: "grey" }]}>Expires:</Text>
-                                    <Text style={styles.bluetext}> {formattedDate}</Text>
-                                </View>
-                            </View>
-
-                            <View style={styles.outercontainer}>
-                                <Text style={[styles.subtitle, { textAlign: 'center' }]}>Bank Details:</Text>
-                                <View style={styles.transparentContainer}>
-                                    <View style={styles.topLeft}>
-                                        <Text style={styles.text}>Account Name:</Text>
-                                        <Text style={styles.bluetext}>{route.params.acc_name}</Text>
-                                    </View>
-                                    <View style={styles.topRight}>
-                                        <Text style={styles.text}>Account Number</Text>
-                                        <Text style={styles.bluetext}>{route.params.acc_num}</Text>
-                                    </View>
-                                    <View style={styles.bottomLeft}>
-                                        <Text style={styles.text}>Bank Name:</Text>
-                                        <Text style={styles.bluetext}>{route.params.bank_name}</Text>
-                                    </View>
-                                    <View style={styles.bottomRight}>
-                                        <Text style={styles.text}>IBAN:</Text>
-                                        <Text style={styles.bluetext}>{route.params.iban}</Text>
-                                    </View>
-                                </View>
-                            </View>
-
-                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-                            <Text style={styles.text}>Namelkjhlkjlkjlhkjhghhgkhgkhgkhgjhgkjhgkghgjkhgkhg:</Text>
-
-
-                            <Text style={styles.text}>
-                               
+                            <Text style={[styles.text, { paddingTop: 30 }]}>
                                 fringilla dolor tristique. Donec eget orci et massa commodo
                                 viverra non non sapien. Nunc id ligula sit amet risus fringilla
                                 euismod. Sed imperdiet venenatis sapien non luctus. Pellentesque
                                 at vestibulum metus, eu tincidunt quam. Integer semper maximus
                                 tortor, id hendrerit nunc dapibus a. Nullam et nibh ex.
+                                {route.params.details}
                             </Text>
 
-                            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                            >
                                 <TouchableOpacity
-                                    style={[styles.loginBtn, { backgroundColor: "#2482C7" }]}
+                                    style={[styles.mapBtn, { backgroundColor: "#2482C7" }]}
+                                    onPress={() => navigation.navigate('donations')}
                                 // onPress={handleLogin}
                                 >
-                                    <Text style={styles.text}>Pledge Now</Text>
-                                </TouchableOpacity>
+                                    <MaterialIcons name="location-on" size={24} color="white" />
+                                    <Text style={styles.text}>See on Map</Text>
 
+                                </TouchableOpacity>
                             </View>
                         </View>
+
                     </ScrollView>
-
-
-
                 </View>
             </Animated.View>
-
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    closeButton: {
+        position: 'absolute',
+        top: 20,
+        left: 20,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        borderRadius: 20,
+        padding: 10,
+    
+      },
     container12: {
         flex: 1,
-        flexDirection: 'row',
-        alignItems: 'stretch',
-      },
-      leftContainer: {
+        flexDirection: "row",
+        alignItems: "stretch",
+    },
+    leftContainer: {
         flex: 2,
-        flexDirection: 'column',
-      },
-      rightContainer: {
+        flexDirection: "column",
+    },
+    rightContainer: {
         flex: 1,
-      },
-      topLeftContainer: {
+    },
+    topLeftContainer: {
         flex: 1,
-        backgroundColor: 'transparent',
-      },
-      bottomLeftContainer: {
+        backgroundColor: "transparent",
+    },
+    bottomLeftContainer: {
         flex: 1,
-        backgroundColor: 'transparent',
-      },
-    loginBtn: {
+        backgroundColor: "transparent",
+    },
+    centerText: {
+        textAlign: "center",
+        fontSize: 16,
+        color: "white",
+    },
+    mapBtn: {
+        flexDirection: "row",
         borderRadius: 25,
         height: 50,
         alignItems: "center",
@@ -185,96 +231,96 @@ const styles = StyleSheet.create({
 
     gradient: {
         zIndex: 2,
-        position: 'absolute',
+        position: "absolute",
         top: 80,
         bottom: 0,
-        width: '100%',
-        height: '100%',
+        width: "100%",
+        height: "100%",
     },
     image: {
         flex: 1,
-        resizeMode: 'cover',
-        height: '100%',
+        resizeMode: "cover",
+        height: "100%",
         width: "100%",
-
     },
     containerBox: {
-        backgroundColor: '#444',
+        backgroundColor: "#444",
         padding: 5,
-        margin: 2,
+        margin: 0,
         borderRadius: 10,
     },
 
     outercontainer: {
         flex: 1,
-        backgroundColor: '#444',
-        padding: 10,
+        backgroundColor: "transparent",
+        padding: 0,
         borderRadius: 5,
-        alignItems: "center",
-        justifyContent: 'center',
-
+        // alignItems: "center",
+        // justifyContent: "center",
     },
     subtitle: {
         fontSize: 20,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         marginVertical: 10,
     },
+
     transparentContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
+        // flex: 1,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
     },
+
     topLeft: {
-        width: '48%',
+        width: "48%",
     },
     topRight: {
-        width: '48%',
+        width: "48%",
     },
     bottomLeft: {
-        width: '48%',
+        width: "90%",
         marginTop: 20,
     },
     bottomRight: {
-        width: '48%',
+        width: "48%",
         marginTop: 20,
     },
     text: {
         fontSize: 16,
-        fontWeight: 'bold',
-        color: 'white',
+        fontWeight: "bold",
+        color: "white",
         marginBottom: 5,
     },
     bluetext: {
         fontSize: 16,
-        color: 'skyblue',
+        color: "skyblue",
     },
     textInCorner: {
-        position: 'absolute',
-        color: 'white',
+        position: "absolute",
+        color: "white",
     },
     container5: {
-        backgroundColor: 'black',
-        justifyContent: 'space-between',
+        backgroundColor: "black",
+        justifyContent: "space-between",
     },
     container: {
         flex: 1,
         height: height,
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        justifyContent: 'flex-start',
+        flexDirection: "column",
+        alignItems: "stretch",
+        justifyContent: "flex-start",
         backgroundColor: "black",
     },
 
     imageContainer: {
         // flex: 1,
         height: "40%",
-        width: "100%"
+        width: "100%",
     },
     image: {
         flex: 1,
-        resizeMode: 'cover',
+        resizeMode: "cover",
     },
 
     textContainer: {
@@ -285,7 +331,6 @@ const styles = StyleSheet.create({
         // left: 20,
         // right: 20,
         overflow: "visible",
-
     },
     textContainer1: {
         flex: 1,
@@ -296,7 +341,6 @@ const styles = StyleSheet.create({
         // left: 20,
         // right: 20,
         overflow: "visible",
-
     },
     textContainer2: {
         flex: 1,
@@ -307,33 +351,30 @@ const styles = StyleSheet.create({
         left: 20,
         right: 20,
         overflow: "visible",
-
     },
     text: {
-
         fontSize: 16,
-        color: "white"
+        color: "white",
     },
     title: {
         fontSize: 32,
-        fontWeight: 'bold',
-        color: '#fff',
+        fontWeight: "bold",
+        color: "#fff",
         marginBottom: 10,
     },
     subtitle: {
         fontSize: 18,
-        color: '#fff',
+        color: "#fff",
         marginBottom: 10,
-
     },
     buttonContainer: {
         paddingVertical: 10,
         paddingHorizontal: 20,
-        backgroundColor: '#007AFF',
+        backgroundColor: "#007AFF",
         borderRadius: 5,
     },
     button: {
-        color: 'white',
+        color: "white",
         fontSize: 16,
     },
 });

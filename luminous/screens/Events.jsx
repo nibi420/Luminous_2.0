@@ -23,27 +23,28 @@ const categories = [
   { id: 5, name: "Category 5" },
 ];
 
-const banners = [
-  { id: 1, imageUrl: "", title: "Event 1" },
-  {
-    id: 2,
-    imageUrl:
-      "https://lums.edu.pk/sites/default/files/styles/main_slider_1550_532/public/2020-08/OWeek.jpg",
-    title: "Event 2",
-  },
-  {
-    id: 3,
-    imageUrl:
-      "https://m.media-amazon.com/images/M/MV5BODYxNDdhYjktMjU5ZS00ZGIxLTg1MDctYjQwNjA2MGRiZWI3XkEyXkFqcGdeQXVyMzc0NzU5MTc@._V1_.jpg",
-    title: "Event 3",
-  },
-  {
-    id: 4,
-    imageUrl:
-      "https://i.scdn.co/image/82aae68f2f1fbd91259d07f29c508236aa9e696d",
-    title: "Event 4",
-  },
-];
+const banners =
+  [
+    { id: 1, imageUrl: "", title: "Event 1" },
+    {
+      id: 2,
+      imageUrl:
+        "https://lums.edu.pk/sites/default/files/styles/main_slider_1550_532/public/2020-08/OWeek.jpg",
+      title: "Event 2",
+    },
+    {
+      id: 3,
+      imageUrl:
+        "https://m.media-amazon.com/images/M/MV5BODYxNDdhYjktMjU5ZS00ZGIxLTg1MDctYjQwNjA2MGRiZWI3XkEyXkFqcGdeQXVyMzc0NzU5MTc@._V1_.jpg",
+      title: "Event 3",
+    },
+    {
+      id: 4,
+      imageUrl:
+        "https://i.scdn.co/image/82aae68f2f1fbd91259d07f29c508236aa9e696d",
+      title: "Event 4",
+    },
+  ];
 
 export default function Event({ navigation }) {
 
@@ -60,9 +61,9 @@ export default function Event({ navigation }) {
         <View style={styles.divider} />
       </View>
       <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder="Search" 
+        <TextInput style={styles.searchInput} placeholder="Search"
           onChangeText={(query) => setSearchQuery(query)}
-          value={searchQuery}/>
+          value={searchQuery} />
       </View>
       <ScrollView
         horizontal
@@ -80,7 +81,8 @@ export default function Event({ navigation }) {
           <TouchableOpacity
             style={styles.button}
             key={banner.id}
-            onPress={() => navigation.navigate(banner.title)}
+            // onPress={() => navigation.navigate(banner.title)}
+            onPress={() => navigation.navigate('eventsDetails', banner)}
           >
             <View style={styles.banner}>
               <Image
