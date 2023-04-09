@@ -53,11 +53,29 @@ export default function Event({ navigation }) {
   const [banners, setBanners] = useState([]);
 
   useEffect(() => {
+<<<<<<< Updated upstream
     axios.get(`${IP}/getAllEvents`)
       .then(response => {
         setBanners(response.data);
       })
       .catch(error => {
+=======
+    const fetchData = async () => {
+      try {
+
+        const response = await axios.get(`${IP}/getAllEvents`);
+        // setData(response.data);
+        const catresponse = await axios.post(`${IP}/getDonationCategories`,{type:"events"});//Events Ki catergories arahi hain
+        catresponse.data.unshift({name:"All"})
+        // console.log(catresponse.data)
+        // Array.unshift(element);
+
+        setRequest({categories: catresponse.data,data: response.data});
+        
+
+      } catch (error) {
+        console.log("Error Caught in useeffect AddEvents")
+>>>>>>> Stashed changes
         console.error(error);
       });
   }, []);

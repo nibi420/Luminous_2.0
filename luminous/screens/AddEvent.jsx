@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image,ScrollView, Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import { IP } from "../constant.js";
+import axios from 'axios';
+import Loading from '../components/Loading.jsx';
 
 
 
 const AddEventScreen = ({navigation}) => {
     const [title, setTitle] = useState('');
     const [venueName, setVenue] = useState('');
+    const [category, setCategory] = useState('');
     const [date, setDate] = useState(new Date());
     const [time, setTime] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -63,13 +66,41 @@ const AddEventScreen = ({navigation}) => {
         }
     };
 
-    
-
-
-
     const toggleVenueModal = () => {
         setShowVenueModal(!showVenueModal);
     };
+
+    const [request, setRequest] = useState({ categories: null, venues: null })
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+
+                const response = await axios.get(`${IP}/getVenues`);
+                // setData(response.data);
+                const catresponse = await axios.post(`${IP}/getDonationCategories`, { type: "donations" });//Events Ki catergories arahi hain
+            
+
+                setRequest({ categories: catresponse.data, venues: response.data });
+                console.log(request.venues);
+
+
+            } catch (error) {
+                console.log("Error Caught in useeffect AddEvents")
+                console.error(error);
+
+            }
+        };
+        fetchData()
+    }, [1]);
+
+    if (!request.venues) {
+
+
+        return <Loading />
+
+    }
+
 
 
     return (
@@ -80,7 +111,6 @@ const AddEventScreen = ({navigation}) => {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Ionicons name="arrow-back-sharp" size={30} color="white" />
                 </TouchableOpacity>
-                               
                 <Text style={styles.title}>Add Event</Text>
                 <Text style={styles.subText}>Please enter details</Text>
                 </View>
@@ -126,7 +156,7 @@ const AddEventScreen = ({navigation}) => {
                             <TouchableOpacity onPress={toggleVenueModal} style={styles.modalBackdrop} />
                             <View style={styles.modalContent}>
                                 <FlatList
-                                    data={['Venue 1', 'Venue 2', 'Venue 3']} // replace with your list of venues
+                                    data={request.venues.map((item)=>{return item.name})} // replace with your list of venues
                                     renderItem={({ item }) => (
                                         <TouchableOpacity
                                             style={styles.modalItem}
@@ -144,6 +174,43 @@ const AddEventScreen = ({navigation}) => {
                         </View>
                     </Modal>
                 )}
+
+
+                    <Text style={styles.label}>Category</Text>
+
+                    <TouchableOpacity style={styles.venue} onPress={toggleVenueModal}>
+                        <Text style={styles.venueText}>{venueName || 'Select a Category'}</Text>
+                        <Ionicons name="chevron-down-outline" size={20} color="white" />
+                    </TouchableOpacity>
+
+                    {showVenueModal && (
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={showVenueModal}
+                        >
+                            <View style={styles.modalContainer}>
+                                <TouchableOpacity onPress={toggleVenueModal} style={styles.modalBackdrop} />
+                                <View style={styles.modalContent}>
+                                    <FlatList
+                                        data={request.categories.map((item) => { return item.name })} // replace with your list of venues
+                                        renderItem={({ item }) => (
+                                            <TouchableOpacity
+                                                style={styles.modalItem}
+                                                onPress={() => {
+                                                    setCategory(item);
+                                                    toggleVenueModal();
+                                                }}
+                                            >
+                                                <Text>{item}</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                        keyExtractor={(item) => item}
+                                    />
+                                </View>
+                            </View>
+                        </Modal>
+                    )}
 
                 <View style={styles.dateTimeContainer}>
                     <View style={styles.dateTimePickerContainer}>
@@ -186,7 +253,7 @@ const AddEventScreen = ({navigation}) => {
                     onChangeText={setInfo}
                     value={info}
                     multiline
-                    maxLength={150}
+                    maxLength={500}
                     placeholder="Enter event info"
                     placeholderTextColor='rgba(255,255,255,0.4)'
                 />
@@ -198,6 +265,7 @@ const AddEventScreen = ({navigation}) => {
                     value={roomNumber}
                     placeholder="Enter room number"
                     placeholderTextColor='rgba(255,255,255,0.4)'
+                    maxLength={40}
                 />
 
                 <TouchableOpacity style={styles.button} onPress={handleSubmit}>

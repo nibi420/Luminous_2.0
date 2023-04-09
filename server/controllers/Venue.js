@@ -33,3 +33,14 @@ export const addVenue = async (req, res) => {
         });
     }
 };
+
+export const getVenues = async (req, res) => {
+    try {
+        const venue = await Venue.find()
+        res.json(venue);
+    } catch (error) {
+        console.log("Rq Venues:",req);
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+};
