@@ -4,9 +4,11 @@ import  { Marker } from "react-native-maps";
 import MapView from "react-native-map-clustering";
 import { PROVIDER_GOOGLE }  from "react-native-maps";
 import  OverlayComponent from "react-native-maps";
+import { Overlay } from "react-native-maps";
 import * as Location from "expo-location";
 import axios from "axios";
 import { IP } from "../constant.js";
+import SwitchSelector from 'react-native-switch-selector';
 
 
 const MapNightStyle = [
@@ -248,6 +250,16 @@ const MapNightStyle = [
 
 const Map = ({navigation}) => {
 
+  const options = [
+    { label: 'Today', value: 'todaysEvents' },
+    { label: 'Next 3 Days', value: 'nextThreedays' },
+    { label: 'Next 7 Days', value: 'nextSevendays' }
+  ];
+  
+
+
+
+
   const INITIAL_REGION = {
     latitude:31.4707 ,
     longitude:74.4098,
@@ -279,19 +291,25 @@ const Map = ({navigation}) => {
   const [markers, setMarkers] = useState(null);
   const [data,setData] = useState(null)
 
+  const [selectedOption, setSelectedOption] = useState('todaysEvents');
+
   
 
   useEffect(() => {
     const getEvents = async ()=> {
       try{
-        const response = await axios.get(`${IP}/nextThreedays` );
+        console.log("Inside API")
+        // const response = await axios.get(`${IP}/nextThreedays` );
         // const response = await axios.get(`${IP}/todaysEvents` );
+        const response = await axios.get(`${IP}/${selectedOption}` );
+        
         // return response.data;
         setData(response.data.data)
        
 
-        
-      console.log(markers);
+      console.log("API CALL IS MADE")
+      console.log(selectedOption)
+      
       }catch(error){
         return error;
       }
@@ -321,7 +339,7 @@ const Map = ({navigation}) => {
   });
 
      
-  }, [x]);
+  }, [selectedOption]);
 
   if (!data){
     // console.log("Error Loading");
@@ -353,31 +371,36 @@ const Map = ({navigation}) => {
                          )
                })}
         
-        {/* <Marker  
-            coordinate={{ latitude: 31.4710037, longitude: 74.4115004 }}  
-            title={"LUMS MINIBAR"}  
-            description={"sab kuch milega"}  
-          />
-          <Marker  
-            coordinate={{ latitude: 31.4720037, longitude: 74.4115004 }}  
-            title={"BABAR KA SCHOOL"}  
-            description={""}  
-          /> */}
+       
+        
             
 
         
       </MapView>
-      <OverlayComponent
-      style={{position: "absolute", bottom: 50}}>
+        <View style={backstyle.backButton}>
+
+        <TouchableOpacity style={backstyle.backButton} onPress={() => navigation.navigate("testing")}>
+          <Text style={backstyle.backButtonText}>Back</Text>
+        </TouchableOpacity>
 
 
-        <Button
-        onPress={() => navigation.navigate("testing")}
-        title="Back"
-        color="#841584"
-        />
+        </View>
 
-        </OverlayComponent>
+        <View style={overlaystyles.overlay}>
+
+        <SwitchSelector
+              options={options}
+              initial={0}
+              onPress={value => setSelectedOption(value)}
+              selectedColor="#fff"
+              buttonColor="#007AFF"
+              borderColor="#007AFF"
+            />
+
+        </View>
+        
+
+      
     </View>
   );
 };
@@ -393,6 +416,49 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+});
+
+
+const overlaystyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff'
+  },
+  map: {
+    flex: 1
+  },
+  overlay: {
+    position: 'absolute',
+    top: 35,
+    left: 20,
+    right: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 20,
+    padding: 2
+  }
+});
+
+
+const backstyle = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff'
+  },
+  map: {
+    flex: 1
+  },
+  backButton: {
+    position: 'absolute',
+    top: 50,
+    left: 10,
+    padding: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 5
+  },
+  backButtonText: {
+    color: '#007AFF',
+    fontWeight: 'bold'
+  }
 });
 
 export default Map;
