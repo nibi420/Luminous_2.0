@@ -1,12 +1,8 @@
 import mongoose from "mongoose";
 
 const donationSchema = new mongoose.Schema({
-    donation_id: {
-      type: String,
-      required: true,
-    },
 
-    donation_category_id: {
+    category : {
         type: String,
         required: true,
       },
@@ -16,23 +12,29 @@ const donationSchema = new mongoose.Schema({
         required: true,
       },
 
+    description : {
+      type: String,
+    },
+
     image : {
-        type: String,
-        required: true,
+        public_id: String,
+        url: String,
       },
 
     required : {
-        type: String,
+        type: Number,
         required: true,
       },
     collected: {
-      type: String,
+      default:0,
+      type: Number,
       required: true,
     },
 
     deadline: {
         type: Date,
         required: true,
+        default: Date.now() + (7 * 24*60*60 * 1000)
         },
 
     acc_name: {
@@ -52,7 +54,6 @@ const donationSchema = new mongoose.Schema({
 
     iban:{
         type: String,
-        required: true
     }
   });
 

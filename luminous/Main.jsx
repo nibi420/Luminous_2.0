@@ -8,6 +8,7 @@ import Verify from "./screens/Verification";
 import HomeScreen from "./screens/HomeScreen";
 import Events from "./screens/Events";
 import Donation from "./screens/Donations";
+import CreateDonation from "./screens/CreateDonation";
 import TestingScreen from "./screens/TestingScreen";
 import GradientScreen from "./screens/DonationsDetails";
 
