@@ -299,8 +299,7 @@ const Map = ({navigation}) => {
     const getEvents = async ()=> {
       try{
         console.log("Inside API")
-        // const response = await axios.get(`${IP}/nextThreedays` );
-        // const response = await axios.get(`${IP}/todaysEvents` );
+       
         const response = await axios.get(`${IP}/${selectedOption}` );
         
         // return response.data;
@@ -365,7 +364,7 @@ const Map = ({navigation}) => {
         {data.map((item,index) => {
                 return (<Marker coordinate={{latitude: item.venue.coordinates[0] + getRandomArbitrary(-0.00006,0.00006)  , longitude: item.venue.coordinates[1]+ getRandomArbitrary(-0.00006,0.00006) }} title={item.title} description={item.room}
                         // image ={ require("../assets/markericon.png")  }
-                         >
+                         key = {index}>
                          <Image source={markerImage} style={markerImageSize} />
                          </Marker>
                          )
