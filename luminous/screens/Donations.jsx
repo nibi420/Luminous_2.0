@@ -44,6 +44,7 @@ const { width } = Dimensions.get("window");
 
 
 import { IP } from '../constant';
+import Navbar from "../components/Navbar";
 
 const Donation = ({ navigation }) => {
   const [data, setData] = useState(null);
@@ -161,7 +162,7 @@ const Donation = ({ navigation }) => {
         {filteredData.map((banner) => (
           <TouchableOpacity
             style={styles.button}
-            key={banner.donation_id}
+            key={banner._id}
             onPress={() => navigation.navigate('donationsDetails', banner)}
           >
             <View style={styles.banner}>
@@ -181,28 +182,7 @@ const Donation = ({ navigation }) => {
         ))}
       </ScrollView>
 
-      <View style={styles.navBar}>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="map-outline" size={24} color="#aaa" />
-          <Text style={[styles.navText]}>Map</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.navButton]}>
-          <Ionicons name="calendar-outline" size={24} color="#aaa" />
-          <Text style={[styles.navText]}>Events</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.navButton]}>
-          <Ionicons name="home-outline" size={24} color="#aaa" />
-          <Text style={[styles.navText]}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.navButton, styles.selectedNavButton]}>
-          <Ionicons name="heart-outline" size={24} color="blue" />
-          <Text style={[styles.navText, styles.selectedNavText]}>Donate</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="person-outline" size={24} color="#aaa" />
-          <Text style={[styles.navText]}>Account</Text>
-        </TouchableOpacity>
-      </View>
+      <Navbar navigation={navigation} currentScreen="donate" />
     </LinearGradient>
   );
 };

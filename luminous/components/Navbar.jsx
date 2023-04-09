@@ -26,6 +26,7 @@ const Navbar = ({ navigation, currentScreen }) => {
             ? [styles.navButton, styles.selectedNavButton]
             : styles.navButton
         }
+        onPress={() => navigation.navigate('map')}
       >
         <Ionicons
           name="map-outline"
@@ -48,7 +49,8 @@ const Navbar = ({ navigation, currentScreen }) => {
             ? [styles.navButton, styles.selectedNavButton]
             : styles.navButton
         }
-        onPress={handleEvent}
+        // onPress={handleEvent}
+        onPress={() => navigation.navigate('events')}
       >
         <Ionicons
           name="calendar-outline"
@@ -71,7 +73,8 @@ const Navbar = ({ navigation, currentScreen }) => {
             ? [styles.navButton, styles.selectedNavButton]
             : styles.navButton
         }
-        onPress={handleHome}
+        // onPress={handleHome}
+        onPress={() => navigation.navigate('homescreen')}
       >
         <Ionicons
           name="home-outline"
@@ -88,12 +91,13 @@ const Navbar = ({ navigation, currentScreen }) => {
           Home
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity
+      <TouchableOpacity 
         style={
           currentScreen === "donate"
             ? [styles.navButton, styles.selectedNavButton]
             : styles.navButton
         }
+        onPress={() => navigation.navigate('donations')}
       >
         <Ionicons
           name="heart-outline"
@@ -116,7 +120,9 @@ const Navbar = ({ navigation, currentScreen }) => {
             ? [styles.navButton, styles.selectedNavButton]
             : styles.navButton
         }
-        onPress={handleProfile}
+        // onPress={handleProfile}
+        onPress={() => navigation.navigate('profile')}
+
       >
         <Ionicons
           name="person-outline"

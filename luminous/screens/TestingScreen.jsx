@@ -58,8 +58,13 @@ const TestingScreen = ({ navigation }) => {
         onPress={() => navigation.navigate("donationDetails")}
       >
         <Text style={styles.text}>GradientScreen</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+        style={styles.button}
         onPress={() => navigation.navigate("profile")}
-      
+      >
+        
+    
         <Text style={styles.text}>Profile</Text>
       </TouchableOpacity>
       <TouchableOpacity

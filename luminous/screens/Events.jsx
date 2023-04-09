@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -15,6 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { IP } from "../constant.js";
+import Navbar from "../components/Navbar.jsx";
 
 const { width } = Dimensions.get("window");
 
@@ -50,17 +51,67 @@ const categories = [
 
 export default function Event({ navigation }) {
 
-  const [banners, setBanners] = useState([]);
+  // const [banners, setBanners] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+ 
+  const [catQuery, setCatQuery] = useState("");
+  const [request,setRequest] = useState({categories:null,data:null})
+  const [myswitch, setSwitch] = useState(1);
 
   useEffect(() => {
-    axios.get(`${IP}/getAllEvents`)
-      .then(response => {
-        setBanners(response.data);
-      })
-      .catch(error => {
+    const fetchData = async () => {
+      try {
+
+        const response = await axios.get(`${IP}/getDonationsData`);
+        // setData(response.data);
+        const catresponse = await axios.post(`${IP}/getDonationCategories`,{type:"events"});
+        catresponse.data.unshift({name:"All"})
+        // console.log(catresponse.data)
+        // Array.unshift(element);
+
+        setRequest({categories: catresponse.data,data: response.data});
+        
+
+      } catch (error) {
+        console.log("dsjflsdhfajsdhfaskd")
         console.error(error);
-      });
-  }, []);
+
+      }
+    };
+    fetchData()
+  }, [1]);
+
+  // useEffect(() => {
+  //   axios.get(`${IP}/getAllEvents`)
+  //     .then(response => {
+  //       setBanners(response.data);
+  //     })
+  //     .catch(error => {
+  //       console.error(error);
+  //     });
+  // }, []);
+
+  if (!request.data  ) {
+    
+    return <Text>Loading...</Text>;
+  }
+ const isVisible = true;
+
+  const filteredBanners = request.data.filter((banner) =>{
+ 
+    if(myswitch === 1){
+      return banner.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+    }
+    if(myswitch === 2){
+      if(catQuery == "All"){
+        return banner.title.toLowerCase().includes("");
+
+      }
+      return banner.category.toLowerCase().includes(catQuery.toLowerCase())
+
+    }
+  })
   
   return (
     <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
@@ -73,16 +124,37 @@ export default function Event({ navigation }) {
           onChangeText={(query) => setSearchQuery(query)}
           value={searchQuery} />
       </View>
+
+      {isVisible && (<View style={{ flexDirection: "row", justifyContent: "center" }}>
+        <TouchableOpacity
+          style={[styles.addBtn, { backgroundColor: "#2482C7" }]}
+          onPress={() => navigation.navigate('addevent')}
+        >
+            <Ionicons name="add" size={24} color="white" style={{ marginRight: 8 }} />
+          <Text style={{color:"white"}}>Add Events</Text>
+        </TouchableOpacity>
+      </View>)}
+
+
+
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.categoriesContainer}
       >
-        {categories.map((category) => (
-          <View key={category.id} style={styles.category}>
-            <Text style={styles.categoryName}>{category.name}</Text>
-          </View>
-        ))}
+        {request.categories.map((category) => (
+             <TouchableOpacity
+             
+             onPress={() => {
+              setSwitch(2);
+              setCatQuery(category.name)}}
+           >
+            <View key={category.id} style={styles.category}>
+              <Text style={styles.categoryName}>{category.name}</Text>
+             
+            </View>
+            </TouchableOpacity>
+          ))}
       </ScrollView>
       <ScrollView style={styles.bannersContainer}>
         {filteredBanners.map((banner) => (
@@ -113,7 +185,7 @@ export default function Event({ navigation }) {
         ))}
       </ScrollView>
 
-      <View style={styles.navBar}>
+      {/* <View style={styles.navBar}>
         <TouchableOpacity style={styles.navButton}>
           <Ionicons name="map-outline" size={24} color="#aaa" />
           <Text style={[styles.navText]}>Map</Text>
@@ -133,13 +205,24 @@ export default function Event({ navigation }) {
         <TouchableOpacity style={styles.navButton}>
           <Ionicons name="person-outline" size={24} color="#aaa" />
           <Text style={styles.navText}>Account</Text>
-        </TouchableOpacity>
-      </View>
+        </TouchableOpacity> */}
+        <Navbar navigation={navigation} currentScreen="events" />
+      {/* </View> */}
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  addBtn: {
+    flexDirection:"row",
+    borderRadius: 10,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+    marginBottom: 5,
+    width: "90%",
+  },
   container: {
     flex: 1,
   },

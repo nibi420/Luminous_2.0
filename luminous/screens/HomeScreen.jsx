@@ -11,6 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons"; // example library for icons
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect } from "react";
+import Navbar from "../components/Navbar";
 // import axios from "axios";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { IP } from "../constant.js";
@@ -84,28 +85,8 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </LinearGradient>
-      <View style={styles.navBar}>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="map-outline" size={24} color="#aaa" />
-          <Text style={[styles.navText]}>Map</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={handleEvent}>
-          <Ionicons name="calendar-outline" size={24} color="#aaa" />
-          <Text style={styles.navText}>Events</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.navButton, styles.selectedNavButton]}>
-          <Ionicons name="home-outline" size={24} color="blue" />
-          <Text style={[styles.navText, styles.selectedNavText]}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Ionicons name="heart-outline" size={24} color="#aaa" />
-          <Text style={styles.navText}>Donate</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={handleProfile}>
-          <Ionicons name="person-outline" size={24} color="#aaa" />
-          <Text style={styles.navText}>Account</Text>
-        </TouchableOpacity>
-      </View>
+     
+      <Navbar navigation={navigation} currentScreen="home" />
     </View>
   );
 }
