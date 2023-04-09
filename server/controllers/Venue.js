@@ -4,6 +4,17 @@ export const addVenue = async (req, res) => {
     try {
         const { name, location } = req.body;
 
+        // Check if a venue with the same name already exists
+        const existingVenue = await Venue.findOne({ name });
+
+        if (existingVenue) {
+            // If a venue with the same name already exists, return an error
+            return res.status(400).json({
+                success: false,
+                message: 'A venue with the same name already exists'
+            });
+        }
+
         const newVenue = new Venue({
             name,
             location

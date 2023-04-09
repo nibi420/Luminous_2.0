@@ -55,10 +55,13 @@ export const register = async (req, res) => {
 export const verify = async (req, res) => {
   try {
     console.log("Here");
-    console.log(req.body.user);
+    console.log(req.body.otp);
     const otp = Number(req.body.otp);
 
     const user = await User.findById(req.user._id);
+
+
+    console.log("Flag 1");
 
     if (user.otp !== otp || user.otpExpire < Date.now()) {
       return res.status(200).json({
@@ -66,6 +69,8 @@ export const verify = async (req, res) => {
         message: "Invalid OTP or OTP expired",
       });
     }
+
+    console.log("Flag 2");
 
     user.verified = true;
     user.otp = null;
@@ -116,9 +121,9 @@ export const sendAgain = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    // console.log(req.body);
     const { email, password } = req.body;
-    email = email.trim();
+    // email = email.trim();
+    console.log("Flag Login 1");
 
     if (!email || !password) {
       return res.status(400).json({
@@ -126,6 +131,8 @@ export const login = async (req, res) => {
         message: "Please enter email and password",
       });
     }
+
+    
 
     const user = await User.findOne({ email }).select("+password");
 

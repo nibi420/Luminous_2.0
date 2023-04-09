@@ -1,13 +1,17 @@
-import Event from '../models/events.js';
+import {Event} from '../models/events.js';
+import {Venue} from '../models/venues.js';
 
 export const addEvent = async (req, res) => {
     try {
-        const { title, postedBy, venue, time, details, room } = req.body;
+        const { title, venueName, time, details, room } = req.body;
+
+        // Find the venue with the given name in the venueSchema
+        const venue = await Venue.findOne({ name: venueName });
 
         const newEvent = new Event({
             title,
-            postedBy,
-            venue,
+            postedBy: req.user._id,
+            venue: venue._id, // Set the venue ID instead of the name
             time,
             details,
             room
@@ -32,5 +36,18 @@ export const addEvent = async (req, res) => {
             success: false,
             message: 'Error adding event'
         });
+    }
+};
+
+
+export const getAllEvents = async (req, res) => {
+    try {
+        const events = await Event.find()
+            .populate('postedBy', 'username')
+            .populate('venue', 'name');
+        res.json(events);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
     }
 };

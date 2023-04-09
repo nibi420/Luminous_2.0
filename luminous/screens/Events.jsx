@@ -12,6 +12,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { IP } from "../constant.js";
 
 const { width } = Dimensions.get("window");
 
@@ -23,29 +26,42 @@ const categories = [
   { id: 5, name: "Category 5" },
 ];
 
-const banners = [
-  { id: 1, imageUrl: "https://assets.xboxservices.com/assets/ef/9e/ef9e8f9f-4141-409c-9bab-659102bcc6b2.jpg?n=XSX_Page-Hero-0_768x1434.jpg", title: "Event 1" },
-  {
-    id: 2,
-    imageUrl:
-      "https://lums.edu.pk/sites/default/files/styles/main_slider_1550_532/public/2020-08/OWeek.jpg",
-    title: "Event 2",
-  },
-  {
-    id: 3,
-    imageUrl:
-      "https://m.media-amazon.com/images/M/MV5BODYxNDdhYjktMjU5ZS00ZGIxLTg1MDctYjQwNjA2MGRiZWI3XkEyXkFqcGdeQXVyMzc0NzU5MTc@._V1_.jpg",
-    title: "Event 3",
-  },
-  {
-    id: 4,
-    imageUrl:
-      "https://i.scdn.co/image/82aae68f2f1fbd91259d07f29c508236aa9e696d",
-    title: "Event 4",
-  },
-];
+// const banners = [
+//   { id: 1, imageUrl: "https://assets.xboxservices.com/assets/ef/9e/ef9e8f9f-4141-409c-9bab-659102bcc6b2.jpg?n=XSX_Page-Hero-0_768x1434.jpg", title: "Event 1" },
+//   {
+//     id: 2,
+//     imageUrl:
+//       "https://lums.edu.pk/sites/default/files/styles/main_slider_1550_532/public/2020-08/OWeek.jpg",
+//     title: "Event 2",
+//   },
+//   {
+//     id: 3,
+//     imageUrl:
+//       "https://m.media-amazon.com/images/M/MV5BODYxNDdhYjktMjU5ZS00ZGIxLTg1MDctYjQwNjA2MGRiZWI3XkEyXkFqcGdeQXVyMzc0NzU5MTc@._V1_.jpg",
+//     title: "Event 3",
+//   },
+//   {
+//     id: 4,
+//     imageUrl:
+//       "https://i.scdn.co/image/82aae68f2f1fbd91259d07f29c508236aa9e696d",
+//     title: "Event 4",
+//   },
+// ];
 
 export default function Event({ navigation }) {
+
+  const [banners, setBanners] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${IP}/getAllEvents`)
+      .then(response => {
+        setBanners(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+  
   return (
     <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
       <View style={styles.topContainer}>
@@ -81,12 +97,12 @@ export default function Event({ navigation }) {
               <View style={styles.bannerInfo}>
                 <Text style={styles.bannerTitle}>{banner.title}</Text>
                 <Text style={styles.bannerPostedBy}>
-                  Posted by: {banner.postedBy}
+                  Posted by: {banner.postedBy.username}
                 </Text>
-                <Text style={styles.bannerVenue}>Venue: {banner.venue}</Text>
-                <Text style={styles.bannerDate}>Date: {banner.date}</Text>
+                <Text style={styles.bannerVenue}>Venue: {banner.venue.name}</Text>
+                <Text style={styles.bannerDate}>Date: {new Date(banner.time).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</Text>
                 <Text style={styles.bannerTime}>
-                  Time: {banner.startTime} - {banner.endTime}
+                  Time: {new Date(banner.time).toLocaleTimeString()}
                 </Text>
               </View>
             </View>

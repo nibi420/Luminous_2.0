@@ -37,6 +37,18 @@ const TestingScreen = ({ navigation }) => {
       >
         <Text style={styles.text}>Verify</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("profile")}
+      >
+        <Text style={styles.text}>Profile</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("addevent")}
+      >
+        <Text style={styles.text}>Add Event</Text>
+      </TouchableOpacity>
     </View>
   );
 };

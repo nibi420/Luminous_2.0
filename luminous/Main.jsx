@@ -9,6 +9,7 @@ import HomeScreen from "./screens/HomeScreen";
 import Events from "./screens/Events";
 import TestingScreen from "./screens/TestingScreen";
 import Profile from "./screens/Profile";
+import AddEventScreen from "./screens/AddEvent";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ const Main = () => {
         <Stack.Screen name="homescreen" component={HomeScreen} />
         <Stack.Screen name="events" component={Events} />
         <Stack.Screen name="profile" component={Profile} />
+        <Stack.Screen name="addevent" component={AddEventScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
