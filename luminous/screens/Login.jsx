@@ -93,7 +93,7 @@ export default function App({ navigation }) {
         Forgot Password?{" "}
         <Text
           style={{ color: "#2482C7" }}
-          onPress={() => navigation.navigate("signup")}
+          onPress={() => navigation.navigate("forgotpassword")}
         >
           Reset Password
         </Text>
