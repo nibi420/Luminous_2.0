@@ -45,6 +45,7 @@ const { width } = Dimensions.get("window");
 
 import { IP } from '../constant';
 import Navbar from "../components/Navbar";
+import Loading from "../components/Loading";
 
 const Donation = ({ navigation }) => {
   const [data, setData] = useState(null);
@@ -52,6 +53,7 @@ const Donation = ({ navigation }) => {
   const [catQuery, setCatQuery] = useState("");
   const [request,setRequest] = useState({categories:null,data:null})
   const [myswitch, setSwitch] = useState(1);
+  // const [loading,setloadin]
   // const [x, setx] = useState(false);
 
 
@@ -80,8 +82,9 @@ const Donation = ({ navigation }) => {
   }, [1]);
 
   if (!request.data  ) {
-    
-    return <Text>Loading...</Text>;
+
+    // return <Text>Loading...</Text>;
+    return<Loading/>
   }
  const isVisible = true;
   

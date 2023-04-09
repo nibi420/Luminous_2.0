@@ -16,6 +16,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { IP } from "../constant.js";
 import Navbar from "../components/Navbar.jsx";
+import Loading from "../components/Loading.jsx";
 
 const { width } = Dimensions.get("window");
 
@@ -93,7 +94,9 @@ export default function Event({ navigation }) {
 
   if (!request.data  ) {
     
-    return <Text>Loading...</Text>;
+ 
+      return<Loading/>
+
   }
  const isVisible = true;
 
