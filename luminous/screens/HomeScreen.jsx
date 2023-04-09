@@ -1,12 +1,42 @@
 import React from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  BackHandler,
+  Alert,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // example library for icons
 import { LinearGradient } from "expo-linear-gradient";
-import axios from "axios";
+import { useEffect } from "react";
+// import axios from "axios";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IP } from "../constant.js";
+// import { IP } from "../constant.js";
 
 export default function HomeScreen({ navigation }) {
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert("Hold on!", "Are you sure you want to go back?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel",
+        },
+        { text: "YES", onPress: () => BackHandler.exitApp() },
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
   const handleEvent = async () => {
     navigation.navigate("events");
     console.log("Navigating to Event Screen");
@@ -14,6 +44,11 @@ export default function HomeScreen({ navigation }) {
     // console.log("Failed On Event Navigation");
     // console.log(error);
   };
+
+  const handleProfile = () => {
+    navigation.navigate("profile");
+  };
+
   return (
     <View style={styles.container}>
       <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
@@ -66,7 +101,7 @@ export default function HomeScreen({ navigation }) {
           <Ionicons name="heart-outline" size={24} color="#aaa" />
           <Text style={styles.navText}>Donate</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity style={styles.navButton} onPress={handleProfile}>
           <Ionicons name="person-outline" size={24} color="#aaa" />
           <Text style={styles.navText}>Account</Text>
         </TouchableOpacity>
