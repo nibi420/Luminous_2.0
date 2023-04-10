@@ -26,6 +26,8 @@ const eventSchema = new mongoose.Schema({
     picture: {
         public_id: String,
         url: String,
+        data: Buffer,
+        contentType: String
     },
     room: {
         type: String,

@@ -8,6 +8,7 @@ import Verify from "./screens/Verification";
 import HomeScreen from "./screens/HomeScreen";
 import Events from "./screens/Events";
 import Donation from "./screens/Donations";
+import Map from "./screens/Map";
 import TestingScreen from "./screens/TestingScreen";
 import GradientScreen from "./screens/DonationsDetails";
 import EventDetailsFunc from "./screens/EventsDetails";
@@ -36,6 +37,7 @@ const Main = () => {
 
         <Stack.Screen name="profile" component={Profile} />
         <Stack.Screen name="addevent" component={AddEventScreen}/>
+        <Stack.Screen name="map" component={Map} />
       </Stack.Navigator>
     </NavigationContainer>
   );

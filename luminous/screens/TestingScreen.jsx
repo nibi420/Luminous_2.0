@@ -72,6 +72,13 @@ const TestingScreen = ({ navigation }) => {
         onPress={() => navigation.navigate("addevent")}
       >
         <Text style={styles.text}>Add Event</Text>
+        </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("map")}
+      >
+        <Text style={styles.text}>Map</Text>
       </TouchableOpacity>
     </View>
   );
