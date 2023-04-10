@@ -11,6 +11,7 @@ const mapSchema = new mongoose.Schema({
     type: [Number],
     required: [true],
   },
+ 
 
   
 });
@@ -22,4 +23,4 @@ mapSchema.pre("save", async function (next) {
   });
 
 
-export const Venue = mongoose.model("Venue", mapSchema);
+export const Venue2 = mongoose.model("Venue2", mapSchema);

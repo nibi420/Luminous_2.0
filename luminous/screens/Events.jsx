@@ -62,9 +62,11 @@ export default function Event({ navigation }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
+        
         const response = await axios.get(`${IP}/getAllEvents`);
         // setData(response.data);
+       
+      
         const catresponse = await axios.post(`${IP}/getDonationCategories`,{type:"events"});
         catresponse.data.unshift({name:"All"})
         // console.log(catresponse.data)
@@ -101,6 +103,7 @@ export default function Event({ navigation }) {
  const isVisible = true;
 
   const filteredBanners = request.data.filter((banner) =>{
+    console.log(banner)
  
     if(myswitch === 1){
       return banner.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -111,7 +114,16 @@ export default function Event({ navigation }) {
         return banner.title.toLowerCase().includes("");
 
       }
-      return banner.category.toLowerCase().includes(catQuery.toLowerCase())
+      else{
+      try{
+        let a = banner.category.toLowerCase().includes(catQuery.toLowerCase())
+        return a;
+      }
+      catch(error){
+        console.log(error)
+        // return "Nothing found in this category"
+      }
+    }
 
     }
   })
@@ -138,7 +150,7 @@ export default function Event({ navigation }) {
         </TouchableOpacity>
       </View>)}
 
-
+      <View style={styles.catContainer}>
 
       <ScrollView
         horizontal
@@ -159,6 +171,7 @@ export default function Event({ navigation }) {
             </TouchableOpacity>
           ))}
       </ScrollView>
+      </View>
       <ScrollView style={styles.bannersContainer}>
         {filteredBanners.map((banner) => (
           <TouchableOpacity
@@ -216,6 +229,17 @@ export default function Event({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  catContainer: {
+    // marginTop: 30,
+    marginHorizontal: 20,
+    backgroundColor: "transparent",
+    borderRadius: 20,
+
+    // paddingHorizontal: 20,
+    // paddingVertical: 10,
+    flexDirection: "row",
+    // alignItems: "center",
+  },
   addBtn: {
     flexDirection:"row",
     borderRadius: 10,
@@ -263,9 +287,11 @@ const styles = StyleSheet.create({
     color: "white",
   },
   categoriesContainer: {
+    // position:"absolute",
+    flex:1,
     marginTop: 20,
     marginLeft: 20,
-    height: 50,
+    // height: 50,
   },
   category: {
     backgroundColor: "rgba(255, 255, 255, 0.0)", // 80% opaque white

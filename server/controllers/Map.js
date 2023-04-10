@@ -1,4 +1,4 @@
-import { Venue } from "../models/map_loc.js";
+import { Venue2 } from "../models/map_loc.js";
 import {Event} from '../models/events.js';
 
 
@@ -7,7 +7,7 @@ export const addlocation =  async( req, res) => {
     try{
         const { locationName, coordinates } = req.body;
 
-        let location = await Venue.create({
+        let location = await Venue2.create({
             locationName,
             coordinates,
           });
@@ -105,7 +105,7 @@ export const nextThreeDays = async( req, res) => {
             time: { $gte: todaysDate, $lte: tommDate },
           })
         .populate({ path:"postedBy" , select:["fullname"] })
-        .populate({path: "venue", select:["locationName", "coordinates"]});
+        .populate({path: "venue2", select:["locationName", "coordinates"]});
 
 
         res.json({
@@ -153,7 +153,7 @@ export const nextSevenDays = async( req, res) => {
             time: { $gte: todaysDate, $lte: tommDate },
           })
         .populate({ path:"postedBy" , select:["fullname"] })
-        .populate({path: "venue", select:["locationName", "coordinates"]});
+        .populate({path: "venue2", select:["locationName", "coordinates"]});
 
 
         res.json({

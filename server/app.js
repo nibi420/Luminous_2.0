@@ -4,7 +4,7 @@ import User from "./routers/User.js";
 import Venue from "./routers/Venue.js";
 import Events from "./routers/Event.js";
 import Map from "./routers/Map.js";
-import Events from "./routers/Events.js"
+
 
 export const app = express();
 
