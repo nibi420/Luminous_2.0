@@ -136,7 +136,9 @@ export default function Event({ navigation }) {
       </View>
       <View style={styles.searchContainer}>
         <TextInput style={styles.searchInput} placeholder="Search"
-          onChangeText={(query) => setSearchQuery(query)}
+          onChangeText={(query) => {
+            setSwitch(1);
+            setSearchQuery(query)}}
           value={searchQuery} />
       </View>
 
