@@ -19,14 +19,14 @@ const EventDetailsFunc = ({ route, navigation }) => {
 
 
     const [daysLeft, setDaysLeft] = useState(0);
-    const date = new Date(route.params.deadline);
+    const date = new Date(route.params.time);
     const date_format = moment(route.params.deadline);
     const formattedDate = date_format.format("DD/MM/YYYY");
     const formattedTime = date_format.format('hh:mm A');
 
 
-    const result = (route.params.collected / route.params.required) * 100;
-    const percentage = `${result.toFixed(2)}%`;
+    // const result = (route.params.collected / route.params.required) * 100;
+    // const percentage = `${result.toFixed(2)}%`;
 
     useEffect(() => {
         const today = new Date();
@@ -45,6 +45,15 @@ const EventDetailsFunc = ({ route, navigation }) => {
             useNativeDriver: true,
         }).start();
     }, [translateY]);
+    console.log(route.params)
+    const region = {
+
+        latitude:route.params.venue.coordinates[0] ,
+        longitude:route.params.venue.coordinates[1],
+        latitudeDelta: 0.00012,
+        longitudeDelta: 0.00099,
+    }
+    const prop = {region:region,date:date}
 
     return (
         
@@ -161,7 +170,7 @@ const EventDetailsFunc = ({ route, navigation }) => {
                             >
                                 <TouchableOpacity
                                     style={[styles.mapBtn, { backgroundColor: "#2482C7" }]}
-                                    onPress={() => navigation.navigate('donations')}
+                                    onPress={() => navigation.navigate('map',prop)}
                                 // onPress={handleLogin}
                                 >
                                     <MaterialIcons name="location-on" size={24} color="white" />

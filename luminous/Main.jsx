@@ -33,6 +33,8 @@ const Main = () => {
         <Stack.Screen name="donations" component={Donation} />
         <Stack.Screen name="donationsDetails" component={GradientScreen} />
         <Stack.Screen name="eventsDetails" component={EventDetailsFunc} />
+
+        {/* <Stack.Screen name="seeonmap" component={Map} /> */}
         
 
         <Stack.Screen name="profile" component={Profile} />

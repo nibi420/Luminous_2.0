@@ -47,7 +47,7 @@ export const getAllEvents = async (req, res) => {
     try {
         const events = await Event.find()
             .populate('postedBy', 'username')
-            .populate('venue', 'name');
+            .populate({path: 'venue', select:['name','coordinates']});
         res.json(events);
     } catch (error) {
         console.error(error);

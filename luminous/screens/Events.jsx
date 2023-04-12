@@ -159,8 +159,9 @@ export default function Event({ navigation }) {
         showsHorizontalScrollIndicator={false}
         style={styles.categoriesContainer}
       >
-        {request.categories.map((category) => (
+        {request.categories.map((category,index) => (
              <TouchableOpacity
+             key={index}
              
              onPress={() => {
               setSwitch(2);
@@ -175,10 +176,10 @@ export default function Event({ navigation }) {
       </ScrollView>
       </View>
       <ScrollView style={styles.bannersContainer}>
-        {filteredBanners.map((banner) => (
+        {filteredBanners.map((banner,index) => (
           <TouchableOpacity
             style={styles.button}
-            key={banner.id}
+            key={index}
             // onPress={() => navigation.navigate(banner.title)}
             onPress={() => navigation.navigate('eventsDetails', banner)}
           >

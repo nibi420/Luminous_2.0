@@ -5,7 +5,7 @@ import { isAuthenticated } from "../middleware/auth.js";
 
 const router = express.Router();
 // isAuthenticated
-router.route("/addEvent").post( addEvent);
-router.route("/getAllEvents").get( getAllEvents);
+router.route("/addEvent").post( isAuthenticated,addEvent);
+router.route("/getAllEvents").get( isAuthenticated,getAllEvents);
 
 export default router;

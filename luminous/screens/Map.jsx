@@ -248,7 +248,7 @@ const MapNightStyle = [
 
 
 
-const Map = ({navigation}) => {
+const Map = ({route,navigation}) => {
 
   const options = [
     { label: 'Today', value: 'todaysEvents' },
@@ -258,14 +258,25 @@ const Map = ({navigation}) => {
   
 
 
+const date = Date.now()
+console.log(date)
+let INITIAL_REGION ={}
 
-
-  const INITIAL_REGION = {
+console.log(route.params)
+if(route.params != undefined){
+  INITIAL_REGION = route.params.region
+}
+else{
+  INITIAL_REGION = {
     latitude:31.4707 ,
     longitude:74.4098,
     latitudeDelta: 0.0012,
     longitudeDelta: 0.0099,
   };
+
+}
+  
+ 
 
 
 

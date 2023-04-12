@@ -1,14 +1,15 @@
-import { Venue2 } from "../models/map_loc.js";
+// import { Venue } from "../models/map_loc.js";
+import { Venue } from "../models/venues.js";
 import {Event} from '../models/events.js';
 
 
 export const addlocation =  async( req, res) => {
 
     try{
-        const { locationName, coordinates } = req.body;
+        const { name, coordinates } = req.body;
 
-        let location = await Venue2.create({
-            locationName,
+        let location = await Venue.create({
+            name,
             coordinates,
           });
 
@@ -56,7 +57,7 @@ export const todaysEvents = async( req, res) => {
             time: { $gte: todaysDate, $lte: tommDate },
           })
         .populate({ path:"postedBy" , select:["fullname"] })
-        .populate({path: "venue", select:["locationName", "coordinates"]});
+        .populate({path: "venue", select:["name", "coordinates"]});
 
 
         res.json({
@@ -105,7 +106,7 @@ export const nextThreeDays = async( req, res) => {
             time: { $gte: todaysDate, $lte: tommDate },
           })
         .populate({ path:"postedBy" , select:["fullname"] })
-        .populate({path: "venue2", select:["locationName", "coordinates"]});
+        .populate({path: "venue", select:["name", "coordinates"]});
 
 
         res.json({
@@ -153,7 +154,7 @@ export const nextSevenDays = async( req, res) => {
             time: { $gte: todaysDate, $lte: tommDate },
           })
         .populate({ path:"postedBy" , select:["fullname"] })
-        .populate({path: "venue2", select:["locationName", "coordinates"]});
+        .populate({path: "venue", select:["name", "coordinates"]});
 
 
         res.json({
