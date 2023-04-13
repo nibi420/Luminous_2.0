@@ -54,3 +54,13 @@ export const getAllEvents = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+export const removeEventAfterTime = async (req, res) => {
+  try {
+    const currentDate = new Date(); // Get the current date and time
+    const eventsToDelete = await Event.find({ time: { $lt: currentDate } }).exec(); // Find events whose time is less than current date
+    await Event.deleteMany({ _id: { $in: eventsToDelete.map(event => event._id) } }).exec(); // Delete events whose time has passed
+    console.log(`Deleted ${eventsToDelete.length} expired events`);
+  } catch (error) {
+    console.error(`Error deleting expired events: ${error}`);
+  }
+}
