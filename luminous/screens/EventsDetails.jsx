@@ -69,7 +69,7 @@ const EventDetailsFunc = ({ route, navigation }) => {
         <View style={styles.imageContainer}>
           <Image
             source={{
-              uri: `https://i.ytimg.com/vi/WQ3oYtIG1Ho/maxresdefault.jpg`,
+              uri: route.params.picture.url,
             }}
             style={styles.image}
           />

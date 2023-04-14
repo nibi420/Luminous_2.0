@@ -10,6 +10,7 @@ export const getDonationsData = async (req,res) => {
 
   try{
    
+<<<<<<< HEAD
       const user = await Donation.find({  })
       return res.send(user)
       console.log(user)
@@ -21,9 +22,23 @@ export const getDonationsData = async (req,res) => {
           message: error.message,
         });   
     }
+=======
+  const user = await Donation.find({ deadline: { $gte: Date.now() }})
+       return res.send(user)
+       console.log(user)
+>>>>>>> 2842ac82cfc4ad185c48112bfd80646ecb66aad4
    
   };
 
+export const getDonationLatest = async (req, res) => {
+  const user = await Donation.find({ deadline: { $gte: Date.now() } })
+    .sort({ deadline: 1 })
+    .limit(1);
+  console.log(user)
+  return res.send(user)
+  console.log(user)
+
+};
 export const pushDonationsData = async (req,res) => {
     // console.log(req.body)
   try{

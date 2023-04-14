@@ -169,6 +169,7 @@ const Donation = ({ navigation }) => {
       </View>
       <ScrollView style={styles.bannersContainer}>
         {filteredData.map((banner) => (
+          
           <TouchableOpacity
             style={styles.button}
             key={banner._id}
@@ -183,7 +184,14 @@ const Donation = ({ navigation }) => {
                 <Text style={styles.bannerTitle}>{banner.post_title}</Text>
                 <Text style={{color:"grey"}}>Posted by: Welfare Committee</Text>
 
-                <DonationProgressBar collected={50} pledged={100} total={150} />
+                {banner.required !== 0? (
+          <DonationProgressBar collected={banner.collected / banner.required} pledged={100} total={banner.required} />
+        ) : <DonationProgressBar collected={banner.collected /0.1} pledged={100} total={banner.required} /> }
+        
+                
+
+
+                {/* <DonationProgressBar collected={banner.collected / req} pledged={100} total={req} /> */}
 
               </View>
             </View>

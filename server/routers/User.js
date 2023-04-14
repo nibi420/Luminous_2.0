@@ -13,7 +13,7 @@ import {
   settingPassword,
 } from "../controllers/User.js";
 import { isAuthenticated } from "../middleware/auth.js";
-import { getDonCats, getDonationsData, pushDonCats, pushDonationsData } from "../controllers/Donations.js";
+import { getDonCats, getDonationLatest, getDonationsData, pushDonCats, pushDonationsData } from "../controllers/Donations.js";
 
 const router = express.Router();
 
@@ -22,6 +22,7 @@ router.route("/login").post(login);
 router.route("/register").post(register);
 router.route("/verify").post(isAuthenticated, verify);
 router.route("/getDonationsData").get(getDonationsData);
+router.route("/getDonationLatest").get(getDonationLatest);
 router.route("/pushDonationsData").post(pushDonationsData);
 router.route("/getDonationCategories").post(getDonCats);
 router.route("/pushDonationCategories").post(pushDonCats);
