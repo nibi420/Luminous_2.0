@@ -7,21 +7,40 @@ import { sendToken } from "../utils/sendToken.js";
 
 
 export const getDonationsData = async (req,res) => {
+
+  try{
    
-       const user = await Donation.find({  })
-       return res.send(user)
-       console.log(user)
+      const user = await Donation.find({  })
+      return res.send(user)
+      console.log(user)
+
+    }catch(error){
+      console.log(error);
+      res.status(250).json({
+          success: false,
+          message: error.message,
+        });   
+    }
    
   };
 
 export const pushDonationsData = async (req,res) => {
     // console.log(req.body)
+  try{
    
     let don_case = await Donation.create(req.body);
   //  let a  = await Donation.deleteMany( req.body )
 
     return res.send("done")
     console.log(user)
+
+  }catch(error){
+    console.log(error);
+    res.status(250).json({
+        success: false,
+        message: error.message,
+      });   
+  }
 
 };
 
