@@ -1,4 +1,3 @@
-import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -17,37 +16,49 @@ import axios from "axios";
 import { IP } from "./constant.js";
 import Navbar from "./components/Navbar";
 import Loading from "./components/Loading";
+import { useDispatch, useSelector } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 
 const Main = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${IP}/getProfile`);
-        setIsAuthenticated(true);
+        console.log(response.data);
+        dispatch({
+          type: "loadUserSuccess",
+          payload: response.data,
+        });
+        dispatch({
+          type: "changeProfile",
+          payload: response.data.user,
+        });
+        setLoading(false);
       } catch (error) {
-        setIsAuthenticated(false);
+        dispatch({
+          type: "loadUserFailure",
+          payload: error.response.data.message,
+        });
+        setLoading(false);
         console.log(error);
       }
     };
 
-    setLoading(true);
-    console.log(isAuthenticated);
     fetchData();
-    console.log(isAuthenticated);
-    setLoading(false);
   }, []);
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   return loading ? (
     <Loading />
   ) : (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={isAuthenticated ? "home" : "login"}
+        initialRouteName={isAuthenticated ? "homescreen" : "login"}
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="login" component={Login} />

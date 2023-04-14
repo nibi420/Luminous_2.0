@@ -18,14 +18,15 @@ import { IP } from "../constant.js";
 import Loading from "../components/Loading";
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
+import { useDispatch } from "react-redux";
 
 export default function Profile({ navigation }) {
   const [avatar, setAvatar] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [isloading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
-  // Fetch data from server using axios get request and set the state of avatar to image fetched using the hook useEffect
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -106,11 +107,16 @@ export default function Profile({ navigation }) {
             await axios
               .get(`${IP}/logout`)
               .then(() => {
+                dispatch({ type: "logoutSucces" });
                 setLoading(false);
                 console.log("Logging out successfully");
                 navigation.navigate("login");
               })
               .catch((error) => {
+                dispatch({
+                  type: "logoutFailure",
+                  payload: error.response.data.message,
+                });
                 setLoading(false);
                 Alert.alert("Uh-Oh", "We weren't able to log you out :(");
                 console.log("Error:", error);
