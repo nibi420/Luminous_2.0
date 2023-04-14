@@ -75,7 +75,6 @@ export const todaysEvents = async( req, res) => {
             message: error.message,
           });   
     }
-
 }
 
 

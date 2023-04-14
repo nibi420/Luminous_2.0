@@ -296,6 +296,24 @@ const Map = ({navigation}) => {
   
 
   useEffect(() => {
+
+    const ask_permission = async () => {
+      console.log("asking for permission");
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status== "granted"){
+        console.log("Permission is granted");
+        await Location.requestBackgroundPermissionsAsync();
+        return
+      }
+      if (status !== "granted") {
+        console.log("Permission is denied");
+        navigation.navigate("homescreen")
+        
+        return;
+      }}
+
+
+
     const getEvents = async ()=> {
       try{
         console.log("Inside API")
@@ -327,6 +345,12 @@ const Map = ({navigation}) => {
   //     longitudeDelta: 0.0099,
   //   });
   // };
+
+  ask_permission().then(()=>{
+    console.log("Permission response recieved");
+    return
+  })
+
   getEvents().then(()=>{
     console.log("events done");
     return ;
