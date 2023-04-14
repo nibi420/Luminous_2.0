@@ -50,8 +50,8 @@ const EventDetailsFunc = ({ route, navigation }) => {
 
         latitude:route.params.venue.coordinates[0] ,
         longitude:route.params.venue.coordinates[1],
-        latitudeDelta: 0.00012,
-        longitudeDelta: 0.00099,
+        latitudeDelta: 0.000012,
+        longitudeDelta: 0.000099,
     }
     const prop = {region:region,date:date}
 
@@ -170,7 +170,7 @@ const EventDetailsFunc = ({ route, navigation }) => {
                             >
                                 <TouchableOpacity
                                     style={[styles.mapBtn, { backgroundColor: "#2482C7" }]}
-                                    onPress={() => navigation.navigate('map',prop)}
+                                    onPress={() => navigation.navigate('mapall',prop)}
                                 // onPress={handleLogin}
                                 >
                                     <MaterialIcons name="location-on" size={24} color="white" />

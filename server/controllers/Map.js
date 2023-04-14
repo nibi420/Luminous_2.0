@@ -176,4 +176,32 @@ export const nextSevenDays = async( req, res) => {
 
 }
 
+export const allDays = async( req, res) => {  
+
+  try{
+    
+      const todaysEvents = await Event.find()
+      .populate({ path:"postedBy" , select:["fullname"] })
+      .populate({path: "venue", select:["name", "coordinates"]});
+
+      res.json({
+          success: true,
+          message:"data: contains events data of all days",
+          data: todaysEvents,
+      });
+      
+
+
+
+  }catch(error){
+      console.log(error);
+      res.status(250).json({
+          success: false,
+          message: error.message,
+        });   
+  }
+
+}
+
+
 
