@@ -34,6 +34,10 @@ export default function App({ navigation }) {
       }
 
       dispatch({
+        type: "changeProfile",
+        payload: response.data.user
+      })
+      dispatch({
         type: "loginSuccess",
         payload: response.data.user,
       });

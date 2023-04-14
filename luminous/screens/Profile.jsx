@@ -250,7 +250,6 @@ export default function Profile({ navigation }) {
           <View style={styles.border}></View>
         </ScrollView>
       </LinearGradient>
-      <Navbar navigation={navigation} currentScreen="profile" />
       {isloading && <Loading />}
     </View>
   );

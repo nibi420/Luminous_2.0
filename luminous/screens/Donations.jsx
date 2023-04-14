@@ -15,6 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import DonationProgressBar from "./DonationProgressBar";
 import axios from "axios";
 import React, { useState, useEffect } from 'react';
+import { useSelector } from "react-redux";
 
 
 
@@ -53,6 +54,10 @@ const Donation = ({ navigation }) => {
   const [catQuery, setCatQuery] = useState("");
   const [request,setRequest] = useState({categories:null,data:null})
   const [myswitch, setSwitch] = useState(1);
+  const userRole = useSelector((state) => state.profile.role)
+  const isVisible = userRole === "stuco" ? true: false
+  console.log(userRole)
+  // const isVisible = true;
   // const [loading,setloadin]
   // const [x, setx] = useState(false);
 
@@ -81,12 +86,13 @@ const Donation = ({ navigation }) => {
     fetchData()
   }, [1]);
 
+  
+
   if (!request.data  ) {
 
     // return <Text>Loading...</Text>;
     return<Loading/>
   }
- const isVisible = true;
   
   const filteredData = request.data.filter((banner) =>{
  
@@ -185,7 +191,6 @@ const Donation = ({ navigation }) => {
         ))}
       </ScrollView>
 
-      <Navbar navigation={navigation} currentScreen="donate" />
     </LinearGradient>
   );
 };

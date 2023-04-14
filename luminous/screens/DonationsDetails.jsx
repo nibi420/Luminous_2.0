@@ -19,6 +19,7 @@ const GradientScreen = ({ route, navigation }) => {
 
     const result = (route.params.collected / route.params.required) * 100;
     const percentage = `${result.toFixed(2)}%`;
+    console.log(route.params)
 
 
 

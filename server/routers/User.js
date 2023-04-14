@@ -14,7 +14,6 @@ import {
 } from "../controllers/User.js";
 import { isAuthenticated } from "../middleware/auth.js";
 import { getDonCats, getDonationsData, pushDonCats, pushDonationsData } from "../controllers/Donations.js";
-import { sendAgain } from "../controllers/User.js";
 
 const router = express.Router();
 

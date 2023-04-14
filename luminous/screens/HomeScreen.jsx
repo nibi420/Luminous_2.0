@@ -85,8 +85,6 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </LinearGradient>
-     
-      <Navbar navigation={navigation} currentScreen="home" />
     </View>
   );
 }

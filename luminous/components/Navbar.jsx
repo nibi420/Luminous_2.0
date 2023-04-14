@@ -42,7 +42,7 @@ const Navbar = () => {
       type: "changeScreen",
       payload: "donate",
     });
-    navigation.navigate("donate");
+    navigation.navigate("donations");
   };
 
   const handleMap = () => {
@@ -64,7 +64,7 @@ const Navbar = () => {
             ? [styles.navButton, styles.selectedNavButton]
             : styles.navButton
         }
-        onPress={() => navigation.navigate('map')}
+        onPress={handleMap}
       >
         <Ionicons
           name="map-outline"
@@ -87,8 +87,8 @@ const Navbar = () => {
             ? [styles.navButton, styles.selectedNavButton]
             : styles.navButton
         }
-        // onPress={handleEvent}
-        onPress={() => navigation.navigate('events')}
+        onPress={handleEvent}
+        // onPress={() => navigation.navigate('events')}
       >
         <Ionicons
           name="calendar-outline"
@@ -111,8 +111,8 @@ const Navbar = () => {
             ? [styles.navButton, styles.selectedNavButton]
             : styles.navButton
         }
-        // onPress={handleHome}
-        onPress={() => navigation.navigate('homescreen')}
+        onPress={handleHome}
+        // onPress={() => navigation.navigate('homescreen')}
       >
         <Ionicons
           name="home-outline"
@@ -135,7 +135,8 @@ const Navbar = () => {
             ? [styles.navButton, styles.selectedNavButton]
             : styles.navButton
         }
-        onPress={() => navigation.navigate('donations')}
+        // onPress={() => navigation.navigate('donations')}
+        onPress={handleDonate}
       >
         <Ionicons
           name="heart-outline"
@@ -158,8 +159,8 @@ const Navbar = () => {
             ? [styles.navButton, styles.selectedNavButton]
             : styles.navButton
         }
-        // onPress={handleProfile}
-        onPress={() => navigation.navigate('profile')}
+        onPress={handleProfile}
+        // onPress={() => navigation.navigate('profile')}
 
       >
         <Ionicons

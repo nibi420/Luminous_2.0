@@ -17,6 +17,7 @@ import axios from 'axios';
 import { IP } from "../constant.js";
 import Navbar from "../components/Navbar.jsx";
 import Loading from "../components/Loading.jsx";
+import { useSelector } from "react-redux";
 
 const { width } = Dimensions.get("window");
 
@@ -59,6 +60,9 @@ export default function Event({ navigation }) {
   const [request,setRequest] = useState({categories:null,data:null})
   const [myswitch, setSwitch] = useState(1);
 
+  const userRole = useSelector((state) => state.profile.role)
+  const isVisible = userRole === "admin" ? true: false
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -100,7 +104,6 @@ export default function Event({ navigation }) {
       return<Loading/>
 
   }
- const isVisible = true;
 
   const filteredBanners = request.data.filter((banner) =>{
     console.log(banner)
@@ -225,7 +228,6 @@ export default function Event({ navigation }) {
           <Ionicons name="person-outline" size={24} color="#aaa" />
           <Text style={styles.navText}>Account</Text>
         </TouchableOpacity> */}
-        <Navbar navigation={navigation} currentScreen="events" />
       {/* </View> */}
     </LinearGradient>
   );
