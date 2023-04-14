@@ -1,35 +1,56 @@
 import {Event} from '../models/events.js';
 import {Venue} from '../models/venues.js';
+import cloudinary from "cloudinary";
+import fs from "fs";
+
 
 export const addEvent = async (req, res) => {
     try {
-        const { title, venueName, time, details, room, categoryName } = req.body;
-        console.log(req.body);
+        const { title, venueName, time, details, room, categoryName} = req.body;
+        const picture1 = req.files.picture.tempFilePath;
+        console.log(picture1);
         // Find the venue with the given name in the venueSchema
         const venue = await Venue.findOne({ name: venueName });
         const category = categoryName;
         // console.log(req);
+        const result = await cloudinary.v2.uploader.upload(picture1, {
+            folder: "luminous/events",
+        });
 
+        fs.rmSync("./tmp", { recursive: true });
+
+        console.log("Public id", result.public_id);
+        console.log("URL", result.secure_url);
+
+
+
+        
         const newEvent = new Event({
             title,
             postedBy: req.user._id,
             venue: venue._id, // Set the venue ID instead of the name
-            time,
+            time: time,
             details,
             room,
             category,
+            picture: {
+                public_id: result.public_id,
+                url: result.secure_url,
+            }
         });
 
-        if (req.file) {
-            // If a file was uploaded, add the file data to the event
-            newEvent.picture = {
-                data: req.file.buffer,
-                contentType: req.file.mimetype
-            }
-        }
+        console.log('hhere!!')
+
+        // if (req.file) {
+        //     // If a file was uploaded, add the file data to the event
+        //     newEvent.picture = {
+        //         data: req.file.buffer,
+        //         contentType: req.file.mimetype
+        //     }
+        // }
 
         await newEvent.save();
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             message: 'Event added successfully'
         });
@@ -45,7 +66,7 @@ export const addEvent = async (req, res) => {
 
 export const getAllEvents = async (req, res) => {
     try {
-        const events = await Event.find()
+        const events = await Event.find({ })
             .populate('postedBy', 'username')
             .populate({path: 'venue', select:['name','coordinates']});
         res.json(events);
@@ -54,6 +75,22 @@ export const getAllEvents = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+export const getUpcomingEvent = async (req, res) => {
+    try {
+        const events = await Event.find({ time: { $gte: Date.now() } })
+            .sort({ time: 1 })
+            .populate('postedBy', 'username')
+            .populate({ path: 'venue', select: ['name', 'coordinates'] })
+            .limit(1);
+        res.json(events);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+};
+
+
 export const removeEventAfterTime = async (req, res) => {
   try {
     const currentDate = new Date(); // Get the current date and time

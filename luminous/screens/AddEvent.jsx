@@ -7,6 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { IP } from "../constant.js";
 import axios from 'axios';
 import Loading from '../components/Loading.jsx';
+import mime from "mime";
 
 
 
@@ -25,6 +26,7 @@ const AddEventScreen = ({ navigation }) => {
 
 
     const [image, setImage] = useState(null);
+    const [imageB, setImageB] = useState(null);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -36,6 +38,7 @@ const AddEventScreen = ({ navigation }) => {
 
         if (!result.canceled) {
             setImage(result.uri);
+            setImageB(result);
         }
     };
 
@@ -52,19 +55,52 @@ const AddEventScreen = ({ navigation }) => {
 
     const handleSubmit = async () => {
         try {
-            const eventData = {
-                title,
-                venueName,
-                time: new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes()),
-                details: info,
-                room: roomNumber || null,
-                categoryName,
-            };
-            const response = await axios.post(`${IP}/addEvent`, eventData);
-            console.log(response.data);
-            // handle success or error response from server
+            let datex = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes())
+
+            setAvatar(imageB.uri);
+
+            const formData = new FormData();
+            formData.append("title", title)
+            formData.append("venueName", venueName)
+            formData.append("time", datex)
+            formData.append("details", info)
+            formData.append("room", roomNumber)
+            formData.append("categoryName", categoryName)
+            formData.append("picture", {
+                uri: imageB.uri,
+                type: mime.getType(imageB.uri),
+                name: imageB.uri.split("/").pop(),
+            });
+
+            console.log("image", imageB);
+
+
+            // console.log("Form", formData);
+
+
+            // const eventData = {
+            //     title,
+            //     venueName,
+            //     time: new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes()),
+            //     details: info,
+            //     room: roomNumber || null,
+            //     categoryName,
+            //     picture: formData
+
+
+            // };
+            const response = await axios.post(`${IP}/addEvent`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            // console.log(response.data);
+            // navigation.goBack();
+            // // handle success or error response from server
         } catch (error) {
-            console.error(error);
+            // console.error(error);
+            navigation.goBack()
             // handle error
         }
     };
@@ -77,7 +113,7 @@ const AddEventScreen = ({ navigation }) => {
     };
 
     const [request, setRequest] = useState({ categories: null, venues: null })
-
+    const [avatar, setAvatar] = useState("");
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -86,9 +122,11 @@ const AddEventScreen = ({ navigation }) => {
                 // setData(response.data);
                 const catresponse = await axios.post(`${IP}/getDonationCategories`, { type: "events" });//Events Ki catergories arahi hain
 
+                const responseImage = await axios.get(`${IP}/getProfile`);
+                setAvatar(responseImage.data.user.profile_picture.url);
 
                 setRequest({ categories: catresponse.data, venues: response.data });
-                console.log(request.venues);
+                // console.log(request.venues);
 
 
             } catch (error) {
@@ -99,6 +137,8 @@ const AddEventScreen = ({ navigation }) => {
         };
         fetchData()
     }, [1]);
+
+
 
     if (!request.venues) {
 

@@ -8,12 +8,21 @@ import { sendToken } from "../utils/sendToken.js";
 
 export const getDonationsData = async (req,res) => {
    
-       const user = await Donation.find({  })
+  const user = await Donation.find({ deadline: { $gte: Date.now() }})
        return res.send(user)
        console.log(user)
    
   };
 
+export const getDonationLatest = async (req, res) => {
+  const user = await Donation.find({ deadline: { $gte: Date.now() } })
+    .sort({ deadline: 1 })
+    .limit(1);
+  console.log(user)
+  return res.send(user)
+  console.log(user)
+
+};
 export const pushDonationsData = async (req,res) => {
     // console.log(req.body)
    

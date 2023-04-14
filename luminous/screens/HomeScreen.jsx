@@ -7,19 +7,55 @@ import {
   Image,
   BackHandler,
   Alert,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // example library for icons
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect } from "react";
 import Navbar from "../components/Navbar";
+import * as Progress from 'react-native-progress';
 // import axios from "axios";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { IP } from "../constant.js";
+import DonationProgressBar from "./DonationProgressBar";
+import { useState, useEffect } from 'react';
+import axios  from "axios";
+import { IP } from "../constant.js";
+import Loading from "../components/Loading";
 
 export default function HomeScreen({ navigation }) {
+
+  const[upcomingEvent, setUpcomingEvent] = useState([]);
+  const [upcomingDonation, setUpcomingDonation] = useState([]);
+  const [number, setNumber] = useState(0);
+
+
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+
+        const response = await axios.get(`${IP}/getUpcomingEvent`);
+        const response2 = await axios.get(`${IP}/getDonationsData`);
+        setUpcomingDonation(response2.data);
+        setUpcomingEvent(response.data);
+
+
+      } catch (error) {
+        console.log("Error In HomeScreen")
+        console.error(error);
+
+      }
+    };
+    fetchData()
+
+    
+
+
+    
+
+
     const backAction = () => {
-      Alert.alert("Hold on!", "Are you sure you want to exit the app?", [
+
+      Alert.alert("Hold on!", "Are you sure you want to go back?", [
         {
           text: "Cancel",
           onPress: () => null,
@@ -28,7 +64,10 @@ export default function HomeScreen({ navigation }) {
         { text: "YES", onPress: () => BackHandler.exitApp() },
       ]);
       return true;
+
     };
+
+    
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -36,7 +75,30 @@ export default function HomeScreen({ navigation }) {
     );
 
     return () => backHandler.remove();
-  }, []);
+  }, [1]);
+
+
+ 
+
+  const handleButtonPress = () => {
+    Alert.prompt(
+      'Enter a number',
+      '',
+      (text) => setNumber(parseInt(text)),
+      'plain-text'
+    );
+  };
+
+
+  console.log("HEHEHE",upcomingEvent);
+  console.log("Donation:", upcomingDonation);
+
+  if (upcomingEvent.length == 0) {
+
+
+    return <Loading />
+
+  }
 
   const handleEvent = async () => {
     navigation.navigate("events");
@@ -63,29 +125,50 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.content}>
           <Text style={styles.title}>Luminous</Text>
           <Text style={styles.subtitle}>Home page</Text>
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => console.log("Clicked on Featured Welfare Post")}
-          >
+          <ScrollView style ={{width: '100%'}}>
             <Text style={styles.cardTitle}>Featured Welfare Post</Text>
-            <Text style={styles.cardContent}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nec
-              gravida turpis.
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => console.log("Clicked on Upcoming Event")}
-          >
+            <TouchableOpacity
+              style={[styles.card, { borderColor: '#000000', borderWidth: 2 }]}
+              onPress={() => console.log("Clicked on Featured Welfare Post")}
+            >
+              <Image
+                source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRu1TflCyfWDMNu6q7hVfgolfdYix7qE377UQ&usqp=CAU' }}
+                style={{ width: '100%', height: 100, borderRadius: 10 }}
+              />
+              <View style={{ paddingHorizontal: 10,}}>
+                <Text style={{ fontWeight: 'bold', color: 'grey' }}>Welfare Committee</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>{upcomingDonation[0].post_title}</Text>
+                <Progress.Bar progress={30 / 100} color="skyblue" height={10} width={null} marginVertical={10} />
+                <TouchableOpacity style={{ backgroundColor: '#000000', borderRadius: 15, padding: 10, marginTop: 10 }} onPress={handleButtonPress()}>
+                  <Text style={{ color: '#FFFFFF', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Pledge</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+
             <Text style={styles.cardTitle}>Upcoming Event</Text>
-            <Text style={styles.cardContent}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nec
-              gravida turpis.
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.card, { borderColor: '#000000', borderWidth: 2 }]}
+              onPress={() => console.log("Clicked on Featured Image")}
+            >
+              <Image
+                source={{ uri: 'https://ismailimail.files.wordpress.com/2018/09/1535934888385blob.png' }}
+                style={{ width: '100%', height: 200, borderRadius: 10 }}
+              />
+              <View style={{ paddingHorizontal: 10, paddingTop: 10 }}>
+                <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 25, }}>{upcomingEvent[0].title}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
+                  <Text style={{ color: '#2E96D2' }}>{upcomingEvent[0].venue.name}</Text>
+                  <Text style={{ color: 'white', marginHorizontal: 10 }}>|</Text>
+                  <Text style={{ color: '#2E96D2' }}>{new Date(upcomingEvent[0].time).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
+        
       </LinearGradient>
     </View>
+
   );
 }
 
@@ -99,6 +182,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
+    marginTop: 100,
   },
   title: {
     fontSize: 24,
@@ -111,9 +195,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   card: {
-    backgroundColor: "#eee",
-    padding: 20,
-    borderRadius: 10,
+    backgroundColor: "#093147",
+    padding: 15,
+    borderRadius: 25,
     marginBottom: 20,
     width: "100%",
     shadowColor: "#000",
@@ -124,11 +208,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
     elevation: 4,
+    display: 'flex',
   },
   cardTitle: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
+    color: 'white',
   },
   cardContent: {
     fontSize: 16,

@@ -371,7 +371,7 @@ export const uploadPicture = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     const avatar = req.files.avatar.tempFilePath;
-
+    console.log(avatar)
     if (avatar) {
       if (user.profile_picture.url !== "") {
         await cloudinary.v2.uploader.destroy(user.profile_picture.public_id);
@@ -380,6 +380,7 @@ export const uploadPicture = async (req, res) => {
       const result = await cloudinary.v2.uploader.upload(avatar, {
         folder: "luminous/profile_pictures",
       });
+
 
       fs.rmSync("./tmp", { recursive: true });
 
