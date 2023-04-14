@@ -53,9 +53,13 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+
+  resetPasswordOtp: Number,
+  resetPasswordOtpExpire: Date,
 });
 
 userSchema.pre("save", async function (next) {
+  this.updatedAt = Date.now();
   if (!this.isModified("password")) {
     return next();
   }

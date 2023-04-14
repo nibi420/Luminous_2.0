@@ -1,12 +1,41 @@
 import { User } from "../models/users.js";
 import { sendMail } from "../utils/sendMail.js";
 import { sendToken } from "../utils/sendToken.js";
+import cloudinary from "cloudinary";
+import fs from "fs";
 
 export const register = async (req, res) => {
   try {
-    const { fullname, email, username, password, role } = req.body;
+    console.log("Register");
+    let { fullname, email, username, password } = req.body;
+    email = email.trim();
+    const regex = /^[0-9]+$/;
+    let domain = email.split("@")[1];
+    let roleCheck = email.split("@")[0];
+    let role;
 
-    // const { profile_picture } = req.files;
+    if (!fullname || !email || !username || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill in all fields",
+      });
+    }
+    if (domain !== "lums.edu.pk") {
+      res.status(400).json({
+        success: false,
+        message: "Please enter a valid LUMS email ID",
+      });
+    }
+
+    if (email === "studentcouncil@lums.edu.pk") {
+      role = "stuco";
+    } else {
+      if (regex.test(roleCheck)) {
+        role = "student";
+      } else {
+        role = "admin";
+      }
+    }
 
     let user = await User.findOne({ email });
 
@@ -45,6 +74,7 @@ export const register = async (req, res) => {
     await sendMail(email, otp);
     sendToken(res, user, 201, "OTP sent to your email");
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       success: false,
       message: error.message,
@@ -56,6 +86,7 @@ export const verify = async (req, res) => {
   try {
     console.log("Here");
     console.log(req.body.otp);
+    console.log("Verification");
     const otp = Number(req.body.otp);
 
     const user = await User.findById(req.user._id);
@@ -64,7 +95,7 @@ export const verify = async (req, res) => {
     console.log("Flag 1");
 
     if (user.otp !== otp || user.otpExpire < Date.now()) {
-      return res.status(200).json({
+      return res.status(400).json({
         success: false,
         message: "Invalid OTP or OTP expired",
       });
@@ -78,7 +109,7 @@ export const verify = async (req, res) => {
 
     await user.save();
 
-    sendToken(res, user, 200, "Account verified successfully");
+    logout(req, res);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -89,10 +120,11 @@ export const verify = async (req, res) => {
 
 export const sendAgain = async (req, res) => {
   try {
+    console.log("Send Again");
     const user = await User.findById(req.user._id);
 
     if (user.otpExpire < Date.now()) {
-      return res.status(200).json({
+      return res.status(400).json({
         success: false,
         message: "OTP expired",
       });
@@ -119,11 +151,102 @@ export const sendAgain = async (req, res) => {
   }
 };
 
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const otp = Math.floor(Math.random() * 10000);
+
+    await sendMail(email, otp);
+
+    user.resetPasswordOtp = otp;
+    user.resetPasswordOtpExpire = Date.now() + 60 * 1000 * 5;
+
+    await user.save();
+
+    sendToken(res, user, 200, "OTP sent to your email");
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { otp } = req.body;
+
+    const user = await User.findById(req.user._id);
+
+    if (
+      user.resetPasswordOtp !== otp ||
+      user.resetPasswordOtpExpire < Date.now()
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP or OTP expired",
+      });
+    }
+
+    user.resetPasswordOtp = null;
+    user.resetPasswordOtpExpire = null;
+
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "OTP verified",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const settingPassword = async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+
+    if (!newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter password",
+      });
+    }
+
+    const user = await User.findById(req.user._id);
+
+    user.password = newPassword;
+
+    await user.save();
+
+    logout(req, res);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    // email = email.trim();
-    console.log("Flag Login 1");
+    console.log("Login");
+    // console.log(req.body);
+    let { email, password } = req.body;
+    email = email.trim();
 
     if (!email || !password) {
       return res.status(400).json({
@@ -132,12 +255,11 @@ export const login = async (req, res) => {
       });
     }
 
-    
-
+    // console.log("Abhi tak theek");
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
-      console.log("yahan error aa gaya");
+      // console.log("yahan error aa gaya");
       return res.status(400).json({
         success: false,
         message: "Invalid email or password",
@@ -145,7 +267,7 @@ export const login = async (req, res) => {
     }
 
     if (!user.verified) {
-      return res.status(200).json({
+      return res.status(400).json({
         success: false,
         message: "Please verify your account",
       });
@@ -160,6 +282,7 @@ export const login = async (req, res) => {
       });
     }
 
+    console.log("Sending token");
     sendToken(res, user, 200, "Login successfull");
   } catch (error) {
     res.status(500).json({
@@ -171,6 +294,7 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
+    console.log("Logout");
     res
       .status(200)
       .cookie("token", null, {
@@ -188,3 +312,97 @@ export const logout = async (req, res) => {
   }
 };
 
+export const changePassword = async (req, res) => {
+  try {
+    console.log("Change password");
+    const user = await User.findById(req.user._id).select("+password");
+
+    const isMatch = await user.comparePassword(req.body.oldPassword);
+
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Old password is incorrect",
+      });
+    }
+
+    user.password = req.body.newPassword;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully",
+    });
+
+    // sendToken(res, user, 200, "Password changed successfully");
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getProfile = async (req, res) => {
+  try {
+    console.log("Get profile");
+    const user = await User.findById(req.user._id);
+
+    res.status(200).json({
+      success: true,
+      user: {
+        fullname: user.fullname,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        profile_picture: user.profile_picture,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const uploadPicture = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const avatar = req.files.avatar.tempFilePath;
+
+    if (avatar) {
+      if (user.profile_picture.url !== "") {
+        await cloudinary.v2.uploader.destroy(user.profile_picture.public_id);
+      }
+
+      const result = await cloudinary.v2.uploader.upload(avatar, {
+        folder: "luminous/profile_pictures",
+      });
+
+      fs.rmSync("./tmp", { recursive: true });
+
+      console.log("Public id", result.public_id);
+      console.log("URL", result.secure_url);
+
+      user.profile_picture = {
+        public_id: result.public_id,
+        url: result.secure_url,
+      };
+
+      await user.save();
+      console.log("User saved");
+
+      res
+        .status(200)
+        .json({ success: true, message: "Profile Updated successfully" });
+    }
+  } catch (error) {
+    console.log("Error idher hai", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

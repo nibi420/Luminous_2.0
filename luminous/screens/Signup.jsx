@@ -19,11 +19,6 @@ export default function Signup({ navigation }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
 
-  const validateEmail = () => {
-    const regex = /^[^\s@]+@([^\s@]+\.)?lums\.edu\.pk$/;
-    return regex.test(email);
-  };
-
   const passwordCheck = () => {
     if (password === confirmPassword) {
       return true;
@@ -41,11 +36,6 @@ export default function Signup({ navigation }) {
       username === ""
     ) {
       Alert.alert("Error!", "Please fill in all fields");
-      return;
-    }
-
-    if (!validateEmail()) {
-      Alert.alert("Error!", "Please enter a valid LUMS email ID");
       return;
     }
 

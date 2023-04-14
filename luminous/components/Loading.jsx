@@ -1,21 +1,22 @@
-import { View } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import React from "react";
-import { LinearGradient } from "expo-linear-gradient";
 
 const Loading = () => {
   return (
-    <LinearGradient
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-      colors={["#000000", "#0E2C4F"]}
-    >
-      <ActivityIndicator animating={true} size="100" color="blue" />
-    </LinearGradient>
+    <View style={styles.overlay}>
+      <ActivityIndicator animating={true} size="large" color="blue" />
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+  },
+});
 
 export default Loading;

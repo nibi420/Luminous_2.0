@@ -19,7 +19,7 @@ import Navbar from "../components/Navbar";
 export default function HomeScreen({ navigation }) {
   useEffect(() => {
     const backAction = () => {
-      Alert.alert("Hold on!", "Are you sure you want to go back?", [
+      Alert.alert("Hold on!", "Are you sure you want to exit the app?", [
         {
           text: "Cancel",
           onPress: () => null,

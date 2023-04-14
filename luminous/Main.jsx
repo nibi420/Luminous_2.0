@@ -1,5 +1,4 @@
-import { View, Text } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./screens/Login";
@@ -15,17 +14,66 @@ import GradientScreen from "./screens/DonationsDetails";
 import EventDetailsFunc from "./screens/EventsDetails";
 import Profile from "./screens/Profile";
 import AddEventScreen from "./screens/AddEvent";
+import ChangePassword from "./screens/ChangePassword";
+import ForgotPassword from "./screens/ForgotPassword";
+import ResetPassword from "./screens/ResetPassword";
+import SettingPassword from "./screens/SettingPassword";
+import axios from "axios";
+import { IP } from "./constant.js";
+import Navbar from "./components/Navbar";
+import Loading from "./components/Loading";
+import { useDispatch, useSelector } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 
 const Main = () => {
-  return (
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${IP}/getProfile`);
+        console.log(response.data);
+        dispatch({
+          type: "loadUserSuccess",
+          payload: response.data,
+        });
+        dispatch({
+          type: "changeProfile",
+          payload: response.data.user,
+        });
+        dispatch({
+          type: "changeScreen",
+          payload: "homescreen",
+        });
+        setLoading(false);
+      } catch (error) {
+        dispatch({
+          type: "loadUserFailure",
+        });
+        setLoading(false);
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  return loading ? (
+    <Loading />
+  ) : (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="testing"
+        initialRouteName={isAuthenticated ? "homescreen" : "login"}
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="login" component={Login} />
+        <Stack.Screen name="forgotpassword" component={ForgotPassword} />
+        <Stack.Screen name="resetpassword" component={ResetPassword} />
+        <Stack.Screen name="settingpassword" component={SettingPassword} />
         <Stack.Screen name="testing" component={TestingScreen} />
         <Stack.Screen name="signup" component={Signup} />
         <Stack.Screen name="verify" component={Verify} />
@@ -43,7 +91,10 @@ const Main = () => {
         <Stack.Screen name="map" component={Map} />
         <Stack.Screen name="mapall" component={MapAll} />
 
+        <Stack.Screen name="changePassword" component={ChangePassword} />
       </Stack.Navigator>
+
+      {isAuthenticated && <Navbar />}
     </NavigationContainer>
   );
 };
