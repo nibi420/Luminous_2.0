@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Button, TouchableOpacity,Image } from "react-native";
 import  { Marker } from "react-native-maps";
+import  { Callout } from "react-native-maps";
 import MapView from "react-native-map-clustering";
 import { PROVIDER_GOOGLE }  from "react-native-maps";
 import  OverlayComponent from "react-native-maps";
@@ -375,7 +376,14 @@ else{
         {data.map((item,index) => {
                 return (<Marker coordinate={{latitude: item.venue.coordinates[0] + getRandomArbitrary(-0.00006,0.00006)  , longitude: item.venue.coordinates[1]+ getRandomArbitrary(-0.00006,0.00006) }} title={item.title} description={item.room}
                         // image ={ require("../assets/markericon.png")  }
-                         key = {index}>
+                         key = {index}
+                         >
+                          <Callout onPress={() => navigation.navigate('eventsDetails', item )}>
+                          <View style={{width:  110}}>
+                            <Text style={styles.title}>{item.title}</Text>
+                            <Text style={styles.room}>{item.room}</Text>
+                          </View>
+                          </Callout>
                          <Image source={markerImage} style={markerImageSize} />
                          </Marker>
                          )
@@ -389,7 +397,7 @@ else{
       </MapView>
         <View style={backstyle.backButton}>
 
-        <TouchableOpacity style={backstyle.backButton} onPress={() => navigation.navigate("testing")}>
+        <TouchableOpacity style={backstyle.backButton} onPress={() => navigation.goBack()}>
           <Text style={backstyle.backButtonText}>Back</Text>
         </TouchableOpacity>
 
@@ -425,6 +433,16 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%",
+  },
+
+  title: {
+    fontWeight: 'bold',
+    fontSize: 17,
+    lineHeight: 24,
+  },
+  room: {
+    fontSize: 14,
+    lineHeight: 20,
   },
 });
 

@@ -148,7 +148,7 @@ const EventDetailsFunc = ({ route, navigation }) => {
                                             {months[date.getMonth()]}
                                         </Text>
                                         <Text style={[styles.text, { textAlign: "center" }]}>
-                                            {date.getDay()}
+                                            {date.getDate()}
                                         </Text>
                                     </View>
                                 </View>
