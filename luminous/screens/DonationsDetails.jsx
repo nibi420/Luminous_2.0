@@ -33,6 +33,15 @@ const GradientScreen = ({ route, navigation }) => {
 
 
     const translateY = useRef(new Animated.Value(height)).current;
+    var req = 1;
+    if(route.params.required == 0){
+        req = 1;
+    }
+    else{
+        req = route.params.required;
+    }
+    
+
 
     useEffect(() => {
         Animated.timing(translateY, {
@@ -81,7 +90,7 @@ const GradientScreen = ({ route, navigation }) => {
                             </View>
 
                             <View style={[styles.containerBox, { backgroundColor: "transparent" }]}>
-                                <Progress.Bar progress={route.params.collected / route.params.required} color="skyblue" height={10} width={null} marginTop={-10} />
+                                <Progress.Bar progress={route.params.collected / req} color="skyblue" height={10} width={null} marginTop={-10} />
                             </View>
 
                             <View style={styles.transparentContainer}>
