@@ -55,29 +55,29 @@ export default function Event({ navigation }) {
 
   // const [banners, setBanners] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
- 
+
   const [catQuery, setCatQuery] = useState("");
-  const [request,setRequest] = useState({categories:null,data:null})
+  const [request, setRequest] = useState({ categories: null, data: null })
   const [myswitch, setSwitch] = useState(1);
 
   const userRole = useSelector((state) => state.profile.role)
-  const isVisible = userRole === "admin" ? true: false
+  const isVisible = userRole === "admin" || userRole === "stuco" ? true : false
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        
+
         const response = await axios.get(`${IP}/getAllEvents`);
         // setData(response.data);
-       
-      
-        const catresponse = await axios.post(`${IP}/getDonationCategories`,{type:"events"});
-        catresponse.data.unshift({name:"All"})
+
+
+        const catresponse = await axios.post(`${IP}/getDonationCategories`, { type: "events" });
+        catresponse.data.unshift({ name: "All" })
         // console.log(catresponse.data)
         // Array.unshift(element);
 
-        setRequest({categories: catresponse.data,data: response.data});
-        
+        setRequest({ categories: catresponse.data, data: response.data });
+
 
       } catch (error) {
         console.log("dsjflsdhfajsdhfaskd")
@@ -98,39 +98,39 @@ export default function Event({ navigation }) {
   //     });
   // }, []);
 
-  if (!request.data  ) {
-    
- 
-      return<Loading/>
+  if (!request.data) {
+
+
+    return <Loading />
 
   }
 
-  const filteredBanners = request.data.filter((banner) =>{
+  const filteredBanners = request.data.filter((banner) => {
     console.log(banner)
- 
-    if(myswitch === 1){
+
+    if (myswitch === 1) {
       return banner.title.toLowerCase().includes(searchQuery.toLowerCase());
 
     }
-    if(myswitch === 2){
-      if(catQuery == "All"){
+    if (myswitch === 2) {
+      if (catQuery == "All") {
         return banner.title.toLowerCase().includes("");
 
       }
-      else{
-      try{
-        let a = banner.category.toLowerCase().includes(catQuery.toLowerCase())
-        return a;
+      else {
+        try {
+          let a = banner.category.toLowerCase().includes(catQuery.toLowerCase())
+          return a;
+        }
+        catch (error) {
+          console.log(error)
+          // return "Nothing found in this category"
+        }
       }
-      catch(error){
-        console.log(error)
-        // return "Nothing found in this category"
-      }
-    }
 
     }
   })
-  
+
   return (
     <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
       <View style={styles.topContainer}>
@@ -141,7 +141,8 @@ export default function Event({ navigation }) {
         <TextInput style={styles.searchInput} placeholder="Search"
           onChangeText={(query) => {
             setSwitch(1);
-            setSearchQuery(query)}}
+            setSearchQuery(query)
+          }}
           value={searchQuery} />
       </View>
 
@@ -150,36 +151,37 @@ export default function Event({ navigation }) {
           style={[styles.addBtn, { backgroundColor: "#2482C7" }]}
           onPress={() => navigation.navigate('addevent')}
         >
-            <Ionicons name="add" size={24} color="white" style={{ marginRight: 8 }} />
-          <Text style={{color:"white"}}>Add Events</Text>
+          <Ionicons name="add" size={24} color="white" style={{ marginRight: 8 }} />
+          <Text style={{ color: "white" }}>Add Events</Text>
         </TouchableOpacity>
       </View>)}
 
       <View style={styles.catContainer}>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.categoriesContainer}
-      >
-        {request.categories.map((category,index) => (
-             <TouchableOpacity
-             key={index}
-             
-             onPress={() => {
-              setSwitch(2);
-              setCatQuery(category.name)}}
-           >
-            <View key={category.id} style={styles.category}>
-              <Text style={styles.categoryName}>{category.name}</Text>
-             
-            </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.categoriesContainer}
+        >
+          {request.categories.map((category, index) => (
+            <TouchableOpacity
+              key={index}
+
+              onPress={() => {
+                setSwitch(2);
+                setCatQuery(category.name)
+              }}
+            >
+              <View key={category.id} style={styles.category}>
+                <Text style={styles.categoryName}>{category.name}</Text>
+
+              </View>
             </TouchableOpacity>
           ))}
-      </ScrollView>
+        </ScrollView>
       </View>
       <ScrollView style={styles.bannersContainer}>
-        {filteredBanners.map((banner,index) => (
+        {filteredBanners.map((banner, index) => (
           <TouchableOpacity
             style={styles.button}
             key={index}
@@ -246,7 +248,7 @@ const styles = StyleSheet.create({
     // alignItems: "center",
   },
   addBtn: {
-    flexDirection:"row",
+    flexDirection: "row",
     borderRadius: 10,
     height: 40,
     alignItems: "center",
@@ -293,7 +295,7 @@ const styles = StyleSheet.create({
   },
   categoriesContainer: {
     // position:"absolute",
-    flex:1,
+    flex: 1,
     marginTop: 20,
     marginLeft: 20,
     // height: 50,

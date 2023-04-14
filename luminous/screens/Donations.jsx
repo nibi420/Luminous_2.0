@@ -52,10 +52,10 @@ const Donation = ({ navigation }) => {
   const [data, setData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [catQuery, setCatQuery] = useState("");
-  const [request,setRequest] = useState({categories:null,data:null})
+  const [request, setRequest] = useState({ categories: null, data: null })
   const [myswitch, setSwitch] = useState(1);
   const userRole = useSelector((state) => state.profile.role)
-  const isVisible = userRole === "stuco" ? true: false
+  const isVisible = userRole === "stuco" ? true : false
   console.log(userRole)
   // const isVisible = true;
   // const [loading,setloadin]
@@ -68,13 +68,13 @@ const Donation = ({ navigation }) => {
 
         const response = await axios.get(`${IP}/getDonationsData`);
         // setData(response.data);
-        const catresponse = await axios.post(`${IP}/getDonationCategories`,{type:"donations"});
-        catresponse.data.unshift({name:"All"})
+        const catresponse = await axios.post(`${IP}/getDonationCategories`, { type: "donations" });
+        catresponse.data.unshift({ name: "All" })
         // console.log(catresponse.data)
         // Array.unshift(element);
 
-        setRequest({categories: catresponse.data,data: response.data});
-        
+        setRequest({ categories: catresponse.data, data: response.data });
+
 
       } catch (error) {
         console.log("dsjflsdhfajsdhfaskd")
@@ -84,24 +84,24 @@ const Donation = ({ navigation }) => {
     };
 
     fetchData()
-  }, [1]);
+  }, []);
 
-  
 
-  if (!request.data  ) {
+
+  if (!request.data) {
 
     // return <Text>Loading...</Text>;
-    return<Loading/>
+    return <Loading />
   }
-  
-  const filteredData = request.data.filter((banner) =>{
- 
-    if(myswitch === 1){
+
+  const filteredData = request.data.filter((banner) => {
+
+    if (myswitch === 1) {
       return banner.post_title.toLowerCase().includes(searchQuery.toLowerCase());
 
     }
-    if(myswitch === 2){
-      if(catQuery == "All"){
+    if (myswitch === 2) {
+      if (catQuery == "All") {
         return banner.post_title.toLowerCase().includes("");
 
       }
@@ -109,7 +109,7 @@ const Donation = ({ navigation }) => {
 
     }
   }
-    
+
   );
 
 
@@ -123,7 +123,8 @@ const Donation = ({ navigation }) => {
         <TextInput style={styles.searchInput} placeholder="Search"
           onChangeText={(query) => {
             setSwitch(1);
-            setSearchQuery(query)}}
+            setSearchQuery(query)
+          }}
           value={searchQuery} />
       </View>
 
@@ -131,10 +132,10 @@ const Donation = ({ navigation }) => {
       {isVisible && (<View style={{ flexDirection: "row", justifyContent: "center" }}>
         <TouchableOpacity
           style={[styles.addBtn, { backgroundColor: "#2482C7" }]}
-          // onPress={handleLogin}
+          onPress={() => navigation.navigate('adddonation')}
         >
-            <Ionicons name="add" size={24} color="white" style={{ marginRight: 8 }} />
-          <Text style={{color:"white"}}>Add donations</Text>
+          <Ionicons name="add" size={24} color="white" style={{ marginRight: 8 }} />
+          <Text style={{ color: "white" }}>Add donations</Text>
         </TouchableOpacity>
       </View>)}
 
@@ -145,24 +146,26 @@ const Donation = ({ navigation }) => {
       {/* <TouchableOpacity  style={{ flexDirection: 'row', alignItems: 'center' }}>
       <Ionicons name="add" size={24} color="white" style={{ marginRight: 8 }} />
       <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Add Donations</Text> */}
-    {/* </TouchableOpacity> */}
+      {/* </TouchableOpacity> */}
       <View style={styles.catContainer}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.categoriesContainer}
         >
-          {request.categories.map((category) => (
-             <TouchableOpacity
-             
-             onPress={() => {
-              setSwitch(2);
-              setCatQuery(category.name)}}
-           >
-            <View key={category.id} style={styles.category}>
-              <Text style={styles.categoryName}>{category.name}</Text>
-             
-            </View>
+          {request.categories.map((category, index) => (
+            <TouchableOpacity
+              key={index}
+
+              onPress={() => {
+                setSwitch(2);
+                setCatQuery(category.name)
+              }}
+            >
+              <View key={category.id} style={styles.category}>
+                <Text style={styles.categoryName}>{category.name}</Text>
+
+              </View>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -181,7 +184,7 @@ const Donation = ({ navigation }) => {
               />
               <View style={styles.bannerInfo}>
                 <Text style={styles.bannerTitle}>{banner.post_title}</Text>
-                <Text style={{color:"grey"}}>Posted by: Welfare Committee</Text>
+                <Text style={{ color: "grey" }}>Posted by: Welfare Committee</Text>
 
                 <DonationProgressBar collected={50} pledged={100} total={150} />
 
@@ -197,7 +200,7 @@ const Donation = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   addBtn: {
-    flexDirection:"row",
+    flexDirection: "row",
     borderRadius: 10,
     height: 40,
     alignItems: "center",
