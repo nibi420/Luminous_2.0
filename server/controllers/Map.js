@@ -180,7 +180,7 @@ export const allDays = async( req, res) => {
 
   try{
     
-      const todaysEvents = await Event.find()
+      const todaysEvents = await Event.find({time:{$gt: Date.now()}})
       .populate({ path:"postedBy" , select:["fullname"] })
       .populate({path: "venue", select:["name", "coordinates"]});
 
