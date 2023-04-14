@@ -25,7 +25,6 @@ const AddDonation = ({navigation}) => {
     const [description, setDesc] = useState('')
     const [required, setRequired] = useState('');
     const [collected, setCollected] = useState('');
-    const [deadline, setDeadline] = useState(new Date());
     const [acc_name, setAccName] = useState('');
     const [bank_name, setBankName] = useState('');
     const [acc_num,setAccNum] = useState('')
@@ -39,6 +38,8 @@ const AddDonation = ({navigation}) => {
     const [existingcategories, setCategories] = useState({})
 
     const [image, setImage] = useState(null);
+
+    const [name, setNewCategory] = useState('');
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -71,7 +72,7 @@ const AddDonation = ({navigation}) => {
       };
   
       getCategories();
-    }, [1]);
+    }, [1, existingcategories]);
 
     const handleDonationSubmit = async () => {
         try {
@@ -81,7 +82,7 @@ const AddDonation = ({navigation}) => {
                 image,
                 required,
                 collected,
-                deadline,
+                deadline: new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes()),
                 acc_name,
                 acc_num,
                 bank_name,
@@ -92,6 +93,19 @@ const AddDonation = ({navigation}) => {
         catch (error) {
             console.log(error)
         }
+    }
+
+    const handleCategorySubmit = async () => {
+      try {
+        const resp = await axios.post(`${IP}/pushDonationCategories`,{
+          name,
+          type: "donations",
+        });
+        console.log(resp.data)
+        
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     const toggleCategoryModal = () => {
@@ -120,6 +134,20 @@ const AddDonation = ({navigation}) => {
                 <Text style={styles.subText}>Please enter details</Text>
                 </View>
           <ScrollView marginBottom={20}>
+
+          <Text style={styles.label}>New Category</Text>
+            <View >
+              <TextInput
+                placeholder="0"
+                style={styles.input}
+                onChangeText={(text) => setNewCategory(text)}
+                value={name}
+              />
+            </View>
+
+          <TouchableOpacity style={styles.button} onPress={handleCategorySubmit} >
+              <Text style={styles.buttonText}>Create Category</Text>
+            </TouchableOpacity>
           
 
                 <TouchableOpacity style={styles.venue} onPress={toggleCategoryModal}>
@@ -169,40 +197,40 @@ const AddDonation = ({navigation}) => {
                     </View>
 
                     <Text style={styles.label}>Title</Text>
-            <View style={styles.input}>
+            <View >
               <TextInput
                 placeholder="Title"
-                placeholderTextColor="#003f5c"
                 onChangeText={(text) => setTitle(text)}
+                style={styles.input}
                 value={post_title}
               />
             </View>
 
             <Text style={styles.label}>Description</Text>
-            <View style={styles.input}>
+            <View>
               <TextInput
                 placeholder="Please write a short description of the case"
-                placeholderTextColor="#ffffff"
+                style={styles.input}
                 onChangeText={(text) => setDesc(text)}
                 value={description}
               />
             </View>
 
             <Text style={styles.label}>Required Amount</Text>
-            <View style={styles.input}>
+            <View >
               <TextInput
                 placeholder="0"
-                placeholderTextColor="#ffffff"
+                style={styles.input}
                 onChangeText={(text) => setRequired(text)}
                 value={required}
               />
             </View>
 
             <Text style={styles.label}>Collected Amount</Text>
-            <View style={styles.input}>
+            <View >
               <TextInput
                 placeholder="0"
-                placeholderTextColor="#ffffff"
+                style={styles.input}
                 onChangeText={(text) => setCollected(text)}
                 value={collected}
               />
@@ -244,40 +272,40 @@ const AddDonation = ({navigation}) => {
             </View>
 
             <Text style={styles.label}>Account Name</Text>
-            <View style={styles.input}>
+            <View >
               <TextInput
                 placeholder=""
-                placeholderTextColor="#ffffff"
+                style={styles.input}
                 onChangeText={(text) => setAccName(text)}
                 value={acc_name}
               />
             </View>
 
             <Text style={styles.label}>Account Number</Text>
-            <View style={styles.input}>
+            <View >
               <TextInput
                 placeholder=""
-                placeholderTextColor="#ffffff"
+                style={styles.input}
                 onChangeText={(text) => setAccNum(text)}
                 value={acc_num}
               />
             </View> 
 
             <Text style={styles.label}>Bank Name</Text>
-            <View style={styles.input}>
+            <View s>
               <TextInput
                 placeholder="Title"
-                placeholderTextColor="#ffffff"
+                style={styles.input}
                 onChangeText={(text) => setBankName(text)}
                 value={bank_name}
               />
             </View>
 
             <Text style={styles.label}>IBAN</Text>
-            <View style={styles.input}>
+            <View >
               <TextInput
                 placeholder=""
-                placeholderTextColor="#ffffff"
+                style={styles.input}
                 onChangeText={(text) => setIban(text)}
                 value={iban}
               />
@@ -339,7 +367,7 @@ const AddDonation = ({navigation}) => {
         paddingHorizontal: 10,
         paddingVertical: 5,
         marginTop: 5,
-        color: 'white',
+        color: '#ffffff',
         fontSize: 15,
     },
     venue: {
