@@ -37,11 +37,14 @@ const Main = () => {
           type: "changeProfile",
           payload: response.data.user,
         });
+        dispatch({
+          type: "changeScreen",
+          payload: "homescreen",
+        });
         setLoading(false);
       } catch (error) {
         dispatch({
           type: "loadUserFailure",
-          payload: error.response.data.message,
         });
         setLoading(false);
         console.log(error);

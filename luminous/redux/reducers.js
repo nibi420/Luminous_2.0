@@ -6,29 +6,25 @@ export const authReducer = createReducer(
     loginSuccess: (state, action) => {
       state.isAuthenticated = true;
       state.user = action.payload;
-      state.message = action.payload.message;
     },
-    loginFailure: (state, action) => {
+    loginFailure: (state) => {
       state.isAuthenticated = false;
       state.user = null;
-      state.error = action.payload;
     },
     loadUserSuccess: (state, action) => {
       state.isAuthenticated = true;
       state.user = action.payload.user;
     },
-    loadUserFailure: (state, action) => {
+    loadUserFailure: (state) => {
       state.isAuthenticated = false;
       state.user = null;
-      state.error = action.payload;
     },
     logoutSuccess: (state) => {
       state.isAuthenticated = false;
       state.user = null;
     },
-    logoutFailure: (state, action) => {
+    logoutFailure: (state) => {
       state.isAuthenticated = true;
-      state.error = action.payload;
     },
   }
 );

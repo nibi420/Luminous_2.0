@@ -107,16 +107,15 @@ export default function Profile({ navigation }) {
             await axios
               .get(`${IP}/logout`)
               .then(() => {
-                dispatch({ type: "logoutSucces" });
+                dispatch({ type: "logoutSuccess" });
+                dispatch({ type: "destroyProfile" });
+                dispatch({ type: "changeScreen", payload: "" });
                 setLoading(false);
                 console.log("Logging out successfully");
                 navigation.navigate("login");
               })
               .catch((error) => {
-                dispatch({
-                  type: "logoutFailure",
-                  payload: error.response.data.message,
-                });
+                dispatch({ type: "logoutFailure" });
                 setLoading(false);
                 Alert.alert("Uh-Oh", "We weren't able to log you out :(");
                 console.log("Error:", error);

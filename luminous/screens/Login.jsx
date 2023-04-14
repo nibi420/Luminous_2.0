@@ -11,10 +11,12 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { IP } from "../constant.js";
+import { useDispatch } from "react-redux";
 
 export default function App({ navigation }) {
   const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
     try {
@@ -31,9 +33,20 @@ export default function App({ navigation }) {
         return;
       }
 
+      dispatch({
+        type: "loginSuccess",
+        payload: response.data.user,
+      });
+      dispatch({ type: "changeScreen", payload: "home" });
+
       // console.log("Data = ", response.data);
       navigation.navigate("homescreen");
     } catch (error) {
+      dispatch({
+        type: "loginFailure",
+      });
+
+      Alert.alert("Error!", "Incorrect Email or Password");
       console.log("Error", error);
     }
   };

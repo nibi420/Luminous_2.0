@@ -7,7 +7,35 @@ import fs from "fs";
 export const register = async (req, res) => {
   try {
     console.log("Register");
-    const { fullname, email, username, password, role } = req.body;
+    let { fullname, email, username, password } = req.body;
+    email = email.trim();
+    const regex = /^[0-9]+$/;
+    let domain = email.split("@")[1];
+    let roleCheck = email.split("@")[0];
+    let role;
+
+    if (!fullname || !email || !username || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill in all fields",
+      });
+    }
+    if (domain !== "lums.edu.pk") {
+      res.status(400).json({
+        success: false,
+        message: "Please enter a valid LUMS email ID",
+      });
+    }
+
+    if (email === "studentcouncil@lums.edu.pk") {
+      role = "stuco";
+    } else {
+      if (regex.test(roleCheck)) {
+        role = "student";
+      } else {
+        role = "admin";
+      }
+    }
 
     let user = await User.findOne({ email });
 
@@ -26,12 +54,6 @@ export const register = async (req, res) => {
         message: "Username already exists",
       });
     }
-
-    // const mycloud = await cloudinary.v2.uploader.upload(profile_picture, {
-    //   folder: "luminous/profile_pictures",
-    // });
-
-    // fs.rmSync("./tmp", { recursive: true });
 
     const otp = Math.floor(Math.random() * 10000);
 
@@ -52,6 +74,7 @@ export const register = async (req, res) => {
     await sendMail(email, otp);
     sendToken(res, user, 201, "OTP sent to your email");
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       success: false,
       message: error.message,
@@ -215,8 +238,8 @@ export const login = async (req, res) => {
   try {
     console.log("Login");
     // console.log(req.body);
-    const { email, password } = req.body;
-    // email = email.trim();
+    let { email, password } = req.body;
+    email = email.trim();
 
     if (!email || !password) {
       return res.status(400).json({
