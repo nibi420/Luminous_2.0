@@ -308,6 +308,25 @@ else{
   
 
   useEffect(() => {
+
+    const ask_permission = async () => {
+      console.log("asking for permission");
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status== "granted"){
+        console.log("Permission is granted");
+        await Location.requestBackgroundPermissionsAsync();
+        return
+      }
+      if (status !== "granted") {
+        console.log("Permission is denied");
+        navigation.navigate("homescreen")
+        
+        return;
+      }}
+
+
+
+
     const getEvents = async ()=> {
       try{
         console.log("Inside API")
@@ -339,6 +358,13 @@ else{
   //     longitudeDelta: 0.0099,
   //   });
   // };
+
+  ask_permission().then(()=>{
+    console.log("Permission response recieved");
+    return
+  })
+
+
   getEvents().then(()=>{
     console.log("events done");
     return ;
@@ -376,8 +402,8 @@ else{
         {data.map((item,index) => {
                 return (<Marker coordinate={{latitude: item.venue.coordinates[0] + getRandomArbitrary(-0.00009,0.00009)  , longitude: item.venue.coordinates[1]+ getRandomArbitrary(-0.00006,0.00006) }} title={item.title} description={item.room}
                         // image ={ require("../assets/markericon.png")  }
-                         key = {index}>
-                         <Image source={markerImage} style={markerImageSize} />
+                         key = {index} pinColor={'blue'}>
+                         {/* <Image source={markerImage} style={markerImageSize} /> */}
                          <Callout onPress={() => navigation.navigate('eventsDetails', item )}>
                           <View style={{width:  110}}>
                             <Text style={styles.title}>{item.title}</Text>

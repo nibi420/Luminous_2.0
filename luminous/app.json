@@ -18,13 +18,27 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": [
+        "ACCESS_BACKGROUND_LOCATION"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAcRbE2A6aOyEEk72pp-sJ0T2JlR4ILIwo"
+        }
+      },
+      "package": "com.azmeerfaisal.luminous"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "52f8534f-0f18-4906-9a54-17b7a276244f"
+      }
     }
   }
 }

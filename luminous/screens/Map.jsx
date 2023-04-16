@@ -250,7 +250,7 @@ const MapNightStyle = [
 
 
 
-const Map = ({route,navigation}) => {
+const Map = ({navigation}) => {
 
   const options = [
     { label: 'Today', value: 'todaysEvents' },
@@ -260,23 +260,23 @@ const Map = ({route,navigation}) => {
   
 
 
-const date = Date.now()
-console.log(date)
-let INITIAL_REGION ={}
+// const date = Date.now()
+// console.log(date)
+// let INITIAL_REGION ={}
 
-console.log(route.params)
-if(route.params != undefined){
-  INITIAL_REGION = route.params.region
-}
-else{
-  INITIAL_REGION = {
+// console.log(route.params)
+// if(route.params != undefined){
+//   INITIAL_REGION = route.params.region
+// }
+// else{
+  const INITIAL_REGION = {
     latitude:31.4707 ,
     longitude:74.4098,
     latitudeDelta: 0.0012,
     longitudeDelta: 0.0099,
   };
 
-}
+// }
   
  
 
@@ -309,6 +309,24 @@ else{
   
 
   useEffect(() => {
+
+    const ask_permission = async () => {
+      console.log("asking for permission");
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status== "granted"){
+        console.log("Permission is granted");
+        await Location.requestBackgroundPermissionsAsync();
+        return
+      }
+      if (status !== "granted") {
+        console.log("Permission is denied");
+        navigation.navigate("homescreen")
+        
+        return;
+      }}
+
+
+
     const getEvents = async ()=> {
       try{
         console.log("Inside API")
@@ -340,6 +358,13 @@ else{
   //     longitudeDelta: 0.0099,
   //   });
   // };
+
+  ask_permission().then(()=>{
+    console.log("Permission response recieved");
+    return
+  })
+
+
   getEvents().then(()=>{
     console.log("events done");
     return ;
@@ -377,15 +402,23 @@ else{
         {data.map((item,index) => {
                 return (<Marker coordinate={{latitude: item.venue.coordinates[0] + getRandomArbitrary(-0.00006,0.00006)  , longitude: item.venue.coordinates[1]+ getRandomArbitrary(-0.00006,0.00006) }} title={item.title} description={item.room}
                         // image ={ require("../assets/markericon.png")  }
-                         key = {index}
+                         key = {index} pinColor={'blue'}
                          >
-                          <Callout onPress={() => navigation.navigate('eventsDetails', item )}>
+                          {/* <Image source={markerImage} style={styles.markerImage} /> */}
+                          {/* <Image source={markerImage} style={markerImageSize} /> */}
+                         <Callout onPress={() => navigation.navigate('eventsDetails', item )}>
                           <View style={{width:  110}}>
                             <Text style={styles.title}>{item.title}</Text>
                             <Text style={styles.room}>{item.room}</Text>
                           </View>
                           </Callout>
-                         <Image source={markerImage} style={markerImageSize} />
+                          
+                          {/* <Callout style={styles.callout} onPress={() => navigation.navigate('eventsDetails', item )}>
+                          <View style={{width:  110}}>
+                            <Text style={styles.title}>{item.title}</Text>
+                            <Text style={styles.room}>{item.room}</Text>
+                          </View>
+                          </Callout>  */}
                          </Marker>
                          )
                })}
@@ -403,9 +436,9 @@ else{
         </TouchableOpacity>
 
 
-        </View>
+        </View> 
 
-        <View style={overlaystyles.overlay}>
+         <View style={overlaystyles.overlay}>
 
         <SwitchSelector
               options={options}
@@ -425,6 +458,18 @@ else{
 };
 
 const styles = StyleSheet.create({
+  callout: {
+    padding: 10
+  },
+  markerContainer: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  markerImage: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain'
+  },
   container: {
     flex: 1,
     alignItems: "center",

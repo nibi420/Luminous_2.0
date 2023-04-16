@@ -68,7 +68,7 @@ const Main = () => {
   ) : (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={isAuthenticated ? "homescreen" : "login"}
+        initialRouteName={isAuthenticated ? "testing" : "testing"}
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="login" component={Login} />
