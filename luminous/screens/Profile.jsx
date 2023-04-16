@@ -205,7 +205,7 @@ export default function Profile({ navigation }) {
           </TouchableOpacity>
           <View style={styles.border}></View>
 
-          <TouchableOpacity style={styles.option}>
+          {/* <TouchableOpacity style={styles.option}>
             <MaterialIcons
               name="notifications"
               size={24}
@@ -235,7 +235,7 @@ export default function Profile({ navigation }) {
               style={{ paddingRight: 10 }}
             />
             <Text style={styles.optionsText}>About</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <View style={styles.border}></View>
 
           <TouchableOpacity style={styles.option} onPress={handleLogout}>
