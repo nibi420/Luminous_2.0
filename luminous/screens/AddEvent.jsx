@@ -28,6 +28,7 @@ const AddEventScreen = ({ navigation }) => {
     const [image, setImage] = useState(null);
     const [imageB, setImageB] = useState(null);
 
+    console.log("hello")
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -55,9 +56,10 @@ const AddEventScreen = ({ navigation }) => {
 
     const handleSubmit = async () => {
         try {
-            let datex = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes())
+            console.log("Event Data")
+            // let datex = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes())
 
-            setAvatar(imageB.uri);
+            // setAvatar(imageB.uri);
 
             const formData = new FormData();
             formData.append("title", title)
@@ -72,10 +74,9 @@ const AddEventScreen = ({ navigation }) => {
                 name: imageB.uri.split("/").pop(),
             });
 
-            console.log("image", imageB);
-
-
-            // console.log("Form", formData);
+            // console.log("image", imageB);
+            console.log(title, venueName, datex, info, roomNumber, categoryName, imageB.uri)
+            console.log("Form", formData);
 
 
             // const eventData = {
@@ -89,6 +90,7 @@ const AddEventScreen = ({ navigation }) => {
 
 
             // };
+            console.log("Event Data", formData)
             const response = await axios.post(`${IP}/addEvent`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",

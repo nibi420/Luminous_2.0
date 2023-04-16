@@ -47,11 +47,6 @@ export default function HomeScreen({ navigation }) {
     };
     fetchData()
 
-    
-
-
-    
-
 
     const backAction = () => {
 
@@ -81,24 +76,24 @@ export default function HomeScreen({ navigation }) {
  
 
   const handleButtonPress = () => {
-    Alert.prompt(
-      'Enter a number',
-      '',
-      (text) => setNumber(parseInt(text)),
-      'plain-text'
-    );
+    // Alert.prompt(
+    //   'Enter a number',
+    //   '',
+    //   (text) => setNumber(parseInt(text)),
+    //   'plain-text'
+    // );
   };
 
 
   console.log("HEHEHE",upcomingEvent);
   console.log("Donation:", upcomingDonation);
 
-  if (upcomingEvent.length == 0) {
+  // if (upcomingEvent.length == 0) {
 
 
-    return <Loading />
+  //   return <Loading />
 
-  }
+  // }
 
   const handleEvent = async () => {
     navigation.navigate("events");
@@ -137,7 +132,7 @@ export default function HomeScreen({ navigation }) {
               />
               <View style={{ paddingHorizontal: 10,}}>
                 <Text style={{ fontWeight: 'bold', color: 'grey' }}>Welfare Committee</Text>
-                <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>{upcomingDonation[0].post_title}</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>{upcomingDonation.length !=0 ? upcomingDonation[0].post_title : "No Latest Donation"}</Text>
                 <Progress.Bar progress={30 / 100} color="skyblue" height={10} width={null} marginVertical={10} />
                 <TouchableOpacity style={{ backgroundColor: '#000000', borderRadius: 15, padding: 10, marginTop: 10 }} onPress={handleButtonPress()}>
                   <Text style={{ color: '#FFFFFF', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Pledge</Text>
@@ -155,11 +150,11 @@ export default function HomeScreen({ navigation }) {
                 style={{ width: '100%', height: 200, borderRadius: 10 }}
               />
               <View style={{ paddingHorizontal: 10, paddingTop: 10 }}>
-                <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 25, }}>{upcomingEvent[0].title}</Text>
+                <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 25, }}>{upcomingEvent.length != 0?upupcomingEvent[0].title:"NO UPCOMING EVENT"}</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-                  <Text style={{ color: '#2E96D2' }}>{upcomingEvent[0].venue.name}</Text>
+                  <Text style={{ color: '#2E96D2' }}>{upcomingEvent.length != 0?upcomingEvent[0].venue.name:""}</Text>
                   <Text style={{ color: 'white', marginHorizontal: 10 }}>|</Text>
-                  <Text style={{ color: '#2E96D2' }}>{new Date(upcomingEvent[0].time).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</Text>
+                  <Text style={{ color: '#2E96D2' }}>{upcomingEvent.length != 0?new Date(upcomingEvent[0].time).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' }):""}</Text>
                 </View>
               </View>
             </TouchableOpacity>
