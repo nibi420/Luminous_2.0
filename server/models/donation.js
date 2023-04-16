@@ -50,7 +50,17 @@ const donationSchema = new mongoose.Schema({
 
     iban:{
         type: String,
-    }
+    },
+    picture: {
+      public_id: String,
+      url: String,
+      data: Buffer,
+      contentType: String
+  },
+  description: {
+    type: String,
+
+    },
   });
 
   export const Donation = mongoose.model("Donation", donationSchema);

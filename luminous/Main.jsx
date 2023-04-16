@@ -7,6 +7,7 @@ import Verify from "./screens/Verification";
 import HomeScreen from "./screens/HomeScreen";
 import Events from "./screens/Events";
 import Donation from "./screens/Donations";
+import AddDonation from "./screens/AddDonation";
 import Map from "./screens/Map";
 import MapAll from "./screens/MapAll";
 import TestingScreen from "./screens/TestingScreen";
@@ -80,14 +81,15 @@ const Main = () => {
         <Stack.Screen name="homescreen" component={HomeScreen} />
         <Stack.Screen name="events" component={Events} />
         <Stack.Screen name="donations" component={Donation} />
+        <Stack.Screen name="adddonation" component={AddDonation} />
         <Stack.Screen name="donationsDetails" component={GradientScreen} />
         <Stack.Screen name="eventsDetails" component={EventDetailsFunc} />
 
         {/* <Stack.Screen name="seeonmap" component={Map} /> */}
-        
+
 
         <Stack.Screen name="profile" component={Profile} />
-        <Stack.Screen name="addevent" component={AddEventScreen}/>
+        <Stack.Screen name="addevent" component={AddEventScreen} />
         <Stack.Screen name="map" component={Map} />
         <Stack.Screen name="mapall" component={MapAll} />
 

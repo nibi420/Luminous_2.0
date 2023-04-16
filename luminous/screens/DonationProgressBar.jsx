@@ -15,7 +15,7 @@ function DonationProgressBar (props) {
          Rs {total}
           </Text>
           </Text>
-        <Progress.Bar progress={collected/total} color="skyblue" height={5}/>
+        <Progress.Bar progress={collected/(total+0.1)} color="skyblue" height={5}/>
         </View>
         </View>
     )
