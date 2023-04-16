@@ -34,7 +34,7 @@ export default function HomeScreen({ navigation }) {
       try {
 
         const response = await axios.get(`${IP}/getUpcomingEvent`);
-        const response2 = await axios.get(`${IP}/getDonationsData`);
+        const response2 = await axios.get(`${IP}/getDonationLatest`);
         setUpcomingDonation(response2.data);
         setUpcomingEvent(response.data);
 
@@ -118,58 +118,58 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.subtitle}>Home page</Text>
           <ScrollView style={{ width: '100%' }}>
             <Text style={styles.cardTitle}>Featured Welfare Post</Text>
-            
-             
-                {upcomingDonation.map((item,index)=>{
-                  return(
-                    <TouchableOpacity
-                    key={index}
-              style={[styles.card, { borderColor: '#000000', borderWidth: 2 }]}
-              onPress={() => (navigation.navigate('donationsDetails', item))}
-            >
-              <Image
-                source={{ uri: item.picture.url }}
-                style={{ width: '100%', height: 100, borderRadius: 10 }}
-              />
-                    <View style={{ paddingHorizontal: 10, }}>
+
+
+            {upcomingDonation.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[styles.card, { borderColor: '#000000', borderWidth: 2 }]}
+                  onPress={() => (navigation.navigate('donationsDetails', item))}
+                >
+                  <Image
+                    source={{ uri: item.picture.url }}
+                    style={{ width: '100%', height: 100, borderRadius: 10 }}
+                  />
+                  <View style={{ paddingHorizontal: 10, }}>
                     <Text style={{ fontWeight: 'bold', color: 'grey' }}>Welfare Committee</Text>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>{upcomingDonation[0].post_title}</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>{item.post_title}</Text>
                     <Progress.Bar progress={30 / 100} color="skyblue" height={10} width={null} marginVertical={10} />
                     {/* <TouchableOpacity style={{ backgroundColor: '#000000', borderRadius: 15, padding: 10, marginTop: 10 }} onPress={handleButtonPress()}>
                       <Text style={{ color: '#FFFFFF', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Pledge</Text>
                     </TouchableOpacity> */}
-                    </View>
-                    </TouchableOpacity>
-                  )
-                })}
-               
-            
-         
+                  </View>
+                </TouchableOpacity>
+              )
+            })}
+
+
+
 
             <Text style={styles.cardTitle}>Upcoming Event</Text>
-            
-                {upcomingEvent.map((item,index)=>(
-                  <TouchableOpacity
-                  key={index}
-                  style={[styles.card, { borderColor: '#000000', borderWidth: 2 }]}
-                  onPress={() => (navigation.navigate('eventsDetails', item))}
-                >
-                  <Image
-                    source={{ uri: item.picture.url }}
-                    style={{ width: '100%', height: 200, borderRadius: 10 }}
-                  />
-                   <View style={{ paddingHorizontal: 10, paddingTop: 10 }}>
-                   <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 25, }}>{item.title}</Text>
-                   <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-                     <Text style={{ color: '#2E96D2' }}>{item.venue.name}</Text>
-                     <Text style={{ color: 'white', marginHorizontal: 10 }}>|</Text>
-                     <Text style={{ color: '#2E96D2' }}>{new Date(item.time).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</Text>
-                   </View>
-                   </View>
-                   </TouchableOpacity>
-                   ))}
-    
-            
+
+            {upcomingEvent.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[styles.card, { borderColor: '#000000', borderWidth: 2 }]}
+                onPress={() => (navigation.navigate('eventsDetails', item))}
+              >
+                <Image
+                  source={{ uri: item.picture.url }}
+                  style={{ width: '100%', height: 200, borderRadius: 10 }}
+                />
+                <View style={{ paddingHorizontal: 10, paddingTop: 10 }}>
+                  <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 25, }}>{item.title}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
+                    <Text style={{ color: '#2E96D2' }}>{item.venue.name}</Text>
+                    <Text style={{ color: 'white', marginHorizontal: 10 }}>|</Text>
+                    <Text style={{ color: '#2E96D2' }}>{new Date(item.time).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+
+
           </ScrollView>
         </View>
 
