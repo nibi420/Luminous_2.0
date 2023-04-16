@@ -17,6 +17,7 @@ import { IP } from "./constant.js";
 import Navbar from "./components/Navbar";
 import Loading from "./components/Loading";
 import { useDispatch, useSelector } from "react-redux";
+import About from "./screens/About";
 
 const Stack = createNativeStackNavigator();
 
@@ -75,6 +76,7 @@ const Main = () => {
         <Stack.Screen name="events" component={Events} />
         <Stack.Screen name="profile" component={Profile} />
         <Stack.Screen name="changePassword" component={ChangePassword} />
+        <Stack.Screen name="about" component={About} />
       </Stack.Navigator>
 
       {isAuthenticated && <Navbar />}
