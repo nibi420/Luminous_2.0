@@ -94,13 +94,13 @@ const GradientScreen = ({ route, navigation }) => {
                             </View>
 
                             <View style={styles.transparentContainer}>
-                                <View style={[styles.containerBox]}>
+                                <View style={[styles.containerBox,{ flex: 1 }]}>
                                     <Text style={styles.text}>Name:</Text>
-                                    <Text style={styles.bluetext}>Abdullah</Text>
+                                    <Text style={styles.bluetext}>Welfare Committee</Text>
                                 </View>
                                 <View style={[styles.containerBox, { flex: 1 }]}>
                                     <Text style={styles.text}>Phone:</Text>
-                                    <Text style={styles.bluetext}>03444020321</Text>
+                                    <Text style={styles.bluetext}>04235608333</Text>
                                 </View>
                                 <View style={[styles.containerBox, { flex: 1, backgroundColor: '#2482C7' }]}>
 
