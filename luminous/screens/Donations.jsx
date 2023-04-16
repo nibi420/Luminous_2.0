@@ -48,7 +48,7 @@ import { IP } from '../constant';
 import Navbar from "../components/Navbar";
 import Loading from "../components/Loading";
 
-const Donation = ({ navigation }) => {
+const Donation = ({ route,navigation }) => {
   const [data, setData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [catQuery, setCatQuery] = useState("");
@@ -57,9 +57,16 @@ const Donation = ({ navigation }) => {
   const userRole = useSelector((state) => state.profile.role)
   const isVisible = userRole === "stuco" ? true: false
   console.log(userRole)
-  // const isVisible = true;
-  // const [loading,setloadin]
-  // const [x, setx] = useState(false);
+  
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    if (route.params?.refresh) {
+      // handle the refresh here
+      console.log('Refreshing...');
+      setRefreshing(true);
+    }
+  }, [route.params?.refresh]);
 
 
   useEffect(() => {

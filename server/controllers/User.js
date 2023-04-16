@@ -384,8 +384,8 @@ export const uploadPicture = async (req, res) => {
 
       fs.rmSync("./tmp", { recursive: true });
 
-      console.log("Public id", result.public_id);
-      console.log("URL", result.secure_url);
+      // console.log("Public id", result.public_id);
+      // console.log("URL", result.secure_url);
 
       user.profile_picture = {
         public_id: result.public_id,

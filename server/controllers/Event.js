@@ -8,19 +8,21 @@ export const addEvent = async (req, res) => {
     try {
         const { title, venueName, time, details, room, categoryName} = req.body;
         const picture1 = req.files.picture.tempFilePath;
-        console.log(picture1);
-        // Find the venue with the given name in the venueSchema
+       
+        var parsedtime = new Date(Date.parse(time));
+    
+
         const venue = await Venue.findOne({ name: venueName });
         const category = categoryName;
-        // console.log(req);
+    
         const result = await cloudinary.v2.uploader.upload(picture1, {
             folder: "luminous/events",
         });
 
         fs.rmSync("./tmp", { recursive: true });
 
-        console.log("Public id", result.public_id);
-        console.log("URL", result.secure_url);
+        // console.log("Public id", result.public_id);
+        // console.log("URL", result.secure_url);
 
 
 
@@ -29,7 +31,7 @@ export const addEvent = async (req, res) => {
             title,
             postedBy: req.user._id,
             venue: venue._id, // Set the venue ID instead of the name
-            time: time,
+            time: parsedtime,
             details,
             room,
             category,

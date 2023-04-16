@@ -6,17 +6,46 @@ import { sendMail } from "../utils/sendMail.js";
 import { sendToken } from "../utils/sendToken.js";
 import fs from "fs";
 
-export const getDonationsData = async (req, res) => {
-  try {
-    const user = await Donation.find({});
-    return res.send(user);
-    console.log(user);
-  } catch (error) {
+// export const getDonationsData = async (req, res) => {
+//   try {
+//     const user = await Donation.find({});
+//     return res.send(user);
+//     console.log(user);
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+export const getDonationsData = async (req,res) => {
+   
+  const user = await Donation.find({ deadline: { $gte: Date.now() }})
+       return res.send(user)
+       console.log(user)
+   
+  };
+
+export const getDonationLatest = async (req, res) => {
+  try{
+    console.log("hellllllooo")
+  const user = await Donation.find({ deadline: { $gte: Date.now() } })
+    .sort({ deadline: 1 })
+    .limit(1);
+  
+  return res.send(user)
+  }
+  catch(error){
     res.status(500).json({
+     
       success: false,
       message: error.message,
     });
+
   }
+
+
 };
 
 export const pushDonationsData = async (req, res) => {

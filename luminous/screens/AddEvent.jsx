@@ -27,6 +27,7 @@ const AddEventScreen = ({ navigation }) => {
 
     const [image, setImage] = useState(null);
     const [imageB, setImageB] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -56,8 +57,7 @@ const AddEventScreen = ({ navigation }) => {
     const handleSubmit = async () => {
         try {
             let datex = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes())
-
-            setAvatar(imageB.uri);
+            datex = datex.toUTCString();
 
             const formData = new FormData();
             formData.append("title", title)
@@ -72,36 +72,21 @@ const AddEventScreen = ({ navigation }) => {
                 name: imageB.uri.split("/").pop(),
             });
 
-            console.log("image", imageB);
+         
 
-
-            // console.log("Form", formData);
-
-
-            // const eventData = {
-            //     title,
-            //     venueName,
-            //     time: new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes()),
-            //     details: info,
-            //     room: roomNumber || null,
-            //     categoryName,
-            //     picture: formData
-
-
-            // };
+            setLoading(true)
             const response = await axios.post(`${IP}/addEvent`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
             });
-
-            // console.log(response.data);
-            // navigation.goBack();
-            // // handle success or error response from server
+            setLoading(false)
+            console.log("event successfully entered")
+            navigation.goBack({refresh: true});
+         
         } catch (error) {
-            // console.error(error);
-            navigation.goBack()
-            // handle error
+            console.error(error);
+        
         }
     };
 
@@ -119,14 +104,13 @@ const AddEventScreen = ({ navigation }) => {
             try {
 
                 const response = await axios.get(`${IP}/getVenues`);
-                // setData(response.data);
+              
                 const catresponse = await axios.post(`${IP}/getDonationCategories`, { type: "events" });//Events Ki catergories arahi hain
 
-                const responseImage = await axios.get(`${IP}/getProfile`);
-                setAvatar(responseImage.data.user.profile_picture.url);
+        
 
                 setRequest({ categories: catresponse.data, venues: response.data });
-                // console.log(request.venues);
+              
 
 
             } catch (error) {
@@ -141,11 +125,13 @@ const AddEventScreen = ({ navigation }) => {
 
 
     if (!request.venues) {
-
-
         return <Loading />
-
     }
+    if(loading){
+        return(
+          <Loading/>
+        )
+      }
 
 
 

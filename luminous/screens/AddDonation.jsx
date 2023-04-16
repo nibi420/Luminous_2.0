@@ -18,6 +18,7 @@ import { IP } from "../constant.js";
 import DateTimePicker from '@react-native-community/datetimepicker'; import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import mime from 'mime';
+import Loading from '../components/Loading.jsx';
 
 
 const AddDonation = ({ navigation }) => {
@@ -42,6 +43,8 @@ const AddDonation = ({ navigation }) => {
 
   const [name, setNewCategory] = useState('');
   const [newCat, setNewCat] = useState(0);
+  const [loading, setLoading] = useState(false);
+
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -99,18 +102,7 @@ const AddDonation = ({ navigation }) => {
         name: image.split('/').pop(),
       });
      
-      // const resp = await axios.post(`${IP}/pushDonationsData`, {
-      //   category,
-      //   post_title,
-      //   required,
-      //   collected,
-      //   deadline: new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes()),
-      //   acc_name,
-      //   acc_num,
-      //   bank_name,
-      //   iban,
-      // });
-      
+      setLoading(true)
       const resp2 = await axios.post(`${IP}/pushDonationsData`,formData,{
         headers: {
           "Content-Type": "multipart/form-data",
@@ -118,7 +110,8 @@ const AddDonation = ({ navigation }) => {
       })
       // console.log(resp2.data)
       console.log('herer')
-      navigation.goBack();
+      setLoading(false)
+      navigation.goBack({refresh: true});
     
     }
     catch (error) {
@@ -160,6 +153,16 @@ const AddDonation = ({ navigation }) => {
     setShowTimePicker(false);
     setTime(selectedTime);
   };
+
+  if(loading){
+    return(
+      <Loading/>
+    )
+  }
+
+
+
+
 
   return (
     <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
@@ -214,7 +217,7 @@ const AddDonation = ({ navigation }) => {
                       <Text>{item}</Text>
                     </TouchableOpacity>
                   )}
-                  keyExtractor={(item) => item}
+                  keyExtractor={(item,index) => index.toString()}
                 />
               </View>
             </View>

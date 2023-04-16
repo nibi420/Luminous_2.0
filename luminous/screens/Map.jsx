@@ -10,6 +10,7 @@ import * as Location from "expo-location";
 import axios from "axios";
 import { IP } from "../constant.js";
 import SwitchSelector from 'react-native-switch-selector';
+import Loading from "../components/Loading.jsx";
 
 
 const MapNightStyle = [
@@ -354,7 +355,7 @@ else{
 
   if (!data){
     // console.log("Error Loading");
-  return <Text>Loading....</Text>
+  return <Loading/>
   }
   
   const markerImage = require('../assets/markericon.png');

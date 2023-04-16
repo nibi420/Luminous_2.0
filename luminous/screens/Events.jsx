@@ -29,29 +29,9 @@ const categories = [
   { id: 5, name: "Category 5" },
 ];
 
-// const banners = [
-//   { id: 1, imageUrl: "https://assets.xboxservices.com/assets/ef/9e/ef9e8f9f-4141-409c-9bab-659102bcc6b2.jpg?n=XSX_Page-Hero-0_768x1434.jpg", title: "Event 1" },
-//   {
-//     id: 2,
-//     imageUrl:
-//       "https://lums.edu.pk/sites/default/files/styles/main_slider_1550_532/public/2020-08/OWeek.jpg",
-//     title: "Event 2",
-//   },
-//   {
-//     id: 3,
-//     imageUrl:
-//       "https://m.media-amazon.com/images/M/MV5BODYxNDdhYjktMjU5ZS00ZGIxLTg1MDctYjQwNjA2MGRiZWI3XkEyXkFqcGdeQXVyMzc0NzU5MTc@._V1_.jpg",
-//     title: "Event 3",
-//   },
-//   {
-//     id: 4,
-//     imageUrl:
-//       "https://i.scdn.co/image/82aae68f2f1fbd91259d07f29c508236aa9e696d",
-//     title: "Event 4",
-//   },
-// ];
 
-export default function Event({ navigation }) {
+
+export default function Event({ route,navigation }) {
 
   // const [banners, setBanners] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -62,6 +42,16 @@ export default function Event({ navigation }) {
 
   const userRole = useSelector((state) => state.profile.role)
   const isVisible = userRole === "admin" || userRole === 'stuco' ? true : false
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    if (route.params?.refresh) {
+      // handle the refresh here
+      console.log('Refreshing...');
+      setRefreshing(true);
+    }
+  }, [route.params?.refresh]);
 
   useEffect(() => {
     const fetchData = async () => {

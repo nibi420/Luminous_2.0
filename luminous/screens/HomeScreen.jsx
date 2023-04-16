@@ -18,13 +18,13 @@ import * as Progress from 'react-native-progress';
 // import { IP } from "../constant.js";
 import DonationProgressBar from "./DonationProgressBar";
 import { useState, useEffect } from 'react';
-import axios  from "axios";
+import axios from "axios";
 import { IP } from "../constant.js";
 import Loading from "../components/Loading";
 
 export default function HomeScreen({ navigation }) {
 
-  const[upcomingEvent, setUpcomingEvent] = useState([]);
+  const [upcomingEvent, setUpcomingEvent] = useState([]);
   const [upcomingDonation, setUpcomingDonation] = useState([]);
   const [number, setNumber] = useState(0);
 
@@ -47,12 +47,6 @@ export default function HomeScreen({ navigation }) {
     };
     fetchData()
 
-    
-
-
-    
-
-
     const backAction = () => {
 
       Alert.alert("Hold on!", "Are you sure you want to go back?", [
@@ -67,7 +61,7 @@ export default function HomeScreen({ navigation }) {
 
     };
 
-    
+
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -78,27 +72,24 @@ export default function HomeScreen({ navigation }) {
   }, [1]);
 
 
- 
+
 
   const handleButtonPress = () => {
-    Alert.prompt(
-      'Enter a number',
-      '',
-      (text) => setNumber(parseInt(text)),
-      'plain-text'
-    );
+    // Alert.prompt(
+    //   'Enter a number',
+    //   '',
+    //   (text) => setNumber(parseInt(text)),
+    //   'plain-text'
+    // );
   };
 
 
-  console.log("HEHEHE",upcomingEvent);
-  console.log("Donation:", upcomingDonation);
+  // console.log("HEHEHE", upcomingEvent);
+  // console.log("Donation:", upcomingDonation);
 
-  if (upcomingEvent.length == 0) {
-
-
-    return <Loading />
-
-  }
+  // if (upcomingEvent.length === 0 || upcomingDonation.length ===0) {
+  //   return <Loading />
+  // }
 
   const handleEvent = async () => {
     navigation.navigate("events");
@@ -125,47 +116,63 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.content}>
           <Text style={styles.title}>Luminous</Text>
           <Text style={styles.subtitle}>Home page</Text>
-          <ScrollView style ={{width: '100%'}}>
+          <ScrollView style={{ width: '100%' }}>
             <Text style={styles.cardTitle}>Featured Welfare Post</Text>
-            <TouchableOpacity
+            
+             
+                {upcomingDonation.map((item,index)=>{
+                  return(
+                    <TouchableOpacity
+                    key={index}
               style={[styles.card, { borderColor: '#000000', borderWidth: 2 }]}
-              onPress={() => console.log("Clicked on Featured Welfare Post")}
+              onPress={() => (navigation.navigate('donationsDetails', item))}
             >
               <Image
-                source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRu1TflCyfWDMNu6q7hVfgolfdYix7qE377UQ&usqp=CAU' }}
+                source={{ uri: item.picture.url }}
                 style={{ width: '100%', height: 100, borderRadius: 10 }}
               />
-              <View style={{ paddingHorizontal: 10,}}>
-                <Text style={{ fontWeight: 'bold', color: 'grey' }}>Welfare Committee</Text>
-                <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>{upcomingDonation[0].post_title}</Text>
-                <Progress.Bar progress={30 / 100} color="skyblue" height={10} width={null} marginVertical={10} />
-                <TouchableOpacity style={{ backgroundColor: '#000000', borderRadius: 15, padding: 10, marginTop: 10 }} onPress={handleButtonPress()}>
-                  <Text style={{ color: '#FFFFFF', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Pledge</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
+                    <View style={{ paddingHorizontal: 10, }}>
+                    <Text style={{ fontWeight: 'bold', color: 'grey' }}>Welfare Committee</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }}>{upcomingDonation[0].post_title}</Text>
+                    <Progress.Bar progress={30 / 100} color="skyblue" height={10} width={null} marginVertical={10} />
+                    {/* <TouchableOpacity style={{ backgroundColor: '#000000', borderRadius: 15, padding: 10, marginTop: 10 }} onPress={handleButtonPress()}>
+                      <Text style={{ color: '#FFFFFF', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Pledge</Text>
+                    </TouchableOpacity> */}
+                    </View>
+                    </TouchableOpacity>
+                  )
+                })}
+               
+            
+         
 
             <Text style={styles.cardTitle}>Upcoming Event</Text>
-            <TouchableOpacity
-              style={[styles.card, { borderColor: '#000000', borderWidth: 2 }]}
-              onPress={() => console.log("Clicked on Featured Image")}
-            >
-              <Image
-                source={{ uri: 'https://ismailimail.files.wordpress.com/2018/09/1535934888385blob.png' }}
-                style={{ width: '100%', height: 200, borderRadius: 10 }}
-              />
-              <View style={{ paddingHorizontal: 10, paddingTop: 10 }}>
-                <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 25, }}>{upcomingEvent[0].title}</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-                  <Text style={{ color: '#2E96D2' }}>{upcomingEvent[0].venue.name}</Text>
-                  <Text style={{ color: 'white', marginHorizontal: 10 }}>|</Text>
-                  <Text style={{ color: '#2E96D2' }}>{new Date(upcomingEvent[0].time).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
+            
+                {upcomingEvent.map((item,index)=>(
+                  <TouchableOpacity
+                  key={index}
+                  style={[styles.card, { borderColor: '#000000', borderWidth: 2 }]}
+                  onPress={() => (navigation.navigate('eventsDetails', item))}
+                >
+                  <Image
+                    source={{ uri: item.picture.url }}
+                    style={{ width: '100%', height: 200, borderRadius: 10 }}
+                  />
+                   <View style={{ paddingHorizontal: 10, paddingTop: 10 }}>
+                   <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 25, }}>{item.title}</Text>
+                   <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
+                     <Text style={{ color: '#2E96D2' }}>{item.venue.name}</Text>
+                     <Text style={{ color: 'white', marginHorizontal: 10 }}>|</Text>
+                     <Text style={{ color: '#2E96D2' }}>{new Date(item.time).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</Text>
+                   </View>
+                   </View>
+                   </TouchableOpacity>
+                   ))}
+    
+            
           </ScrollView>
         </View>
-        
+
       </LinearGradient>
     </View>
 
