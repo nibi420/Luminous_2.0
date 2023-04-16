@@ -64,7 +64,7 @@ const GradientScreen = ({ route, navigation }) => {
 
             <View style={styles.imageContainer}>
             {/* { uri: `https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?cs=srgb&dl=pexels-pixabay-267885.jpg&fm=jpg` } */}
-                <Image source={route.params.image} style={styles.image} />
+                <Image source={{uri : route.params.picture.url}} style={styles.image} />
                 <LinearGradient colors={['rgba(0,0,0,0)', '#0E2C4F', 'rgba(0,0,0,255)']} style={styles.gradient} />
 
             </View>
@@ -138,13 +138,13 @@ const GradientScreen = ({ route, navigation }) => {
                             <Text style={[styles.text,{paddingTop:30}]}>
 
                         
-                                fringilla dolor tristique. Donec eget orci et massa commodo
+                                {/* fringilla dolor tristique. Donec eget orci et massa commodo
                                 viverra non non sapien. Nunc id ligula sit amet risus fringilla
                                 euismod. Sed imperdiet venenatis sapien non luctus. Pellentesque
                                 at vestibulum metus, eu tincidunt quam. Integer semper maximus
-                                tortor, id hendrerit nunc dapibus a. Nullam et nibh ex.
+                                tortor, id hendrerit nunc dapibus a. Nullam et nibh ex. */}
 
-                                {route.params.details}
+                                {route.params.description}
                             </Text>
 
                             <View style={{ flexDirection: "row", justifyContent: "center" }}>

@@ -152,14 +152,14 @@ const Donation = ({ navigation }) => {
           showsHorizontalScrollIndicator={false}
           style={styles.categoriesContainer}
         >
-          {request.categories.map((category) => (
+          {request.categories.map((category,index) => (
              <TouchableOpacity
-             
+             key={index} 
              onPress={() => {
               setSwitch(2);
               setCatQuery(category.name)}}
            >
-            <View key={category.id} style={styles.category}>
+            <View style={styles.category}>
               <Text style={styles.categoryName}>{category.name}</Text>
              
             </View>
@@ -177,7 +177,7 @@ const Donation = ({ navigation }) => {
           >
             <View style={styles.banner}>
               <Image
-                source={{ uri: banner.image }}
+                source={{ uri: banner.picture.url }}
                 style={styles.bannerImage}
               />
               <View style={styles.bannerInfo}>
@@ -185,8 +185,8 @@ const Donation = ({ navigation }) => {
                 <Text style={{color:"grey"}}>Posted by: Welfare Committee</Text>
 
                 {banner.required !== 0? (
-          <DonationProgressBar collected={banner.collected / banner.required} pledged={100} total={banner.required} />
-        ) : <DonationProgressBar collected={banner.collected /0.1} pledged={100} total={banner.required} /> }
+          <DonationProgressBar collected={banner.collected } pledged={100} total={banner.required} />
+        ) : <DonationProgressBar collected={banner.collected } pledged={100} total={banner.required} /> }
         
                 
 

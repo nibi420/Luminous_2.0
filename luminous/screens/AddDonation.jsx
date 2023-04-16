@@ -79,19 +79,20 @@ const AddDonation = ({ navigation }) => {
   const handleDonationSubmit = async () => {
     try {
 
-      const deadline = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes());
-
+      var deadline = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes());
+      deadline = deadline.toUTCString();
+      console.log('herer22')
       const formData = new FormData();
-      formData.append(category)
-      formData.append(post_title)
-      formData.append(description)
-      formData.append(required)
-      formData.append(collected)
-      formData.append(deadline)
-      formData.append(acc_name)
-      formData.append(acc_num)
-      formData.append(bank_name)
-      formData.append(iban)
+      formData.append("category",category)
+      formData.append("post_title",post_title)
+      formData.append("description",description)
+      formData.append("required",required)
+      formData.append("collected",collected)
+      formData.append("deadline",deadline)
+      formData.append("acc_name",acc_name)
+      formData.append("acc_num",acc_num)
+      formData.append("bank_name",bank_name)
+      formData.append("iban",iban)
       formData.append('image', {
         uri: image,
         type: mime.getType(image),
@@ -109,13 +110,15 @@ const AddDonation = ({ navigation }) => {
       //   bank_name,
       //   iban,
       // });
-      // console.log(resp.data)
-      const resp2 = await axios.push(`${IP}/pushDonationsData`,formData,{
+      
+      const resp2 = await axios.post(`${IP}/pushDonationsData`,formData,{
         headers: {
           "Content-Type": "multipart/form-data",
-        },
+        }
       })
-      console.log(resp2.data)
+      // console.log(resp2.data)
+      console.log('herer')
+      navigation.goBack();
     
     }
     catch (error) {
@@ -131,6 +134,7 @@ const AddDonation = ({ navigation }) => {
       });
       console.log(resp.data)
       setNewCat(newCat+1)
+     
 
 
     } catch (error) {
@@ -139,7 +143,10 @@ const AddDonation = ({ navigation }) => {
   }
 
   const toggleCategoryModal = () => {
-    handleCategorySubmit();
+    if(name !== ''){
+      handleCategorySubmit();
+    }
+    
     setCategoryModal(!showCategoryModal);
 
   };
