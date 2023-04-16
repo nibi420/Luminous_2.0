@@ -41,6 +41,7 @@ const AddDonation = ({ navigation }) => {
   const [image, setImage] = useState('');
 
   const [name, setNewCategory] = useState('');
+  const [newCat, setNewCat] = useState(0);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -73,7 +74,7 @@ const AddDonation = ({ navigation }) => {
     };
 
     getCategories();
-  }, [1]);
+  }, [newCat]);
 
   const handleDonationSubmit = async () => {
     try {
@@ -96,7 +97,7 @@ const AddDonation = ({ navigation }) => {
         type: mime.getType(image),
         name: image.split('/').pop(),
       });
-
+     
       // const resp = await axios.post(`${IP}/pushDonationsData`, {
       //   category,
       //   post_title,
@@ -108,7 +109,14 @@ const AddDonation = ({ navigation }) => {
       //   bank_name,
       //   iban,
       // });
-      console.log(resp.data)
+      // console.log(resp.data)
+      const resp2 = await axios.push(`${IP}/pushDonationsData`,formData,{
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      console.log(resp2.data)
+    
     }
     catch (error) {
       console.log(error)
@@ -122,6 +130,7 @@ const AddDonation = ({ navigation }) => {
         type: "donations",
       });
       console.log(resp.data)
+      setNewCat(newCat+1)
 
 
     } catch (error) {
@@ -130,7 +139,9 @@ const AddDonation = ({ navigation }) => {
   }
 
   const toggleCategoryModal = () => {
+    handleCategorySubmit();
     setCategoryModal(!showCategoryModal);
+
   };
 
   const handleDateChange = (event, selectedDate) => {
@@ -166,9 +177,9 @@ const AddDonation = ({ navigation }) => {
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleCategorySubmit} >
+        {/* <TouchableOpacity style={styles.button} onPress={handleCategorySubmit} >
           <Text style={styles.buttonText}>Create Category</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
 
         <TouchableOpacity style={styles.venue} onPress={toggleCategoryModal}>

@@ -131,7 +131,7 @@ const Donation = ({ navigation }) => {
       {isVisible && (<View style={{ flexDirection: "row", justifyContent: "center" }}>
         <TouchableOpacity
           style={[styles.addBtn, { backgroundColor: "#2482C7" }]}
-          // onPress={handleLogin}
+          onPress={()=>{navigation.navigate('adddonation')}}
         >
             <Ionicons name="add" size={24} color="white" style={{ marginRight: 8 }} />
           <Text style={{color:"white"}}>Add donations</Text>
@@ -168,11 +168,11 @@ const Donation = ({ navigation }) => {
         </ScrollView>
       </View>
       <ScrollView style={styles.bannersContainer}>
-        {filteredData.map((banner) => (
+        {filteredData.map((banner,index) => (
           
           <TouchableOpacity
             style={styles.button}
-            key={banner._id}
+            key={index}
             onPress={() => navigation.navigate('donationsDetails', banner)}
           >
             <View style={styles.banner}>

@@ -371,6 +371,7 @@ export const uploadPicture = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     const avatar = req.files.avatar.tempFilePath;
+    console.log(req.files.avatar)
 
     if (avatar) {
       if (user.profile_picture.url !== "") {
