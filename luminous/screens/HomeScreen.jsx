@@ -27,16 +27,18 @@ export default function HomeScreen({ navigation }) {
   const[upcomingEvent, setUpcomingEvent] = useState([]);
   const [upcomingDonation, setUpcomingDonation] = useState([]);
   const [number, setNumber] = useState(0);
+  const [loading, setLoading] = useState(false)
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-
+        setLoading(true)
         const response = await axios.get(`${IP}/getUpcomingEvent`);
         const response2 = await axios.get(`${IP}/getDonationsData`);
         setUpcomingDonation(response2.data);
         setUpcomingEvent(response.data);
+        setLoading(false)
 
 
       } catch (error) {

@@ -22,6 +22,8 @@ export const addEvent = async (req, res) => {
         console.log("Public id", result.public_id);
         console.log("URL", result.secure_url);
 
+        console.log(time);
+
 
 
         
