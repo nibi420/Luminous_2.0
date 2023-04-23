@@ -5,12 +5,16 @@ import * as Progress from 'react-native-progress';
 import { MaterialIcons } from "@expo/vector-icons";
 import moment from 'moment'
 
+
 const { width, height } = Dimensions.get('window');
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Modal, TouchableWithoutFeedback, Keyboard,Alert,TextInput } from 'react-native';
 
 const GradientScreen = ({ route, navigation }) => {
+    const [showModal, setShowModal] = useState(false);
+    const [pledgeAmount, setPledgeAmount] = useState("");
+    const inputRef = useRef(null);
 
     const [daysLeft, setDaysLeft] = useState(0);
     const date = new Date(route.params.deadline)
@@ -51,6 +55,56 @@ const GradientScreen = ({ route, navigation }) => {
             useNativeDriver: true,
         }).start();
     }, [translateY]);
+
+    const handleModalClose = () => {
+        setPledgeAmount("");
+        setShowModal(false);
+    };
+
+    const handleShowModal = () => {
+        setShowModal(true);
+        setTimeout(() => {
+            inputRef.current.focus();
+        }, 100);
+    };
+
+
+
+    const handlePledgeAmountChange = (text) => {
+        // Regular expression to match only numbers
+        let regex = /^[0-9]*$/;
+        if (regex.test(text)) {
+            regex = Number(regex);
+            setPledgeAmount(text);
+        }
+    };
+
+    const handlePledge = async () => {
+        // Check if pledge amount is valid
+        if (pledgeAmount === "") {
+            Alert.alert("Error", "Please enter a pledge amount.");
+        } else if (parseInt(pledgeAmount) === 0) {
+            Alert.alert("Error", "Pledge amount cannot be zero.");
+        } else {
+            // Submit pledge amount to server or perform other actions
+            console.log(`Pledge amount: ${pledgeAmount}`);
+
+            const response = await axios.post(`${IP}/pledge`, {
+                amount: pledgeAmount,
+            });
+ 
+            if (!response.data.success) {
+                // I think here we need to use response.data.success
+                console.log("Error", response.data.message);
+                Alert.alert("Error!", "Failed to pledge amount.");
+                return;
+            }
+
+
+        }
+        setShowModal(false);
+    };
+
 
     return (
         <View style={styles.container}>
@@ -150,10 +204,43 @@ const GradientScreen = ({ route, navigation }) => {
                             <View style={{ flexDirection: "row", justifyContent: "center" }}>
                                 <TouchableOpacity
                                     style={[styles.loginBtn, { backgroundColor: "#2482C7" }]}
-                                // onPress={handleLogin}
+                                    onPress={handleShowModal}
                                 >
                                     <Text style={styles.text}>Pledge Now</Text>
                                 </TouchableOpacity>
+                                
+                                <Modal visible={showModal} animationType="slide">
+                                   
+                                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                                        <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
+                                        <View style={styles.modalContent}>
+                                            <View style={styles.modalHeader}>
+                                            <Text style={styles.modalHeaderText}>Add Pledge Amount</Text>
+                                            </View>
+                                            <TextInput
+                                                ref={inputRef}
+                                                style={styles.input}
+                                                keyboardType="numeric"
+                                                placeholder="Enter pledge amount"
+                                                placeholderTextColor={"grey"}
+                                                value={pledgeAmount}
+                                                onChangeText={handlePledgeAmountChange}
+                                            />
+
+                                            <View style={styles.buttonContainerX}>
+                                                <TouchableOpacity onPress={handlePledge} style={styles.doneButton}>
+                                                    <Text style={styles.buttonText}>Done</Text>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity onPress={handleModalClose} style={styles.cancelButton}>
+                                                    <Text style={styles.buttonText}>Cancel</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                        </LinearGradient>
+                                    </TouchableWithoutFeedback>
+                                    
+                                </Modal>
+                                
 
                             </View>
                         </View>
@@ -360,6 +447,61 @@ const styles = StyleSheet.create({
     button: {
         color: 'white',
         fontSize: 16,
+    },
+
+    modalContent: {
+        flex: 1,
+        backgroundColor: '#0E2C4F',
+        borderRadius: 10,
+        marginHorizontal: 20,
+        marginTop: 100,
+        marginBottom: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 30,
+    },
+    modalHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    modalHeaderText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    input: {
+        borderBottomColor: '#ccc',
+        borderBottomWidth: 1,
+        paddingVertical: 10,
+        fontSize: 16,
+        marginBottom: 20,
+    },
+
+    buttonContainerX: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginHorizontal: 20,
+        marginVertical: 10,
+    },
+    doneButton: {
+        backgroundColor: '#2482C7',
+        borderRadius: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        width: '45%'
+    },
+    cancelButton: {
+        backgroundColor: 'grey',
+        borderRadius: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        width: '45%'
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
 });
 

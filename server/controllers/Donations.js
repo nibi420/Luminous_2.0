@@ -62,3 +62,19 @@ export const pushDonCats = async (req,res) => {
   }
  
 };
+
+export const pledge = async (req, res) => {
+
+try{
+  
+
+
+
+}
+
+catch(error){
+  console.log(error)
+
+}
+
+};

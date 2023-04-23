@@ -68,7 +68,7 @@ const Main = () => {
   ) : (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={isAuthenticated ? "homescreen" : "login"}
+        initialRouteName={isAuthenticated ? "homescreen" : "login"}// change this when done testing
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="login" component={Login} />
@@ -84,6 +84,7 @@ const Main = () => {
         <Stack.Screen name="adddonation" component={AddDonation} />
         <Stack.Screen name="donationsDetails" component={GradientScreen} />
         <Stack.Screen name="eventsDetails" component={EventDetailsFunc} />
+        
 
         {/* <Stack.Screen name="seeonmap" component={Map} /> */}
 
