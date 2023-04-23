@@ -41,7 +41,6 @@
     "react-redux": "^8.0.5",
     "@react-native-community/masked-view": "^0.1.11",
   
-    "expo-dev-client": "~2.1.6",
   
     "react-native-gesture-handler": "^2.9.0",
   

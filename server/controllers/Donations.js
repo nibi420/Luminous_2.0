@@ -123,3 +123,38 @@ export const pushDonCats = async (req, res) => {
     console.log(error);
   }
 };
+
+export const pledge = async (req, res) => {
+
+  try {
+
+    if ((req.body.required + req.body.collected)> req.body.required) {
+      res.status(400).json({
+        success: false,
+        message: 'Amount pledged exceeds required amount'
+      });
+      return;
+    }
+    const updatedDonation = await Donation.findOneAndUpdate(
+      { _id: req.body.id },
+      { $inc: { collected: req.body.amount } },
+      { returnOriginal: false },
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'Pledged successfully',
+      data: updatedDonation // return the updated document to the client
+    });
+
+  }
+  catch (error) {
+    console.log("Body of Request in Pledge:", req.body);
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'Error pledging donation'
+    });
+  }
+
+};
