@@ -1,5 +1,25 @@
 import mongoose from "mongoose";
 
+import cron from 'node-cron';
+
+// Run the task every day at 12:20 AM
+cron.schedule('0 0 * * *', async () => {
+    const now = new Date();
+    // Find all events whose endTime is less than the current date
+    const expiredEvents = await Event.find({
+        $or: [
+            { endTime: { $lt: now } },
+            { endTime: { $exists: false } },
+        ],
+    });
+    console.log(expiredEvents);
+    // Delete each expired event
+    for (const event of expiredEvents) {
+        await Event.findByIdAndDelete(event._id);
+    }
+});
+
+
 const eventSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -16,6 +36,10 @@ const eventSchema = new mongoose.Schema({
         required: true
     },
     time: {
+        type: Date,
+        required: true
+    },
+    endTime: {
         type: Date,
         required: true
     },

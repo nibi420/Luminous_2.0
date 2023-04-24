@@ -69,7 +69,7 @@ const Navbar = () => {
         <Ionicons
           name="map-outline"
           size={24}
-          color={currentScreen === "map" ? "blue" : "#aaa"}
+          color={currentScreen === "map" ? "#2482C7" : "#aaa"}
         />
         <Text
           style={
@@ -88,12 +88,12 @@ const Navbar = () => {
             : styles.navButton
         }
         onPress={handleEvent}
-        // onPress={() => navigation.navigate('events')}
+      // onPress={() => navigation.navigate('events')}
       >
         <Ionicons
           name="calendar-outline"
           size={24}
-          color={currentScreen === "events" ? "blue" : "#aaa"}
+          color={currentScreen === "events" ? "#2482C7" : "#aaa"}
         />
         <Text
           style={
@@ -112,12 +112,12 @@ const Navbar = () => {
             : styles.navButton
         }
         onPress={handleHome}
-        // onPress={() => navigation.navigate('homescreen')}
+      // onPress={() => navigation.navigate('homescreen')}
       >
         <Ionicons
           name="home-outline"
           size={24}
-          color={currentScreen === "home" ? "blue" : "#aaa"}
+          color={currentScreen === "home" ? "#2482C7" : "#aaa"}
         />
         <Text
           style={
@@ -129,7 +129,7 @@ const Navbar = () => {
           Home
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={
           currentScreen === "donate"
             ? [styles.navButton, styles.selectedNavButton]
@@ -141,7 +141,7 @@ const Navbar = () => {
         <Ionicons
           name="heart-outline"
           size={24}
-          color={currentScreen === "donate" ? "blue" : "#aaa"}
+          color={currentScreen === "donate" ? "#2482C7" : "#aaa"}
         />
         <Text
           style={
@@ -160,13 +160,13 @@ const Navbar = () => {
             : styles.navButton
         }
         onPress={handleProfile}
-        // onPress={() => navigation.navigate('profile')}
+      // onPress={() => navigation.navigate('profile')}
 
       >
         <Ionicons
           name="person-outline"
           size={24}
-          color={currentScreen === "profile" ? "blue" : "#aaa"}
+          color={currentScreen === "profile" ? "#2482C7" : "#aaa"}
         />
         <Text
           style={
@@ -201,11 +201,11 @@ const styles = StyleSheet.create({
     color: "#aaa",
   },
   selectedNavButton: {
-    borderBottomColor: "blue",
+    borderBottomColor: "#2482C7",
     borderBottomWidth: 2,
   },
   selectedNavText: {
-    color: "blue",
+    color: "#2482C7",
   },
 });
 

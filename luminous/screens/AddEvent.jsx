@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, } from 'react-native';
+import { Image, ScrollView, Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -8,6 +8,7 @@ import { IP } from "../constant.js";
 import axios from 'axios';
 import Loading from '../components/Loading.jsx';
 import mime from "mime";
+import { color } from 'react-native-reanimated';
 
 
 
@@ -16,9 +17,13 @@ const AddEventScreen = ({ navigation }) => {
     const [venueName, setVenue] = useState('');
     const [categoryName, setCategory] = useState('');
     const [date, setDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
     const [time, setTime] = useState(new Date());
+    const [endTime, setEndTime] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
+    const [showEndTimePicker, setShowEndTimePicker] = useState(false);
     const [info, setInfo] = useState('');
     const [roomNumber, setRoomNumber] = useState('');
     const [showVenueModal, setShowVenueModal] = useState(false);
@@ -47,6 +52,10 @@ const AddEventScreen = ({ navigation }) => {
         setShowDatePicker(false);
         setDate(selectedDate);
     };
+    const handleEndDateChange = (event, selectedEndDate) => {
+        setShowEndDatePicker(false);
+        setEndDate(selectedEndDate);
+    };
 
 
     const handleTimeChange = (event, selectedTime) => {
@@ -54,39 +63,60 @@ const AddEventScreen = ({ navigation }) => {
         setTime(selectedTime);
     };
 
+    const handleEndTimeChange = (event, selectedEndTime) => {
+        setShowEndTimePicker(false);
+        setEndTime(selectedEndTime);
+    };
+
     const handleSubmit = async () => {
         try {
-            let datex = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes())
-            datex = datex.toUTCString();
 
-            const formData = new FormData();
-            formData.append("title", title)
-            formData.append("venueName", venueName)
-            formData.append("time", datex)
-            formData.append("details", info)
-            formData.append("room", roomNumber)
-            formData.append("categoryName", categoryName)
-            formData.append("picture", {
-                uri: imageB.uri,
-                type: mime.getType(imageB.uri),
-                name: imageB.uri.split("/").pop(),
-            });
+            if (date < Date.now()) {
+                Alert.alert("Error", "Start Date cannot be before today");
 
-         
+            }
+            else if (endDate < date) {
+                Alert.alert("Error", "End Date cannot be before Start Date");
 
-            setLoading(true)
-            const response = await axios.post(`${IP}/addEvent`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            setLoading(false)
-            console.log("event successfully entered")
-            navigation.goBack({refresh: true});
-         
+            }
+            else if (endTime < time) {
+                Alert.alert("Error", "End Time cannot be before Start Time");
+            }
+            else {
+                let datex = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes())
+                datex = datex.toUTCString();
+                let datexEnd = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), endTime.getHours(), endTime.getMinutes())
+                datexEnd = datexEnd.toUTCString();
+
+                const formData = new FormData();
+                formData.append("title", title)
+                formData.append("venueName", venueName)
+                formData.append("time", datex)
+                formData.append("endTime", datexEnd)
+                formData.append("details", info)
+                formData.append("room", roomNumber)
+                formData.append("categoryName", categoryName)
+                formData.append("picture", {
+                    uri: imageB.uri,
+                    type: mime.getType(imageB.uri),
+                    name: imageB.uri.split("/").pop(),
+                });
+
+
+
+                setLoading(true)
+                const response = await axios.post(`${IP}/addEvent`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+                setLoading(false)
+                console.log("event successfully entered")
+                navigation.goBack({ refresh: true });
+            }
         } catch (error) {
             console.error(error);
-        
+
         }
     };
 
@@ -104,13 +134,13 @@ const AddEventScreen = ({ navigation }) => {
             try {
 
                 const response = await axios.get(`${IP}/getVenues`);
-              
+
                 const catresponse = await axios.post(`${IP}/getDonationCategories`, { type: "events" });//Events Ki catergories arahi hain
 
-        
+
 
                 setRequest({ categories: catresponse.data, venues: response.data });
-              
+
 
 
             } catch (error) {
@@ -127,11 +157,11 @@ const AddEventScreen = ({ navigation }) => {
     if (!request.venues) {
         return <Loading />
     }
-    if(loading){
-        return(
-          <Loading/>
+    if (loading) {
+        return (
+            <Loading />
         )
-      }
+    }
 
 
 
@@ -245,6 +275,7 @@ const AddEventScreen = ({ navigation }) => {
                     )}
 
                     <View style={styles.dateTimeContainer}>
+                        <Text style={{ color: "white", fontWeight: "bold", width: "50%", padding: 10, fontSize: 16 }}>Start Date & Time:</Text>
                         <View style={styles.dateTimePickerContainer}>
                             <Ionicons name="calendar" size={20} color="#666666" style={styles.dateTimePickerIcon} />
                             <TouchableOpacity style={styles.dateTimePicker} onPress={() => setShowDatePicker(true)}>
@@ -263,8 +294,9 @@ const AddEventScreen = ({ navigation }) => {
 
                         <View style={styles.dateTimePickerContainer}>
                             <Ionicons name="time" size={20} color="#666666" style={styles.dateTimePickerIcon} />
+
                             <TouchableOpacity style={styles.dateTimePicker} onPress={() => setShowTimePicker(true)}>
-                                <Text style={styles.dateTimePickerText}>{time.toLocaleTimeString()}</Text>
+                                <Text style={styles.dateTimePickerText}>{time.toLocaleTimeString("en-US", { hour: 'numeric', minute: 'numeric' })}</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -276,6 +308,47 @@ const AddEventScreen = ({ navigation }) => {
                                 onChange={handleTimeChange}
                             />
                         )}
+
+
+
+                        <Text style={{ color: "white", fontWeight: "bold", width: "50%", padding: 10, fontSize: 16 }}>End Date & Time:</Text>
+                        <View style={styles.dateTimePickerContainer}>
+                            <Ionicons name="calendar" size={20} color="#666666" style={styles.dateTimePickerIcon} />
+                            <TouchableOpacity style={styles.dateTimePicker} onPress={() => setShowEndDatePicker(true)}>
+                                <Text style={styles.dateTimePickerText}>{endDate.toDateString()}</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {showEndDatePicker && (
+                            <DateTimePicker
+                                value={endDate}
+                                mode="date"
+                                display="default"
+                                onChange={handleEndDateChange}
+                            />
+                        )}
+
+
+                        <View style={styles.dateTimePickerContainer}>
+                            <Ionicons name="time" size={20} color="#666666" style={styles.dateTimePickerIcon} />
+
+                            <TouchableOpacity style={styles.dateTimePicker} onPress={() => setShowEndTimePicker(true)}>
+                                <Text style={styles.dateTimePickerText}>{endTime.toLocaleTimeString("en-US", { hour: 'numeric', minute: 'numeric' })}</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {showEndTimePicker && (
+                            <DateTimePicker
+                                value={endTime}
+                                mode="time"
+                                display="default"
+                                onChange={handleEndTimeChange}
+                            />
+                        )}
+
+
+
+
 
                     </View>
 
@@ -419,6 +492,7 @@ const styles = {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 10,
+
     },
     dateTimePickerIcon: {
         marginRight: 10,

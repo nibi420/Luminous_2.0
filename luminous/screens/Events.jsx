@@ -18,7 +18,8 @@ import { IP } from "../constant.js";
 import Navbar from "../components/Navbar.jsx";
 import Loading from "../components/Loading.jsx";
 import { useSelector } from "react-redux";
-
+import Header from "../components/Header";
+import Icon from 'react-native-vector-icons/Ionicons';
 const { width } = Dimensions.get("window");
 
 const categories = [
@@ -31,7 +32,7 @@ const categories = [
 
 
 
-export default function Event({ route,navigation }) {
+export default function Event({ route, navigation }) {
 
   // const [banners, setBanners] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -123,12 +124,19 @@ export default function Event({ route,navigation }) {
 
   return (
     <LinearGradient style={styles.container} colors={["#000000", "#0E2C4F"]}>
-      <View style={styles.topContainer}>
-        <Text style={styles.eventsTitle}>Events</Text>
-        <View style={styles.divider} />
-      </View>
+      <Header name="Events" />
+      <View
+        style={{
+          backgroundColor: "white",
+          width: "90%",
+          height: 2,
+          marginBottom: 0,
+          alignSelf: "center",
+        }}
+      ></View>
       <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder="Search"
+        <Icon name="search-outline" size={20} color="rgba(255, 255, 255, 0.4)" style={styles.searchIcon} />
+        <TextInput style={styles.searchInput} placeholder="Search" placeholderTextColor={"rgba(255, 255, 255, 0.4)"}
           onChangeText={(query) => {
             setSwitch(1);
             setSearchQuery(query)
@@ -183,17 +191,25 @@ export default function Event({ route,navigation }) {
                 source={{ uri: banner.picture.url }}
                 style={styles.bannerImage}
               />
-              <View style={styles.bannerInfo}>
-                <Text style={styles.bannerTitle}>{banner.title}</Text>
-                <Text style={styles.bannerPostedBy}>
-                  Posted by: {banner.postedBy.username}
-                </Text>
-                <Text style={styles.bannerVenue}>Venue: {banner.venue.name}</Text>
-                <Text style={styles.bannerDate}>Date: {new Date(banner.time).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</Text>
-                <Text style={styles.bannerTime}>
-                  Time: {new Date(banner.time).toLocaleTimeString()}
-                </Text>
-              </View>
+              <LinearGradient start={{ x: 0, y: 1 }}
+                end={{ x: 0.8, y: 0 }} style={styles.bannerInfo} colors={["rgba(0, 0, 0, 0.7)", "rgba(36, 130, 199, 0.7)"]}>
+                <View>
+
+                  <Text style={styles.bannerTitle}>{banner.title}</Text>
+                  <Text style={styles.bannerPostedBy}>
+                    Posted by: {banner.postedBy.username}
+                  </Text>
+
+                  <View style={styles.bannerSmallInfo}>
+
+                    <Text style={styles.bannerVenue}>Venue: <Text style={styles.smallDetails}>{banner.venue.name}</Text></Text>
+                    <Text style={styles.bannerDate}>Date: <Text style={styles.smallDetails}>{new Date(banner.time).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</Text></Text>
+                    <Text style={styles.bannerTime}>
+                      Time: <Text style={styles.smallDetails}>{new Date(banner.time).toLocaleTimeString("en-US", { hour: 'numeric', minute: 'numeric' })}</Text>
+                    </Text>
+                  </View>
+                </View>
+              </LinearGradient>
             </View>
           </TouchableOpacity>
         ))}
@@ -249,6 +265,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    paddingTop: 50,
   },
   topContainer: {
     flexDirection: "row",
@@ -270,8 +287,9 @@ const styles = StyleSheet.create({
   searchContainer: {
     marginTop: 30,
     marginHorizontal: 20,
+    marginBottom: 5,
     backgroundColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 20,
+    borderRadius: 15,
     paddingHorizontal: 20,
     paddingVertical: 10,
     flexDirection: "row",
@@ -318,19 +336,20 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: 150,
     height: "100%",
-    borderRadius: 10,
+    borderRadius: 15,
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
   },
   bannerInfo: {
     marginLeft: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
     padding: 10,
     borderTopLeftRadius: 0,
     borderBottomLeftRadius: 0,
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
+    borderTopRightRadius: 15,
+    borderBottomRightRadius: 15,
     flex: 1,
+
   },
   bannerTitle: {
     color: "white",
@@ -339,20 +358,25 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   bannerPostedBy: {
-    color: "white",
-    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.7)",
+    fontSize: 10,
+    fontWeight: "bold",
+    marginBottom: 5,
   },
   bannerVenue: {
-    color: "white",
-    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.5)",
+    fontSize: 12,
+    fontWeight: "bold",
   },
   bannerDate: {
-    color: "white",
-    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.5)",
+    fontSize: 12,
+    fontWeight: "bold",
   },
   bannerTime: {
-    color: "white",
-    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.5)",
+    fontSize: 12,
+    fontWeight: "bold",
   },
 
   navBar: {
@@ -378,5 +402,15 @@ const styles = StyleSheet.create({
   },
   selectedNavText: {
     color: "blue",
+  },
+  bannerSmallInfo: {
+    backgroundColor: "rgba(35, 62, 105, 0.5)",
+    borderRadius: 6,
+    padding: 5,
+  },
+  smallDetails: {
+
+    color: "white",
+    fontSize: 14,
   },
 });

@@ -20,9 +20,12 @@ const EventDetailsFunc = ({ route, navigation }) => {
 
     const [daysLeft, setDaysLeft] = useState(0);
     const date = new Date(route.params.time);
-    const date_format = moment(route.params.deadline);
+    const endDate = new Date(route.params.endTime)
+    const date_format = moment(route.params.time);
+    const endtime_format = moment(route.params.endTime);
     const formattedDate = date_format.format("DD/MM/YYYY");
     const formattedTime = date_format.format('hh:mm A');
+    const formattedEndTime = endtime_format.format('hh:mm A');
 
 
     // const result = (route.params.collected / route.params.required) * 100;
@@ -48,38 +51,38 @@ const EventDetailsFunc = ({ route, navigation }) => {
     console.log(route.params)
     const region = {
 
-        latitude:route.params.venue.coordinates[0] ,
-        longitude:route.params.venue.coordinates[1],
+        latitude: route.params.venue.coordinates[0],
+        longitude: route.params.venue.coordinates[1],
         latitudeDelta: 0.000012,
         longitudeDelta: 0.000099,
     }
-    const prop = {region:region,date:date}
+    const prop = { region: region, date: date }
 
     return (
-        
+
         <View style={styles.container}>
 
-              <TouchableOpacity style={[styles.closeButton,{zIndex:2}]} onPress={() => {
-              navigation.goBack()
-          }}>
-            <MaterialIcons name="close" size={24} color="white" />
-          </TouchableOpacity>
+            <TouchableOpacity style={[styles.closeButton, { zIndex: 2 }]} onPress={() => {
+                navigation.goBack()
+            }}>
+                <MaterialIcons name="close" size={24} color="white" />
+            </TouchableOpacity>
 
 
-        <View style={styles.imageContainer}>
-          <Image
-            source={{
-              uri: route.params.picture.url,
-            }}
-            style={styles.image}
-          />
-          <LinearGradient
-            colors={["rgba(0,0,0,0)", "#0E2C4F", "rgba(0,0,0,255)"]}
-            style={styles.gradient}
-          />
-        
-        </View>
-      {/* </View> */}
+            <View style={styles.imageContainer}>
+                <Image
+                    source={{
+                        uri: route.params.picture.url,
+                    }}
+                    style={styles.image}
+                />
+                <LinearGradient
+                    colors={["rgba(0,0,0,0)", "#0E2C4F", "rgba(0,0,0,255)"]}
+                    style={styles.gradient}
+                />
+
+            </View>
+            {/* </View> */}
             <Animated.View
                 style={[
                     styles.textContainer,
@@ -126,7 +129,9 @@ const EventDetailsFunc = ({ route, navigation }) => {
                                         </View>
                                         <View style={[styles.containerBox, { width: "45%" }]}>
                                             <Text style={styles.centerText}>Ending:</Text>
-                                            <Text style={styles.centerText}>{formattedTime}</Text>
+                                            <Text style={styles.centerText}>{formattedEndTime}</Text>
+                                            <Text style={styles.endDateStyle}>{endDate.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</Text>
+
                                         </View>
 
                                     </View>
@@ -170,7 +175,7 @@ const EventDetailsFunc = ({ route, navigation }) => {
                             >
                                 <TouchableOpacity
                                     style={[styles.mapBtn, { backgroundColor: "#2482C7" }]}
-                                    onPress={() => navigation.navigate('mapall',prop)}
+                                    onPress={() => navigation.navigate('mapall', prop)}
                                 // onPress={handleLogin}
                                 >
                                     <MaterialIcons name="location-on" size={24} color="white" />
@@ -195,8 +200,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         borderRadius: 20,
         padding: 10,
-    
-      },
+
+    },
     container12: {
         flex: 1,
         flexDirection: "row",
@@ -381,6 +386,12 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 16,
     },
+    endDateStyle: {
+        fontSize: 8,
+        fontWeight: "bold",
+        color: "grey",
+        textAlign: "center",
+    }
 });
 
 export default EventDetailsFunc;
