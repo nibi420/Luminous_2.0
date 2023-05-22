@@ -14,7 +14,7 @@ The backend is deployed on Heroku and the front-end production build was constru
 - Scan the generated QR code in the terminal using the Expo App for Android or with your camera for IOS.
 - Login Credentials:
 
-    Email: test19@lums.edu.pk
+    Email: test19@lums.edu.pk  
     Password: 12345678
 
 And you are on your way!
