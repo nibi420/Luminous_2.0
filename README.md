@@ -27,4 +27,5 @@ Same is the case with "Forgot Password"
 
 ### Screens for Reference
 
-(/luminous/assets/luminous1.jpg?raw=true)
+![alt text](https://github.com/nibbi420/Luminous+2.0/HickeryDickery-patch-1/luminous/assets/luminous1.jpg?raw=true)
+
