@@ -18,3 +18,13 @@ The backend is deployed on Heroku and the front-end production build was constru
     Password: 12345678
 
 And you are on your way!
+Feel free to explore the app.
+
+## Note
+
+You cannot make a new account since that would require a valid LUMS email ID and an email sending service setup on the server in order to verify it using the OTP.  
+Same is the case with "Forgot Password"
+
+### Screens for Reference
+
+(/luminous/assets/luminous1.jpg?raw=true)
