@@ -6,5 +6,7 @@ The app uses the MERN stack with React Native for the front-end. The map is disp
 
 The backend is deployed on Heroku and the front-end production build was constructed using the Expo environment.
 
-## Note
+## Setup Instructions
 
+- Clone the repository and run `npm i` in the terminal of the "luminous" folder to install all the dependencies.
+- 
