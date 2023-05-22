@@ -29,4 +29,8 @@ Same is the case with "Forgot Password"
 
 <!-- ![alt text](https://github.com/nibi420/Luminous_2.0/blob/HickeryDickery-patch-1/luminous/assets/luminous1.jpg?raw=true) -->
 <img src="https://github.com/nibi420/Luminous_2.0/blob/HickeryDickery-patch-1/luminous/assets/luminous1.jpg" width="250" />
+<img src="https://github.com/nibi420/Luminous_2.0/blob/HickeryDickery-patch-1/luminous/assets/luminous2.jpg" width="250" />
+<img src="https://github.com/nibi420/Luminous_2.0/blob/HickeryDickery-patch-1/luminous/assets/luminous3.jpg" width="250" />
+<img src="https://github.com/nibi420/Luminous_2.0/blob/HickeryDickery-patch-1/luminous/assets/luminous4.jpg" width="250" />
+<img src="https://github.com/nibi420/Luminous_2.0/blob/HickeryDickery-patch-1/luminous/assets/luminous5.jpg" width="250" />
 
