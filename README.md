@@ -9,4 +9,11 @@ The backend is deployed on Heroku and the front-end production build was constru
 ## Setup Instructions
 
 - Clone the repository and run `npm i` in the terminal of the "luminous" folder to install all the dependencies.
-- 
+- Download the expo app on your Andoird or IOS mobile.
+- Run `npm start` in the terminal of the "luminous" folder
+- Scan the generated QR code in the terminal using the Expo App for Android or with your camera for IOS.
+- Login Credentials:
+    Email: test19@lums.edu.pk
+    Password: 12345678
+
+And you are on your way!
